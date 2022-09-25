@@ -1,0 +1,8 @@
+#ifndef IMPLEMENTACION_POTENCIA_H
+#define IMPLEMENTACION_POTENCIA_H
+
+#include "matriz.h"
+
+
+
+#endif //IMPLEMENTACION_POTENCIA_H
