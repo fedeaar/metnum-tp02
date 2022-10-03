@@ -3,19 +3,22 @@
 //
 
 
+#include "../matriz.h"
+
 template<class R>
-matriz<R>::matriz(size_t n, size_t m): _rep(n, m), _n(n), _m(m) {}
+matriz<R>::matriz(size_t n, size_t m): _rep(n, m), _n(n), _m(m), _t(false) {}
 
 
 template<class R>
 template<class S>
-matriz<R>::matriz(const matriz<S> &b) {
+matriz<R>::matriz(const matriz<S> &b): _rep(b.n(), b.m()), _n(b.n()), _m(b.m()), _t(b._t) {
     *this = b;
 }
 
 
 template<class R>
-matriz<R>::matriz(const initializer_list<initializer_list<double>> &b): _n(b.size()), _m((*b.begin()).size()), _rep(_n, _m) {
+matriz<R>::matriz(const initializer_list<initializer_list<double>> &b):
+    _n(b.size()), _m((*b.begin()).size()), _rep(_n, _m), _t(false) {
     *this = b;
 }
 
@@ -28,25 +31,25 @@ matriz<R>::matriz(const initializer_list<initializer_list<double>> &b): _n(b.siz
 
 template<class R>
 size_t matriz<R>::n() const {
-    return _n;
+    return _t ? _m : _n;
 }
 
 
 template<class R>
 size_t matriz<R>::m() const {
-    return _m;
+    return _t ? _n : _m;
 }
 
 
 template<class R>
 double matriz<R>::at(size_t row, size_t col) const {
-    return _rep.at(row, col);
+    return _t ? _rep.at(col, row) : _rep.at(row, col);
 }
 
 
 template<class R>
 void matriz<R>::set(size_t row, size_t col, double elem) {
-    _rep.set(row, col, elem);
+    _t ? _rep.set(col, row, elem) : _rep.set(row, col, elem);
 }
 
 
@@ -77,7 +80,7 @@ matriz<R> &matriz<R>::operator=(const initializer_list<initializer_list<double>>
     size_t i = 0;
     for (auto it = b.begin(); it != b.end(); ++it, ++i) {
         auto inner = *it;
-        assert(m() >= inner.size());
+        assert(m() == inner.size());
         size_t j = 0;
         for (auto jt = inner.begin(); jt != inner.end(); ++jt, ++j) {
             set(i, j, *jt);
@@ -152,12 +155,48 @@ matriz<R> matriz<R>::operator*(const matriz<S> &b) const {
 
 
 template<class R>
+vector<double> matriz<R>::operator*(const vector<double> &b) const {
+    assert(m() == b.size());
+    vector<double> res(n());
+    for (size_t i = 0; i < n(); ++i) {
+        double sum = 0;
+        for (size_t j = 0; j < b.size(); ++j) {
+            sum += at(i, j) * b[j];
+        }
+        res[i] = sum;
+    }
+    return res;
+}
+template<class R>
+vector<double> operator*(const vector<double> &b, const matriz<R> &a) {
+    assert(a.n() == b.size());
+    vector<double> res(a.m());
+    for (size_t i = 0; i < a.m(); ++i) {
+        double sum = 0;
+        for (size_t j = 0; j < b.size(); ++j) {
+            sum +=  b[j] * a.at(j, i);
+        }
+        res[i] = sum;
+    }
+    return res;
+}
+
+
+template<class R>
 template<class S>
 bool matriz<R>::eq(const matriz<S> &b, double epsilon) const {
     bool res = true;
     for (auto it = begin(); it.in_range() && res; it.next()) {
         res = std::abs(it.at() - b.at(it.row(), it.col())) < epsilon;
     }
+    return res;
+}
+
+
+template<class R>
+matriz<R> matriz<R>::T() const {
+    matriz<R> res {*this};
+    res._t = not res._t;
     return res;
 }
 
@@ -291,6 +330,19 @@ void matriz<R>::clear() {
 //
 
 template<class R>
+matriz<R> outer(const vector<double> &a, const vector<double> &b) {
+    assert(a.size() == b.size());
+    matriz<R> res(a.size(), a.size());
+    for(int i = 0; i < a.size(); ++i) {
+        for (int j = 0; j < a.size(); ++j) {
+            res.set(i, j, a[i] * b[j]);
+        }
+    }
+    return res;
+}
+
+
+template<class R>
 matriz<R> diagonal(const vector<double> &v) {
     size_t n = v.size();
     matriz<R> res {n, n};
@@ -299,6 +351,7 @@ matriz<R> diagonal(const vector<double> &v) {
     }
     return res;
 }
+
 
 template<class R>
 matriz<R> identity(size_t n) {

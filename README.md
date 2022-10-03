@@ -61,7 +61,7 @@ Para este procedimiento se asume que trabajaremos en bash. Desde la raiz del rep
 
     > $ ./TESTS-matriz
 
-    > $ ./tp2 ../catedra/karateclub.txt 100 0.01
+    > $ ./tp2 ../catedra/karateclub_matriz.txt 100 0.01
 
 Notamos que la ejecución de los experimentos requiere que el ejecutable `./tp2` se encuentre en `./build`.
 
@@ -70,26 +70,28 @@ Notamos que la ejecución de los experimentos requiere que el ejecutable `./tp2`
 
 ### IO ./tp2
 
-El ejecutable del metodo de la potencia permite trabajar con los siguientes parámetros.
+El ejecutable del método de la potencia por deflación permite trabajar con los siguientes parámetros.
 
 
 Obligatorios (deben estar en orden):
 
-- `*` fuente del archivo de entrada. El mismo debe estar formateado según las pautas del enunciado. No requiere `"`, no se aceptan nombres con espacio. Ejemplo de uso: `../catedra/karateclub.txt`.
+- `*`: fuente del archivo de entrada. El mismo debe estar formateado según las pautas del enunciado. No requiere `"`, no se aceptan nombres con espacio. Ejemplo de uso: `../catedra/karateclub_matriz.txt`.
 
-- `*` cantidad de iteraciones a realizar.
+- `*`: cantidad de iteraciones a realizar.
 
-- `*` tolerancia máxima para la convergencia.
+- `*`: tolerancia máxima para la convergencia.
 
 
 Opcionales:
 
-- `-out` carpeta en la que se guardarán los archivos de salida. Por defecto, la misma donde se encuentra el ejecutable. Ejemplo de uso: `-out=../experimentos/`.
+- `-f`: formato del archivo de entrada, `grafo` ó  `matriz`, por default matriz. Ejemplo de uso: `-f grafo`. 
 
-- `-save_as` nombre con el que se guardarán los archivos de salida. Por defecto, este nombre será el mismo que el del archivo de entrada pero con una extensión distinta acorde al archivo. Para el archivo solución, esta extensión sera `.out`. Ejemplo de uso: `-save_as=resultado`. 
+- `-o`: carpeta en la que se guardarán los archivos de salida. Por defecto, la misma donde se encuentra el ejecutable. Ejemplo de uso: `-o ../experimentos/`.
 
-- `-presicion` la presición con la que se guardaran los resultados, en el sentido de la cantidad de digitos decimales después de la coma. Por defecto 15. Ejemplo de uso: `-presicion=8`.
+- `-as`: nombre con el que se guardarán los archivos de salida. Por defecto, este nombre será el mismo que el del archivo de entrada pero con una extensión distinta acorde al archivo. Para el archivo solución, esta extensión sera `.out`. Ejemplo de uso: `-as resultado`. 
 
-- `-time_it` Flag. Si se pasa éste parámetro, se guardará el tiempo de ejecución del algoritmo de pageRank (descontando las operaciones de IO) en un archivo con la extensión `.time`.
+- `-p`: la presición con la que se guardaran los resultados, en el sentido de la cantidad de digitos decimales después de la coma. Por defecto 15. Ejemplo de uso: `-p 8`.
 
-- `-v` Flag. Verbose. Si se pasa éste parámetro, se imprimirá en la consola información durante la ejecución del programa.
+- `-time`: Flag. Si se pasa éste parámetro, se guardará el tiempo de ejecución del algoritmo (descontando las operaciones de IO) en un archivo con la extensión `.time`.
+
+- `-v`: Flag. Verbose. Si se pasa éste parámetro, se imprimirá en la consola información relevante durante la ejecución del programa.

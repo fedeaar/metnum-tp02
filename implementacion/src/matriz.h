@@ -43,6 +43,7 @@ class matriz {
 protected:
     /** ESTRUCTURA */
     const size_t _n, _m;
+    bool _t;
     R _rep;
 
 public:
@@ -65,7 +66,10 @@ public:
     template<class S> matriz operator-(const matriz<S> &b) const;
     matriz operator*(double b) const;
     template<class S> matriz operator*(const matriz<S> &b) const;
+    vector<double> operator*(const vector<double> &b) const;
     template<class S> bool eq(const matriz<S> &b, double epsilon=EPSILON) const;
+
+    matriz T() const;
 
     /** OPERACIONES GAUSS */
     matriz gauss_elim() const;
@@ -91,6 +95,19 @@ ostream &operator<<(ostream &os, const matriz<R> &mat);
 
 template<class R>
 matriz<R> operator*(double b, const matriz<R> &a);
+
+template<class R>
+vector<double> operator*(const vector<double> &b, const matriz<R> &a);
+
+
+//
+// VECTORES
+//
+
+double inner(const vector<double> &a, const vector<double> &b);
+
+template<class R>
+matriz<R> outer(const vector<double> &a, const vector<double> &b);
 
 
 //

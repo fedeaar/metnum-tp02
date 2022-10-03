@@ -1,4 +1,5 @@
-#include "potencia.h"
+/*
+#include "../potencia.h"
 #include "cmath"
 
 #define autovalores vector<double>
@@ -47,3 +48,4 @@ void metodoDeLaPotencia(matriz<double> A, int iteraciones, double tolerancia) {
     }
     
 }
+*/

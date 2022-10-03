@@ -51,18 +51,106 @@ map<string, string> IO::oparams(int argc,  char** argv) {
         if (argv[i][0] != '-') {
             continue;
         }
-        string arg = argv[i];
-        string param;
-        string val;
-        auto delim = arg.find('=');
-        if (delim != string::npos) {
-            param = arg.substr(0, delim);
-            val = arg.substr(delim + 1, arg.size());
+        string param = argv[i];
+        if (i + 1 < argc && argv[i+1][0] != '-') {
+            string val = argv[i+1];
+            params[param] = val;
+            ++i;
         } else {
-            param = arg;
-            val = "true";
+            params[param] = "true";
         }
-        params[param] = val;
     }
     return params;
+}
+
+
+
+
+//
+// FILE HANDLING
+//
+
+grafo IO::read_grafo(const string &in) {
+    ifstream file {in};
+    if (!file.is_open()) {
+        throw std::invalid_argument("no se pudo leer el archivo: " + in + ".");
+    }
+    // cantidad de nodos
+    string _nodos {};
+    std::getline(file, _nodos);
+    size_t nodos = stolcast(_nodos, "error de formato: linea 1.");
+    // cantidad de links
+    string _links {};
+    std::getline(file, _links);
+    size_t links = stolcast(_links, "error de formato: linea 2.");
+    // init store
+    grafo res(nodos, links);
+    // in coords
+    string _i, _j;
+    size_t i, j, k = 2;
+    while (file >> _j >> _i) {
+        string msg = "error de formato: linea " + std::to_string(k) + ".";
+        i = stolcast(_i, msg);
+        j = stolcast(_j, msg);
+        res.relaciones.emplace_back(coords{i, j});
+        ++k;
+    }
+    return res;
+}
+
+
+void IO::write_time(const string &out, const chrono::microseconds &time) {
+    ofstream file {out};
+    file << "microseconds\n" << time.count() << endl;
+    file.close();
+}
+
+
+
+
+//
+// METODO POTENCIA
+//
+
+IO::potencia::out_file IO::potencia::read_out(const string &in) {
+    ifstream file {in};
+    if (!file.is_open()) {
+        throw std::invalid_argument("no se pudo leer el archivo: " + in + ".");
+    }
+    // n
+    string _n {};
+    std::getline(file, _n);
+    size_t n = stolcast(_n, "error de formato: linea 1.");
+    // niter
+    string _niter {};
+    std::getline(file, _niter);
+    size_t niter = stolcast(_n, "error de formato: linea 2.");
+    // tol
+    string _tol {};
+    std::getline(file, _tol);
+    double tol = stodcast(_n, "error de formato: linea 3.");
+    // init store
+    IO::potencia::out_file params(n, niter, tol);
+    // in xi
+    string _xi;
+    double xi;
+    size_t k = 1;
+    while (std::getline(file, _xi)) {
+        string msg = "error de formato: linea " + std::to_string(k) + ".";
+        xi = stodcast(_xi, msg);
+        params.solucion.push_back(xi);
+    }
+    return params;
+}
+
+
+void IO::potencia::write_out(const string &out, unsigned int niter, double tol, const vector<double> &res,
+                             int precision) {
+    ofstream file {out};
+    file << res.size() << '\n' << niter << '\n' << tol;
+    for (auto &xi : res) {
+        file << '\n' << std::setprecision(precision) << std::fixed << xi;
+    }
+    file << endl;
+    file.close();
 }

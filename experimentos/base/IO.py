@@ -8,29 +8,81 @@ EXE_PATH = '../build/tp2'      # si se compilo de otra manera o con otro nombre,
 WSL = True                     # dejar true solo si se utilizó wsl para compilar el programa, false sino
 
 
-def readFileIn(filename):   # TODO
-    pass
+def readGrafo(filename):
+    
+    with open(filename) as file:
+        data = file.read().splitlines()
+        n = int(data[0])
+        q = int(data[1])
+        links  = [x.split(' ') for x in data[2:]]
+        matriz = np.zeros((n, n))
+        for link in links:
+            if (len(link) == 2):
+                matriz[int(link[1]) - 1][int(link[0]) - 1] = 1
+
+    return n, q, matriz # nodos, links, matriz de conectividad
 
 
-def readFileOut(filename):  # TODO
-    pass
+def readAutovalores(filename):
+
+    data = np.loadtxt(filename)
+    return data[0, 0], data[1, 0], data[2:, :]  # iteraciones, tolerancia, valores
 
 
-def readMatriz(filename):   # TODO
-    pass
+def readAutovectores(filename):
+    
+    return readMatriz(filename)                 # cada columna es un autovector
 
 
-def readTime(filename):     # TODO
-    pass
+def readTime(filename):
+
+    with open(filename) as file:
+        data = file.read().splitlines()
+        scale = data[0]
+        time = int(data[1])
+        
+    return scale, time
 
 
-def createFileIn(filename, matrix): # TODO
-    pass
+def readMatriz(filename, cols=None):
+
+    return np.loadtxt(filename, usecols=cols, skiprows=2) 
+
+
+def writeMatriz(A, filename):
+
+    np.savetxt(filename, A, header=f"{A.shape[0]}\n{A.shape[1]}", comments="")
+
+
+def writeGrafo(filename, matrix): # TODO
+    
+    n = matrix.shape[0]
+    q = np.count_nonzero(matrix != 0)
+    links = np.where(matrix != 0)
+    links = tuple(zip(*links))
+    text  = [n, q]
+    for coord in links:
+        text.append(str(coord[1] + 1) + " " + str(coord[0] + 1))
+
+    np.savetxt(filename, text, delimiter="\n", fmt="%s")
+
+    return links
+
+
+def writeAutovalores(niter, tol, eig, filename):
+
+    data = [len(eig), niter, tol, *eig]
+    np.savetxt(filename, data)
+
+
+def writeAutovectores(A, filename):
+
+    writeMatriz(A, filename)
 
 
 def createInOut(filename):
     
-    path = "./resultados/" + filename + '/'
+    path = "./resultados/" + filename + "/"
     pathIn =  path + "in/"
     pathOut = path + "out/"
     if not os.path.exists(pathIn):
@@ -44,21 +96,21 @@ def createInOut(filename):
 def createCSV(filename, columnas): 
 
     with open(filename, "w", encoding="utf-8") as file:
-        file.write(columnas + '\n')
+        file.write(columnas + "\n")
 
 
-def run(filename, iter, thres, 
-        out_dir="./", precision=15, save_as=None, time_it=False, save_m=False, 
-        exe_path=EXE_PATH): # TODO
+def run(filename, iter, epsilon, 
+        f="matriz", o="./", precision=15, save_as=None, time=False, save_m=False, 
+        exe_path=EXE_PATH):
 
-    # call_params = [
-    #     "wsl" if WSL else "",   
-    #     exe_path, 
-    #     filename, str(p_value), 
-    #     f"-out={out_dir}",
-    #     f'{f"-save_as={save_as}" if save_as else ""}', 
-    #     f"-presicion={precision}", 
-    #     f'{"-time_it" if time_it else ""}',
-    #     f'{"-save_m" if save_m else ""}'
-    # ]
-    # sub.check_call(call_params)
+    call_params = [
+        "wsl" if WSL else "",   
+        exe_path, 
+        filename, str(iter), str(epsilon),
+        f"-f {f}"
+        f"-o {o}",
+        "-as {save_as}" if save_as else "", 
+        f"-presicion {precision}", 
+        "-time" if time_it else ""
+    ]
+    sub.check_call(call_params)

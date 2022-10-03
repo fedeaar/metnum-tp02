@@ -234,6 +234,52 @@ TEST_F(MatrizTest, producto) {
 }
 
 
+TEST_F(MatrizTest, producto_con_vector) { // TODO mas tests
+    vector<double> v = {1, 0, 0, 0};
+    vector<double> vA = v * a;
+    for (int i = 0; i < 4; ++i) {
+        EXPECT_EQ(vA[i], a.at(0, i));
+    }
+    vector<double> Av = a * v;
+    for (int i = 0; i < 4; ++i) {
+        EXPECT_EQ(Av[i], a.at(i, 0));
+    }
+}
+
+
+TEST_F(MatrizTest, transpuesta) { // TODO mas tests
+    matriz<__ESTR__> at = a.T();
+    for (auto jt = a.begin(); jt.in_range(); jt.next(false)) {
+        for (auto it = a.begin(jt.row(), jt.col()); it.in_range(); it.next()) {
+            EXPECT_EQ(jt.at(), at.at(jt.col(), jt.row()));
+        }
+    }
+    at.set(2, 3, 1);
+    EXPECT_EQ(at.at(2, 3), 1);
+}
+
+
+TEST_F(MatrizTest, inner) { // TODO mas tests
+    vector<double> a = {1, 2, 3, 4};
+    vector<double> b = {1, 3, 4, 1};
+    EXPECT_EQ(inner(a, b), 23);
+}
+
+
+TEST_F(MatrizTest, outter) { // TODO mas tests
+    vector<double> a = {1, 0, 0, 0};
+    vector<double> b = {1, 0, 0, 0};
+    matriz<__ESTR__> ab = outer<__ESTR__>(a, b);
+    matriz<__ESTR__> expected = {
+            {1, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0}
+    };
+    EXPECT_TRUE(expected.eq(ab));
+}
+
+
 TEST_F(MatrizTest, print) {
     ostringstream stream;
     stream << a;
@@ -247,7 +293,7 @@ TEST_F(MatrizTest, print) {
 }
 
 
-TEST_F(MatrizTest, gauss_elim){
+TEST_F(MatrizTest, gauss_elim) {
     matriz<__ESTR__> input1 = {
         {1, 0, 0, 3},
         {0, 1, 0, 6},
