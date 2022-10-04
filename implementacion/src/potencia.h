@@ -5,11 +5,10 @@
 
 
 template<class R>
-pair<double, vector<double>> potencia(matriz<R> m, double niter, double tol);
+pair<double, vector<double>> potencia(const matriz<R> &A, size_t niter, double tol);
 
-
-template<class R, class S>
-pair<vector<double>, matriz<R>> deflacion(matriz<S> m, unsigned k, double niter, double tol);
+template<class R>
+pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t niter, double tol);
 
 
 #include "impl/potencia.hpp"

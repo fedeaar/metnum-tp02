@@ -3,6 +3,5 @@
 #include "./src/matriz/matriz_base.h"
 
 int main(int argc,  char** argv) {
-    // todo
     return 0;
 }

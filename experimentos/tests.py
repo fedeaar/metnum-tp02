@@ -20,18 +20,15 @@ TEST_DIR = "../tests"
 def assert_results(M, w, V):
 
     assert(len(w) == len(np.unique(w)))
-    for i in range(M.shape[0]):
-        a = M @ V[:, i]
-        b = w[i] * V[:, i]
-        test = np.allclose(a, b, utils.EPSILON, utils.EPSILON)
-        assert(test)
+    test = np.allclose(M @ V,  V @ np.diag(w), utils.EPSILON, utils.EPSILON)
+    assert(test)
 
 
 def make_test(M, niter, tol, w, filename):
 
     IO.writeAutovalores(niter, tol, w, f"{TEST_DIR}/{filename}.autovalores.out")
     IO.writeMatriz(M, f"{TEST_DIR}/{filename}.txt")
-
+    
 
 # TESTS 
 def TESTS_diagonales(n=10, t=10, niter=10000, tol=1e-10, seed=None):
@@ -39,7 +36,7 @@ def TESTS_diagonales(n=10, t=10, niter=10000, tol=1e-10, seed=None):
     for i in range(t):
         if seed:
             np.random.seed(seed + i)
-        diagonal = np.random.choice(range(1, 100), n, replace=False)
+        diagonal = np.random.choice([x if i % 2 == 0 else -x for i, x in enumerate(range(1, 100))], n, replace=False)
         D = np.diag(diagonal)
 
         w, V = utils.metodo_deflacion(D, n, niter, tol)
@@ -53,7 +50,7 @@ def TESTS_householder(n=10, t=10, niter=10000, tol=1e-10, seed=None):
     for i in range(t):
         if seed:
             np.random.seed(seed + i)
-        diagonal = np.random.choice(range(1, 100), n, replace=False)
+        diagonal = np.random.choice([x if i % 2 == 0 else -x for i, x in enumerate(range(1, 100))], n, replace=False)
         D = np.diag(diagonal)
         u = np.random.rand(n, 1)
         u = u / utils.norma(u, 2)

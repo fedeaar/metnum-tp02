@@ -1,4 +1,4 @@
-// #ifndef IMPLEMENTACION_MATRIZ_ALT_H // me estaba tirando errores asique lo comente
+#ifndef IMPLEMENTACION_MATRIZ_ALT_H
 #define IMPLEMENTACION_MATRIZ_ALT_H
 
 #include "../matriz.h"
@@ -70,4 +70,4 @@ public:
     void set(double elem);
 };
 
-// #endif //IMPLEMENTACION_MATRIZ_ALT_H
+#endif //IMPLEMENTACION_MATRIZ_ALT_H

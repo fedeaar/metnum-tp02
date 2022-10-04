@@ -11,16 +11,10 @@ matriz<R> IO::read_matriz(const string &in) {
     if (!file.is_open()) {
         throw std::invalid_argument("no se pudo leer el archivo: " + in + ".");
     }
-    // n
-    string _n {};
-    std::getline(file, _n);
-    size_t n = stolcast(_n, "error de formato: linea 1.");
-    // m
-    string _m {};
-    std::getline(file, _m);
-    size_t m = stolcast(_m, "error de formato: linea 2.");
+    // n, m
+    pair<size_t, size_t> shape = _shape(in);
     // init
-    matriz<R> res(n, m);
+    matriz<R> res(shape.first, shape.second);
     size_t i = 0, j = 0, k = 2;
     string _e {};
     double e {};
@@ -30,7 +24,7 @@ matriz<R> IO::read_matriz(const string &in) {
         e = stodcast(_e, msg);
         res.set(i, j, e);
         ++j;
-        if (j >= m) {
+        if (j >= shape.second) {
             j = 0;
             ++i;
         }

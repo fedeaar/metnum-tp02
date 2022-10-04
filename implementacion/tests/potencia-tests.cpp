@@ -18,8 +18,7 @@ protected:
 };
 
 
-bool PotenciaTest::base_test(const string &in, const string &out) { // TODO test
-
+bool PotenciaTest::base_test(const string &in, const string &out) {
     IO::potencia::out_file expected = IO::potencia::read_out(basedir + out);
     matriz<base> mat = IO::read_matriz<base>(basedir + in);
     pair<vector<double>, matriz<base>> solucion = deflacion<base>(mat, expected.n, expected.niter, expected.tol);
@@ -29,7 +28,7 @@ bool PotenciaTest::base_test(const string &in, const string &out) { // TODO test
         res = std::abs(solucion.first[i] - expected.solucion[i]) < epsilon;
     }
     matriz<base> diag   = diagonal<base>(solucion.first);
-    matriz<base> lambda = diag * solucion.second;
+    matriz<base> lambda = solucion.second * diag;
     matriz<base> vect   = mat * solucion.second;
     res = vect.eq(lambda, epsilon);
 
@@ -40,7 +39,7 @@ bool PotenciaTest::base_test(const string &in, const string &out) { // TODO test
 TEST_F(PotenciaTest, tests_diagonal) {
     for (int i = 1; i < 11; ++i) {
         string test = "diagonal_" + to_string(i);
-        EXPECT_TRUE(base_test(test + ".txt", test + "autovalores.out"));
+        EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
     }
 }
 
@@ -48,7 +47,7 @@ TEST_F(PotenciaTest, tests_diagonal) {
 TEST_F(PotenciaTest, tests_householder) {
     for (int i = 1; i < 11; ++i) {
         string test = "householder_" + to_string(i);
-        EXPECT_TRUE(base_test(test + ".txt", test + "autovalores.out"));
+        EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
     }
 }
 
@@ -56,18 +55,18 @@ TEST_F(PotenciaTest, tests_householder) {
 TEST_F(PotenciaTest, tests_sdp) {
     for (int i = 1; i < 11; ++i) {
         string test = "sdp_" + to_string(i);
-        EXPECT_TRUE(base_test(test + ".txt", test + "autovalores.out"));
+        EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
     }
 }
 
 
 TEST_F(PotenciaTest, simetrico) {
     string test = "simetrico";
-    EXPECT_TRUE(base_test(test + ".txt", test + "autovalores.out"));
+    EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
 }
 
 
 TEST_F(PotenciaTest, error_num) {
     string test = "error_num";
-    EXPECT_TRUE(base_test(test + ".txt", test + "autovalores.out"));
+    EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
 }

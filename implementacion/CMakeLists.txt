@@ -18,8 +18,8 @@ set(SOURCE_FILES
         src/impl/matriz/matriz_alt.cpp
         # src/impl/matriz/matriz_sim.cpp
         src/grafo.h
-        # src/potencia.h
-        # src/impl/potencia.hpp
+        src/potencia.h
+        src/impl/potencia.hpp
         src/IO.h
         src/impl/IO.cpp)
         

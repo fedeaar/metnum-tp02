@@ -16,7 +16,7 @@ double base::at(size_t row, size_t col) const {
 
 void base::set(size_t row, size_t col, double elem) {
     assert(0 <= row && row < _n && 0 <= col && col < _m);
-    _mat[row][col] = elem;
+    _mat[row][col] = abs(elem) < EPSILON ? 0 : elem;
 }
 
 

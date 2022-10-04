@@ -5,11 +5,12 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <random>
 
 using namespace std;
 
 
-const double EPSILON = 1e-4;
+const double EPSILON = 1e-10;
 
 
 /**
@@ -59,12 +60,14 @@ public:
     void set(size_t row, size_t col, double elem);
 
     /** OPERADORES */
+    matriz &operator=(const matriz &b);
     template<class S> matriz &operator=(const matriz<S> &b);
     matriz &operator=(const initializer_list<initializer_list<double>> &b);
 
     template<class S> matriz operator+(const matriz<S> &b) const;
     template<class S> matriz operator-(const matriz<S> &b) const;
     matriz operator*(double b) const;
+    matriz operator/(double b) const;
     template<class S> matriz operator*(const matriz<S> &b) const;
     vector<double> operator*(const vector<double> &b) const;
     template<class S> bool eq(const matriz<S> &b, double epsilon=EPSILON) const;
@@ -97,6 +100,9 @@ template<class R>
 matriz<R> operator*(double b, const matriz<R> &a);
 
 template<class R>
+matriz<R> operator/(double b, const matriz<R> &a);
+
+template<class R>
 vector<double> operator*(const vector<double> &b, const matriz<R> &a);
 
 
@@ -108,6 +114,26 @@ double inner(const vector<double> &a, const vector<double> &b);
 
 template<class R>
 matriz<R> outer(const vector<double> &a, const vector<double> &b);
+
+vector<double> operator*(const vector<double>& a, double b); // TODO test
+vector<double> operator*(double b, const vector<double> &a);
+
+vector<double> operator/(const vector<double>& a, double b); // TODO test
+vector<double> operator/(double b, const vector<double> &a);
+
+vector<double> operator+(const vector<double> &a, const vector<double> &b); // TODO test
+
+vector<double> operator-(const vector<double> &a, const vector<double> &b); // TODO test
+
+vector<double> abs(const vector<double> &a); // TODO test
+
+vector<double> aleatorio(size_t n, pair<int, int> range={INT_MIN, INT_MAX}); // TODO test
+
+vector<double> normalizar(const vector<double> &v); // TODO test
+
+bool eq(const vector<double> &a, const vector<double> &b, double epsilon=EPSILON); // TODO test
+
+double inf(const vector<double> &a); // TODO test
 
 
 //

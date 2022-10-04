@@ -70,6 +70,25 @@ map<string, string> IO::oparams(int argc,  char** argv) {
 // FILE HANDLING
 //
 
+pair<size_t, size_t> IO::_shape(const string &in) {
+    ifstream file {in};
+    string _line;
+    size_t n {}, m {};
+    getline(file, _line);
+    if (!_line.empty()) {
+        ++n;
+        for (char c : _line) {
+            m += c == ' ';
+        }
+        ++m;
+    }
+    while (getline(file, _line)) {
+        ++n;
+    }
+    return {n, m};
+}
+
+
 grafo IO::read_grafo(const string &in) {
     ifstream file {in};
     if (!file.is_open()) {
@@ -78,11 +97,11 @@ grafo IO::read_grafo(const string &in) {
     // cantidad de nodos
     string _nodos {};
     std::getline(file, _nodos);
-    size_t nodos = stolcast(_nodos, "error de formato: linea 1.");
+    size_t nodos = stodcast(_nodos, "error de formato: linea 1.");
     // cantidad de links
     string _links {};
     std::getline(file, _links);
-    size_t links = stolcast(_links, "error de formato: linea 2.");
+    size_t links = stodcast(_links, "error de formato: linea 2.");
     // init store
     grafo res(nodos, links);
     // in coords
@@ -120,21 +139,21 @@ IO::potencia::out_file IO::potencia::read_out(const string &in) {
     // n
     string _n {};
     std::getline(file, _n);
-    size_t n = stolcast(_n, "error de formato: linea 1.");
+    size_t n = stodcast(_n, "error de formato: linea 1.");
     // niter
     string _niter {};
     std::getline(file, _niter);
-    size_t niter = stolcast(_n, "error de formato: linea 2.");
+    size_t niter = stodcast(_niter, "error de formato: linea 2.");
     // tol
     string _tol {};
     std::getline(file, _tol);
-    double tol = stodcast(_n, "error de formato: linea 3.");
+    double tol = stodcast(_tol, "error de formato: linea 3.");
     // init store
     IO::potencia::out_file params(n, niter, tol);
     // in xi
     string _xi;
     double xi;
-    size_t k = 1;
+    size_t k = 4;
     while (std::getline(file, _xi)) {
         string msg = "error de formato: linea " + std::to_string(k) + ".";
         xi = stodcast(_xi, msg);

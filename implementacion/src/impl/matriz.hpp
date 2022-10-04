@@ -60,13 +60,30 @@ void matriz<R>::set(size_t row, size_t col, double elem) {
 //
 
 template<class R>
+matriz<R> &matriz<R>::operator=(const matriz<R> &b) {
+    assert(n() == b.n() && m() == b.m());
+    if (this != &b) {
+        clear();
+        for (auto jt = b.begin(); jt.in_range(); jt.next(false)) {
+            for (auto it = b.begin(jt.row(), jt.col()); it.in_range(); it.next()) {
+                set(it.row(), it.col(), it.at());
+            }
+        }
+    }
+    return *this;
+}
+
+
+template<class R>
 template<class S>
 matriz<R> &matriz<R>::operator=(const matriz<S> &b) {
     assert(n() == b.n() && m() == b.m());
     if (this != &b) {
         clear();
-        for (auto it = b.begin(); it.in_range(); it.next()) {
-            set(it.row(), it.col(), it.at());
+        for (auto jt = b.begin(); jt.in_range(); jt.next(false)) {
+            for (auto it = b.begin(jt.row(), jt.col()); it.in_range(); it.next()) {
+                set(it.row(), it.col(), it.at());
+            }
         }
     }
     return *this;
@@ -135,6 +152,22 @@ matriz<R> operator*(double b, const matriz<R> &a) {
 
 
 template<class R>
+matriz<R> matriz<R>::operator/(double b) const {
+    matriz<R> res {*this};
+    for (auto jt = res.begin(); jt.in_range(); jt.next(false)) {
+        for (auto it = res.begin(jt.row(), jt.col()); it.in_range(); it.next()) {
+            it.set(it.at() / b);
+        }
+    }
+    return res;
+}
+template<class R>
+matriz<R> operator/(double b, const matriz<R> &a) {
+    return a / b;
+}
+
+
+template<class R>
 template<class S>
 matriz<R> matriz<R>::operator*(const matriz<S> &b) const {
     assert(m() == b.n());
@@ -145,9 +178,7 @@ matriz<R> matriz<R>::operator*(const matriz<S> &b) const {
             for (auto kt = begin(i, 0); kt.in_range(); kt.next()) {
                 sum += kt.at() * b.at(kt.col(), j);
             }
-            if (sum >= EPSILON) {
-                res.set(i, j, sum);
-            }
+            res.set(i, j, sum);
         }
     }
     return res;
@@ -330,19 +361,6 @@ void matriz<R>::clear() {
 //
 
 template<class R>
-matriz<R> outer(const vector<double> &a, const vector<double> &b) {
-    assert(a.size() == b.size());
-    matriz<R> res(a.size(), a.size());
-    for(int i = 0; i < a.size(); ++i) {
-        for (int j = 0; j < a.size(); ++j) {
-            res.set(i, j, a[i] * b[j]);
-        }
-    }
-    return res;
-}
-
-
-template<class R>
 matriz<R> diagonal(const vector<double> &v) {
     size_t n = v.size();
     matriz<R> res {n, n};
@@ -356,4 +374,23 @@ matriz<R> diagonal(const vector<double> &v) {
 template<class R>
 matriz<R> identity(size_t n) {
     return diagonal<R>(vector<double>(n, 1));
+}
+
+
+
+
+//
+// VECTOR
+//
+
+template<class R>
+matriz<R> outer(const vector<double> &a, const vector<double> &b) {
+    assert(a.size() == b.size());
+    matriz<R> res(a.size(), a.size());
+    for(int i = 0; i < a.size(); ++i) {
+        for (int j = 0; j < a.size(); ++j) {
+            res.set(i, j, a[i] * b[j]);
+        }
+    }
+    return res;
 }

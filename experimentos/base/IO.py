@@ -46,15 +46,15 @@ def readTime(filename):
 
 def readMatriz(filename, cols=None):
 
-    return np.loadtxt(filename, usecols=cols, skiprows=2) 
+    return np.loadtxt(filename, usecols=cols) 
 
 
 def writeMatriz(A, filename):
 
-    np.savetxt(filename, A, header=f"{A.shape[0]}\n{A.shape[1]}", comments="")
+    np.savetxt(filename, A)
 
 
-def writeGrafo(filename, matrix): # TODO
+def writeGrafo(filename, matrix):
     
     n = matrix.shape[0]
     q = np.count_nonzero(matrix != 0)

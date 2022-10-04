@@ -22,18 +22,20 @@ namespace IO {
 
     map<string, string> oparams(int argc,  char** argv); // TODO test
 
-    string filename(const string& path);
+    string filename(const string& path); // TODO test
 
 
     /** FILE HANDLING */
 
     grafo read_grafo(const string &in); // TODO test
 
-    template<class R> matriz<R> read_matriz(const string &in);
+    pair<size_t, size_t> _shape(const string &in); // TODO test
+
+    template<class R> matriz<R> read_matriz(const string &in); // TODO test
 
     template<class R> void write_matriz(const string &out, const matriz<R>& mat, int precision=PRECISION); // TODO test
 
-    void write_time(const string &out, const chrono::microseconds &time);
+    void write_time(const string &out, const chrono::microseconds &time); // TODO test
 
 
     /** POTENCIA */
@@ -41,7 +43,7 @@ namespace IO {
     namespace potencia {
 
         struct out_file {
-            explicit out_file(unsigned n, unsigned niter, double tol): niter(niter), tol(tol), n(n), solucion(n) {}
+            explicit out_file(unsigned n, unsigned niter, double tol): niter(niter), tol(tol), n(n), solucion() {}
 
             unsigned n;
             unsigned niter;
