@@ -1,0 +1,10 @@
+implementacion:
+
+	***- como tratar el caso y ortogonal a x en potencia()
+	- test funciones vectores
+	- mover funciones vectores a un archivo propio
+	- test funciones IO
+	*- repensar formato potencia::out_file
+	*- test grafo_a_matriz
+	- mas tests para las funciones de matrices
+

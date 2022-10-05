@@ -20,22 +20,22 @@ namespace IO {
 
     double stodcast(const string &val, const string &msg);
 
-    map<string, string> oparams(int argc,  char** argv); // TODO test
+    map<string, string> oparams(int argc,  char** argv); // TODO tests
 
-    string filename(const string& path); // TODO test
+    string filename(const string& path); // TODO tests
 
 
     /** FILE HANDLING */
 
-    grafo read_grafo(const string &in); // TODO test
+    grafo read_grafo(const string &in); // TODO tests
 
-    pair<size_t, size_t> _shape(const string &in); // TODO test
+    template<class R> matriz<R> read_matriz(const string &in); // TODO tests
 
-    template<class R> matriz<R> read_matriz(const string &in); // TODO test
+    template<class R> void write_matriz(const string &out, const matriz<R>& mat, int precision=PRECISION); // TODO tests
 
-    template<class R> void write_matriz(const string &out, const matriz<R>& mat, int precision=PRECISION); // TODO test
+    void write_time(const string &out, const chrono::microseconds &time); // TODO tests
 
-    void write_time(const string &out, const chrono::microseconds &time); // TODO test
+    pair<size_t, size_t> _shape(const string &in); // TODO tests
 
 
     /** POTENCIA */
@@ -51,10 +51,12 @@ namespace IO {
             vector<double> solucion;
         };
 
-        out_file read_out(const string &in); // TODO test
+        out_file read_out(const string &in); // TODO repensar
 
-        void write_out(const string &out, unsigned niter, double tol, const vector<double> &res,
-                       int precision=PRECISION); // TODO test
+        void write_out_dev(const string &out, unsigned niter, double tol, const vector<double> &res,
+                           int precision=PRECISION); // TODO tests
+
+        void write_out(const string &out, const vector<double> &res, int precision=PRECISION); // TODO tests
     }
 }
 

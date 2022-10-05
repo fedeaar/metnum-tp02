@@ -64,9 +64,3 @@ TEST_F(PotenciaTest, simetrico) {
     string test = "simetrico";
     EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
 }
-
-
-TEST_F(PotenciaTest, error_num) {
-    string test = "error_num";
-    EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
-}

@@ -21,7 +21,10 @@ struct grafo {
     vector<coords> relaciones;
 };
 
-// template<class R>
-// matriz<R> grafo_a_matriz(const grafo &g); // TODO
+template<class R>
+matriz<R> grafo_a_matriz(const grafo &g); // TODO tests
+
+
+#include "impl/grafo.hpp"
 
 #endif //POTENCIA_GRAFO_H

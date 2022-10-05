@@ -53,15 +53,15 @@ Para este procedimiento se asume que trabajaremos en bash. Desde la raiz del rep
     > $ make ./TESTS-potencia
 
     iii. Para correr otros tests internos
-    > $ make ./TESTS-matriz
+    > $ make ./TESTS-matriz-base
 
 5. ejecutar
 
     > $ ./TESTS-potencia
 
-    > $ ./TESTS-matriz
+    > $ ./TESTS-matriz-base
 
-    > $ ./tp2 ../catedra/karateclub_matriz.txt 100 0.01
+    > $ ./tp2 ../catedra/karateclub_matriz.txt 10000 1e-8
 
 Notamos que la ejecución de los experimentos requiere que el ejecutable `./tp2` se encuentre en `./build`.
 
@@ -79,7 +79,7 @@ Obligatorios (deben estar en orden):
 
 - `*`: cantidad de iteraciones a realizar.
 
-- `*`: tolerancia máxima para la convergencia.
+- `*`: tolerancia mínima aceptada.
 
 
 Opcionales:

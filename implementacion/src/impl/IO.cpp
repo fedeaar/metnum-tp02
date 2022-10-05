@@ -163,13 +163,21 @@ IO::potencia::out_file IO::potencia::read_out(const string &in) {
 }
 
 
-void IO::potencia::write_out(const string &out, unsigned int niter, double tol, const vector<double> &res,
-                             int precision) {
+void IO::potencia::write_out_dev(const string &out, unsigned int niter, double tol, const vector<double> &res,
+                                int precision) {
     ofstream file {out};
-    file << res.size() << '\n' << niter << '\n' << tol;
+    file << res.size() << '\n' << niter << '\n' << tol << '\n';
     for (auto &xi : res) {
-        file << '\n' << std::setprecision(precision) << std::fixed << xi;
+        file << std::setprecision(precision) << std::fixed << xi << '\n';
     }
-    file << endl;
+    file.close();
+}
+
+
+void IO::potencia::write_out(const string &out, const vector<double> &res, int precision) {
+    ofstream file {out};
+    for (auto &xi : res) {
+        file << std::setprecision(precision) << std::fixed << xi << '\n';
+    }
     file.close();
 }
