@@ -1,0 +1,3 @@
+proc potencia(in A: matriz<n, n>, in k: Nat, in t: Real) {
+    // TODO
+}

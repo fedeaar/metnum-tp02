@@ -2,7 +2,7 @@
 \usepackage{./packages/caratula}
 
 \graphicspath{./files/src/media/}
-\renewcommand{\contentsname}{Contenidos}
+\renewcommand{\contentsname}{contenidos}
 \renewcommand{\refname}{Referencias}
 \renewcommand\qedsymbol{$\blacksquare$}
 \renewcommand{\lstlistingname}{Algoritmo}% Listing -> Algorithm
@@ -26,4 +26,8 @@
   keywordstyle=\color{black}\textbf,
   commentstyle=\color{gray},
   morestring=[b]" % defines that strings are enclosed in double quotes
+}
+
+\newcommand{\TODO}[1]{
+  {\color{red} [#1]}
 }

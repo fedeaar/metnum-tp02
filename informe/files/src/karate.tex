@@ -1,0 +1,66 @@
+% === CONTEXTO === %
+
+\vspace{1em}
+\subsection{Contexto}
+
+La red del \textit{Club de Karate} es parte de una investigación antropológica \TODO{citar} que estudió las relaciones `políticas' entre los miembros de un club universitario. La misma se realizó durante el desarrollo de un conflicto que terminó por dividir al grupo. La red busca modelar el flujo de información entre sus integrantes por medio de la tripla $(V,\ E,\ C)$, donde $V$ denota el conjunto de individuos, $E$ refiere a un grafo no direccionado cuyos ejes representan los vínculos entre los miembros, y $C$ define la fuerza de estas relaciones ---lo que se podría pensar como ponderaciones sobre los ejes de $E$---. 
+
+La investigación culmina con una demostración de la capacidad del modelo para predecir la división del grupo por medio del algoritmo de \textit{labeling} de `flujo máximo - corte mínimo' de Ford y Fulkelson  \TODO{citar}.
+
+$\\$
+En este análisis utilizaremos sólo la representación matricial de $E$ para evaluar la importancia de los distintos miembros en la red, y la matríz laplaciana asociada para evaluar el uso de autovectores como predictores de la división del grupo. 
+
+
+
+
+% === CENTRALIDAD DE AV === %
+
+\vspace{2em}
+\subsection{Centralidad de Autovector} La centralidad de autovector es una medida utilizada en el análisis de redes para medir la `importancia' de los nodos que la componen, relativa a la importancia de sus conexiones. Dada una matríz de conectividad \textbf{W}, y un vector inicial $x$, se define:
+
+\vspace{1em}
+\begin{equation}
+    x'_i = \sum_{j}\mathbf{W}_{ij} x_j
+\end{equation}
+
+\vspace{1em}
+\noindent o lo que es equivalente:
+
+\vspace{1em}
+\begin{equation} \label{conectividad}
+    x' = \mathbf{W} x
+\end{equation}
+
+\vspace{1em}
+Intuitivamente, se puede pensar que la importancia de cada nodo es proporcional a la suma de las importancias de sus vecinos \TODO{citar}. 
+
+\vspace{1em}
+Vemos que la equación (\ref{conectividad}.) es similiar a (\ref{eqpotencia}.). Se puede demostrar \TODO{citar} que la aplicación sucesiva de este método ---tal que $x_{k + 1} = \mathbf{W} x_k$--- permite estimar el autovector de módulo máximo, y este será positivo:
+
+\vspace{1em}
+\begin{equation} \label{conectividad}
+    \lambda x = \mathbf{W} x
+\end{equation}
+
+\vspace{1em}
+Podemos ver que la aplicación del metodo de la potencia con deflación sobre la matríz de conectividad asociada al grafo $E$ resulta en el siguiente autovalor y autovector asociado:
+
+\vspace{1em}
+\TODO{presentar vector.}
+
+\vspace{1em}
+Vemos que el nodo `1' y el nodo `34' son los más centrales. Esto no es casualidad, la red del `Club de Karate' está armada para tener a las dos figuras centrales del conflicto en cada extremo ---el instructor de karate y el presidente del club---, para satisfacer la especificación del algoritmo de `labeling' que utiliza.
+
+
+
+
+% === AV DE LA MATRIZ LAPLACIANA === %
+
+\vspace{2em}
+\subsection{Autovectores de la matríz laplaciana} La matríz laplaciana $\mathbf{L} = \mathbf{D} - \mathbf{W}$, donde \textbf{D} es una matríz diagonal con elementos $\mathbf{D}_{ii} = \sum_j \mathbf{W}_{ij}$ y \textbf{W} es la matríz de conectividad asociada al grafo $E$, sirve para medir distintas propiedades de una red. En particular, el mínimo autovalor no nulo ---llamado conectividad algebraica o valor de Fiedler--- permite establecer un criterio sobre el que particionar la red en dos, donde el autovector asociado designará la pertenencia de un nodo a una u otra partición acorde a su signo. 
+
+\vspace{1em}
+Procedemos a analizar qué autovector de la matríz laplaciana asociada a $E$ permite predecir mejor la división que ocurrió en el club. Para ello, medimos el valor absoluto de la correlación entre cada autovector y el vector que indica el grupo:
+
+\vspace{1em}
+\TODO{presentar resolución.}

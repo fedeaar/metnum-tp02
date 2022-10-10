@@ -1,0 +1,100 @@
+% === INTRO === %
+
+\vspace{1em}
+\subsection{Introducción teórica} El método de la potencia con deflación permite aproximar un subconjunto de los autovalores y autovectores asociados a una matríz. Si la misma satisface que todos sus autovalores (descontando multiplicidad) son diferentes en módulo, entonces permite aproximar el conjunto entero. El método se compone de dos partes:
+
+
+\vspace{2em}
+\noindent \textsc{Método de la potencia}: el método de la potencia, \textit{Power method} ó \textit{Power iteration}, es una técnica iterativa para aproximar el autovector asociado al autovalor de módulo máximo de una matríz cuadrada que satisfaga esta característica ---es decir, tenga un autovalor dominante---, a partir de la aplicación de sucesivos productos matriciales, descriptos por la siguiente relación de recurrencia:
+
+\begin{equation*}
+    b_0\ \text{es un vector aleatorio unitario}
+\end{equation*}
+
+\begin{equation} \label{eqpotencia}
+    b_{k+1} = \frac{\mathbf{A}b_k}{||\mathbf{A}b_k||}
+\end{equation}
+
+\vspace{1em}
+\noindent donde $|| \cdot ||$ es una norma vectorial.
+
+\vspace{1em}
+Se puede demostrar \TODO{citar} que, bajo las condiciones mencionadas, si $b_0$ no es ortogonal al autovector asociado al autovalor dominante en módulo de \textbf{A}, $b_k$ convergerá a éste. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
+
+\vspace{1em}
+\begin{equation}
+    \lambda_{max} = \frac{b_k^t\ \mathbf{A}\ b_k}{b_k^t\ b_k}
+\end{equation}
+
+
+\vspace{2em}
+\noindent \textsc{Método de la deflación}: el método de la deflación, por su parte, corresponde a la transformación de la matríz inicial \textbf{A} por una matríz \textbf{B} que comparta autovalores con \textbf{A}, salvo por el autovalor dominante, que se reemplazará por el autovalor 0. Existen numerosos métodos de deflación, entre ellos la deflación de Hotelling \TODO{citar} y la deflación de Wielandt \TODO{citar}. \TODO{completar con una explicación del método que usemos.}  
+
+
+
+
+% === IMPLEMENTACION === %
+
+\vspace{2em}
+\subsection{Implementación} Procedemos a detallar una posible implementación para ambos métodos. Para no complicar la implementación, nos restringiremos a las matrices cuyos autovalores asociados son reales. Definimos entonces:
+
+\begin{align*}
+    deflacion&:\ \text{\textit{matriz}$<$n $\times$ n$>$ \textbf{A}}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t} \\
+    &\longrightarrow\ \text{\textit{vector}$<$q$>$}\ \times\ \text{\textit{matriz}$<$n $\times$ q$>$}
+    \\ \\
+    potencia&:\ \text{\textit{matriz}$<$n $\times$ n$>$ \textbf{A}}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t}\ \\
+    & \longrightarrow\ \text{\textit{real}}\ \times\ \text{\textit{vector}$<$n$>$}
+\end{align*}
+
+\vspace{1em}
+\noindent donde $n$ es un natural, \textbf{A} tiene $q$ autovalores reales dominantes en módulo, $0 < q \leq n$, $k$ representa el número máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia de error a partir de la que una solución se considera aceptable. 
+
+
+\vspace{2em}
+\noindent Proponemos el siguiente algoritmo para $Deflacion$: 
+
+\vspace{1em}
+\lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la deflación.}, label=deflacion]{files/src/.code/deflacion.pseudo}
+
+\vspace{1em}
+El mismo retornará un vector con los $q$ autovalores de \textbf{A}, ordenados descendientemente por tamaño, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores unitarios asociados a los $q$ autovalores. \TODO{explicar un toque aspectos relevantes a su implementacion.}
+
+
+\vspace{2em}
+\noindent $Potencia$, por su parte, retornará el autovalor de \textbf{A} máximo en módulo y su autovector asociado. Proponemos el siguiente algoritmo:
+
+\vspace{1em}
+\lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia.}, label=potencia]{files/src/.code/potencia.pseudo}
+
+\vspace{1em}
+\noindent \TODO{explicar aspectos relevantes.}
+
+
+
+
+
+% === EVALUACION === %
+
+\vspace{2em}
+\subsection{Evaluación cuantitativa} Procederemos a evaluar nuestra implementación del método de la potencia con deflación en C++ acorde a los algoritmos propuestos.
+
+\vspace{1em}
+\textsc{Error relativo} Medimos el error $|\mathbf{A} \mathbf{V} - \mathbf{V} \mathbf{\Lambda}|_1$ en función de la cantidad de iteraciones $k$ para 300 instancias de matrices $\in \mathbb{R}^{25 \times 25}$ generadas aleatoriamente, donde \textbf{V} y $\mathbf{\Lambda}$ representan ---respectivamente--- las matrices aproximadas de autovectores y autovalores de \textbf{A}, tal que $\mathbf{A}\mathbf{V}_i \approx \mathbf{\Lambda}_{ii} \mathbf{V}_i$ $\forall i:\ 1\ ...\ n$.  En total, obtuvimos \TODO{XXX} mediciones\footnote{El script asociado se puede encontrar en $./experimentos/error\_potencia.py$}.  
+
+
+\vspace{1em}
+\noindent \textsc{Metodología}. Se calculó  $\mathbf{\Lambda}, \mathbf{V} = Deflacion(\mathbf{A},\ 25,\ k,\ 0)$ y se midió el error relativo para cada una de las matrices sobre cada valor de $k$ en en el intervalo $(0, 1e6)$, de a saltos de $1e3$.
+
+\vspace{1em}
+\noindent Cada caso se generó a través de uno de los siguientes tres procedimientos\footnote{Se utilizó un valor semilla para facilitar la reproductibilidad.}:
+
+\vspace{1em}
+\begin{enumerate}
+    \item \textit{Matrices Diagonales}: Se generaron cien matrices diagonales con veinticinco autovalores en el rango $[-1e6,\ 1e6]$ tal que ningun autovalor compartiera valor absoluto en módulo con ningún otro, dados signos diferentes. Los mismos se eligieron a partir del rng PCG64 de numpy para evitar distribuciones particulares que pudieran influir en la variabilidad de los autovalores. Notar que los autovalores de una matríz diagonal son los elementos de su diagonal. \\
+    \item \textit{Matrices Diagonalizables}: Se generaron cien matrices diagonalizables $\mathbf{A} = \mathbf{Q}\mathbf{D}\mathbf{Q}^t$ donde cada matríz $\mathbf{D}$ se generó a partir de la metodología (1.) y $\mathbf{Q}$ es un matríz de householder $\mathbf{Q} = \mathbf{I} - 2uu^t$, con $u$ un vector aleatorio ---generado a partir del algoritmo random.rand() de numpy--- tal que $||u||_2 = 1$. \\
+    \item \textit{Matrices Simétricas Definidas Positivas}: Se generaron cien matrices simétricas definidas positivas de enteros de la siguiente manera: se generó la matríz $\mathbf{B}$ con el algoritmo random.randint() de numpy y se definió la matríz $\mathbf{A} = \mathbf{B} \mathbf{B}^t$. 
+\end{enumerate}
+
+
+\vspace{1em}
+\noindent \textsc{Resultados}. \TODO{experimento}
