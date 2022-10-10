@@ -3,9 +3,14 @@
 
 #include "matriz.h"
 
+struct eigen
+{
+    double eigval;
+    vector<double> eigvec;
+};
 
 template<class R>
-pair<double, vector<double>> potencia(const matriz<R> &A, size_t niter, double tol);
+eigen potencia(const matriz<R> &A, size_t niter, double tol);
 
 template<class R>
 pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t niter, double tol);

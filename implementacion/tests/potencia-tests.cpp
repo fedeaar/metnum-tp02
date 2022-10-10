@@ -53,11 +53,15 @@ TEST_F(PotenciaTest, tests_householder) {
 
 
 TEST_F(PotenciaTest, tests_sdp) {
-    for (int i = 1; i < 11; ++i) {
-        string test = "sdp_" + to_string(i);
-        // EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
-        cout << "i: " << i << ", "<< (base_test(test + ".txt", test + ".autovalores.out") ? "TRUE" : "FALSE") << endl;
-    }
+    int fails = 0;
+    for(int tt = 0; tt < 100; ++tt)
+        for (int i = 1; i < 11; ++i) {
+            string test = "sdp_" + to_string(i);
+            //EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
+            //cout << "i: " << i << ", "<< (base_test(test + ".txt", test + ".autovalores.out") ? "TRUE" : "FALSE") << endl;
+            if(!base_test(test + ".txt", test + ".autovalores.out")) fails++;
+        }
+    cout << fails << endl;
 }
 
 
