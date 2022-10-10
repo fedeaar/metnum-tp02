@@ -10,7 +10,7 @@ protected:
     string basedir;
     double epsilon;
     void SetUp() override {
-        basedir = "../../tests/";
+        basedir = "../../experimentos/tests-generados/";
         epsilon = 1e-4;
     }
 
