@@ -26,12 +26,31 @@ bool PotenciaTest::base_test(const string &in, const string &out) {
     bool res = (solucion.first.size() == expected.n);
     for (size_t i = 0; i < expected.n && res; ++i) {
         res = std::abs(solucion.first[i] - expected.solucion[i]) < epsilon;
+        if (!res) {
+            cout << "autovalor equivocado [" << std::to_string(i) << ": "
+                 << solucion.first[i] << ". expected: " << expected.solucion[i] << endl;
+        }
     }
-    matriz<base> diag   = diagonal<base>(solucion.first);
-    matriz<base> lambda = solucion.second * diag;
-    matriz<base> vect   = mat * solucion.second;
-    res = vect.eq(lambda, epsilon);
+    // matriz<base> diag   = diagonal<base>(solucion.first);
+    // matriz<base> lambda = solucion.second * diag;
+    // matriz<base> vect   = mat * solucion.second;
+    // res = vect.eq(lambda, epsilon);
 
+    for (size_t i = 0; i < expected.n && res; ++i) {
+        vector<double> vi;
+        for (size_t j = 0; j < solucion.second.n(); ++j) {
+            vi.emplace_back(solucion.second.at(j, i));
+        }
+        vector<double> tmp = mat * vi;
+        res = eq(solucion.first[i] * vi, tmp, epsilon);
+        if (!res) {
+            cout << "autovector equivocado [" << std::to_string(i) << "]: [";
+            for (auto x : solucion.first[i] * vi - tmp) {
+                cout << x << ", ";
+            }
+            cout << ']' << endl;
+        }
+    }
     return res;
 }
 
@@ -39,7 +58,10 @@ bool PotenciaTest::base_test(const string &in, const string &out) {
 TEST_F(PotenciaTest, tests_diagonal) {
     for (int i = 1; i < 11; ++i) {
         string test = "diagonal_" + to_string(i);
-        EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
+        cout << "test " << test << ":\n";
+        bool res = base_test(test + ".txt", test + ".autovalores.out");
+        cout << (res ? "TRUE" : "FALSE") << endl;
+        EXPECT_TRUE(res);
     }
 }
 
@@ -47,31 +69,38 @@ TEST_F(PotenciaTest, tests_diagonal) {
 TEST_F(PotenciaTest, tests_householder) {
     for (int i = 1; i < 11; ++i) {
         string test = "householder_" + to_string(i);
-        EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
+        cout << "test " << test << ":\n";
+        bool res = base_test(test + ".txt", test + ".autovalores.out");
+        cout << (res ? "TRUE" : "FALSE") << endl;
+        EXPECT_TRUE(res);
     }
 }
 
 
 TEST_F(PotenciaTest, tests_sdp) {
-    int fails = 0;
-    for(int tt = 0; tt < 100; ++tt)
-        for (int i = 1; i < 11; ++i) {
-            string test = "sdp_" + to_string(i);
-            //EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
-            //cout << "i: " << i << ", "<< (base_test(test + ".txt", test + ".autovalores.out") ? "TRUE" : "FALSE") << endl;
-            if(!base_test(test + ".txt", test + ".autovalores.out")) fails++;
-        }
-    cout << fails << endl;
+    for (int i = 1; i < 11; ++i) {
+        string test = "sdp_" + to_string(i);
+        cout << "test " << test << ":\n";
+        bool res = base_test(test + ".txt", test + ".autovalores.out");
+        cout << (res ? "TRUE" : "FALSE") << endl;
+        EXPECT_TRUE(res);
+    }
 }
 
 
 TEST_F(PotenciaTest, simetrico) {
     string test = "simetrico";
-    EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
+    cout << "test " << test << ":\n";
+    bool res = base_test(test + ".txt", test + ".autovalores.out");
+    cout << (res ? "TRUE" : "FALSE") << endl;
+    EXPECT_TRUE(res);
 }
 
 
 TEST_F(PotenciaTest, karate) {
     string test = "karate";
-    EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
+    cout << "test " << test << ":\n";
+    bool res = base_test(test + ".txt", test + ".autovalores.out");
+    cout << (res ? "TRUE" : "FALSE") << endl;
+    EXPECT_TRUE(res);
 }
