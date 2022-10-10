@@ -55,7 +55,7 @@ TEST_F(PotenciaTest, tests_householder) {
 TEST_F(PotenciaTest, tests_sdp) {
     for (int i = 1; i < 11; ++i) {
         string test = "sdp_" + to_string(i);
-        //EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
+        // EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
         cout << "i: " << i << ", "<< (base_test(test + ".txt", test + ".autovalores.out") ? "TRUE" : "FALSE") << endl;
     }
 }
@@ -63,5 +63,11 @@ TEST_F(PotenciaTest, tests_sdp) {
 
 TEST_F(PotenciaTest, simetrico) {
     string test = "simetrico";
+    EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
+}
+
+
+TEST_F(PotenciaTest, karate) {
+    string test = "karate";
     EXPECT_TRUE(base_test(test + ".txt", test + ".autovalores.out"));
 }

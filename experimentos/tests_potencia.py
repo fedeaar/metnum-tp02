@@ -19,7 +19,6 @@ TEST_DIR = "./tests-generados"
 # UTILS
 def assert_results(M, w, V):
 
-    assert(len(w) == len(np.unique(w)))
     test = np.allclose(M @ V,  V @ np.diag(w), utils.EPSILON, utils.EPSILON)
     assert(test)
 
@@ -77,7 +76,7 @@ def TESTS_sdp(n=10, t=10, niter=10000, tol=1e-10, seed=None):
         make_test(S, niter, tol, w, "sdp_" + str(i + 1))
 
 
-def TESTS_especiales(niter=20000, tol=1e-24):
+def TESTS_especiales(niter=10000, tol=1e-10):
 
     n = 3
 
@@ -93,7 +92,15 @@ def TESTS_especiales(niter=20000, tol=1e-24):
     make_test(A, niter, tol, w, "simetrico")
 
 
-
+    # club karate 
+    A = IO.readMatriz("../catedra/karateclub_matriz.txt")
+    D = np.diag([np.sum(x) for x in A])
+    L = D - A
+    w, V = np.linalg.eig(L)#utils.metodo_deflacion(L, L.shape[0], niter, tol)
+    
+    assert_results(L, w, V)
+    w = np.sort(w)[::-1]
+    make_test(A, niter, tol, w, "karate")
 
 
 if __name__ == "__main__":

@@ -25,7 +25,11 @@ vector<double> operator/(const vector<double>& a, double b) {
     return res;
 }
 vector<double> operator/(double b, const vector<double> &a) {
-    return a / b;
+    vector<double> res {a};
+    for (auto & x: res) {
+        x = b / x;
+    }
+    return res;
 }
 
 
