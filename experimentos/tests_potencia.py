@@ -96,11 +96,12 @@ def TESTS_especiales(niter=10000, tol=1e-10):
     A = IO.readMatriz("../catedra/karateclub_matriz.txt")
     D = np.diag([np.sum(x) for x in A])
     L = D - A
-    w, V = np.linalg.eig(L)#utils.metodo_deflacion(L, L.shape[0], niter, tol)
+    w, V = np.linalg.eig(L)
+    # w, V = utils.metodo_deflacion(L, L.shape[0], niter, tol)
     
     assert_results(L, w, V)
     w = np.sort(w)[::-1]
-    make_test(A, niter, tol, w, "karate")
+    make_test(L, niter, tol, w, "karate")
 
 
 if __name__ == "__main__":
