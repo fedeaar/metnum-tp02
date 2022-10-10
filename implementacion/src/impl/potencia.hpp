@@ -24,7 +24,7 @@ pair<double, vector<double>> potencia(const matriz<R> &A, size_t niter, double t
     vector<double> y, z;
     size_t i = 0;
     while (i++ < niter) {
-        y = A * x;
+        y = A * (A * x);
         if (eq(y, cero)) {
             break;
         }
@@ -42,6 +42,24 @@ pair<double, vector<double>> potencia(const matriz<R> &A, size_t niter, double t
     return {a, x};
 }
 
+//
+//template<class R>
+//pair<vector<double>, matriz<R>> Hdeflacion(const matriz<R> &A, size_t k, size_t niter, double tol) {
+//    size_t n = A.n();
+//    matriz<R> B = A;
+//    vector<double> eigvals;
+//    matriz<R> eigvecs(n, k);
+//
+//    for (size_t i = 0; i < k; ++i) {
+//        pair<double, vector<double>> av = potencia(B, niter, tol);
+//        eigvals.emplace_back(av.first);
+//        for (size_t j = 0; j < n; ++j) {
+//            eigvecs.set(j, i, av.second[j]);
+//        }
+//        B = B - av.first * outer<R>(av.second, av.second);
+//    }
+//    return {eigvals, eigvecs};
+//}
 
 template<class R>
 pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t niter, double tol) {
@@ -53,10 +71,21 @@ pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t n
     for (size_t i = 0; i < k; ++i) {
         pair<double, vector<double>> av = potencia(B, niter, tol);
         eigvals.emplace_back(av.first);
+
         for (size_t j = 0; j < n; ++j) {
             eigvecs.set(j, i, av.second[j]);
         }
-        B = B - av.first * outer<R>(av.second, av.second);
+
+        size_t mxpos = 0;
+        for (size_t j = 0; j < n; ++j) {
+            if(abs(av.second[j]) > abs(av.second[mxpos])) mxpos = j;
+        }
+
+        vector<double> x(n, 0);
+        x[mxpos] = 1/(av.first * av.second[mxpos]);
+        x = A * x;
+
+        B = B - av.first * outer<R>(av.second, x);
     }
     return {eigvals, eigvecs};
 }

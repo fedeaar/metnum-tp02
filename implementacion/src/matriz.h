@@ -127,7 +127,7 @@ vector<double> operator-(const vector<double> &a, const vector<double> &b); // T
 
 vector<double> abs(const vector<double> &a); // TODO test
 
-vector<double> aleatorio(size_t n, pair<int, int> range={INT_MIN, INT_MAX}); // TODO test
+vector<double> aleatorio(size_t n, pair<int, int> range={INT32_MIN, INT32_MAX}); // TODO test
 
 vector<double> normalizar(const vector<double> &v); // TODO test
 
