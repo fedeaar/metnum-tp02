@@ -135,6 +135,7 @@ bool eq(const vector<double> &a, const vector<double> &b, double epsilon=EPSILON
 
 double inf(const vector<double> &a); // TODO test
 
+size_t maxarg(const vector<double> &a); // TODO test
 
 //
 // OTRAS FUNCIONES

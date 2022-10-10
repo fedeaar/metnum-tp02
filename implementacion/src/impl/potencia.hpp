@@ -24,7 +24,7 @@ pair<double, vector<double>> potencia(const matriz<R> &A, size_t niter, double t
     vector<double> y, z;
     size_t i = 0;
     while (i++ < niter) {
-        y = A * (A * x);
+        y = A * x;
         if (eq(y, cero)) {
             break;
         }
@@ -76,11 +76,7 @@ pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t n
             eigvecs.set(j, i, av.second[j]);
         }
 
-        size_t mxpos = 0;
-        for (size_t j = 0; j < n; ++j) {
-            if(abs(av.second[j]) > abs(av.second[mxpos])) mxpos = j;
-        }
-
+        size_t mxpos = maxarg(abs(av.second));
         vector<double> x(n, 0);
         x[mxpos] = 1/(av.first * av.second[mxpos]);
         x = A * x;

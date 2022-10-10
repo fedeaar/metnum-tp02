@@ -106,3 +106,12 @@ double inf(const vector<double> &a) {
     }
     return max;
 }
+
+
+size_t maxarg(const vector<double> &a) {
+    size_t res = 0;
+    for (size_t j = 0; j < a.size(); ++j) {
+        if(a[j] > a[res]) res = j;
+    }
+    return res;
+}
