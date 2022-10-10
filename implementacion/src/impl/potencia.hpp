@@ -82,7 +82,7 @@ pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t n
         }
 
         vector<double> x(n, 0);
-        x[0] = 1/(av.first * av.second[mxpos]);
+        x[mxpos] = 1/(av.first * av.second[mxpos]);
         x = A * x;
 
         B = B - av.first * outer<R>(av.second, x);
