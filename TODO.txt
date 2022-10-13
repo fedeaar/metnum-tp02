@@ -1,63 +1,63 @@
-C   	| ESTADO    | QUIEN	    | DETALLE
+C   	| ESTADO    | DETALLE
 ----------------------------------------------------------
 1.1. 
-		CASI		NAT			- implementar
-					FEDE		- explicar impl en el informe
-								- como tratar el caso y ortogonal a x en potencia()
-								- medir iteraciones necesarias para lograr cierta convergencia?
+		casi		- implementar
+		casi		- explicar impl en el informe
+					- como tratar el caso y ortogonal a x en potencia()
+					- medir iteraciones necesarias para lograr cierta convergencia?
 1.2.
-		OK			FEDE		- realizar tests
-					FEDE		- explicar tests y resultados en el informe	
+		ok			- realizar tests
+		casi		- explicar tests y resultados en el informe	
 
 ----------------------------------------------------------
 2.1.
-		ok			FEDE		- computar la centralidad de autovector del CKarate.
-		ok			FEDE 		- qué nodos son mas centrales? Presentar normalizado
-					FEDE		- explicar en el informe
+		ok			- computar la centralidad de autovector del CKarate.
+		ok			- qué nodos son mas centrales? Presentar normalizado
+		casi		- explicar en el informe
 
 2.2.
-		ok			FEDE 		- computar av de la matriz laplaciana. 
-		ok			FEDE		- Analizar q av predice mejor los grupos (medir el val absoluto de corr. 
-								entre cada av y el vector q indica el grupo)
-					FEDE		- explicar en el informe
+		ok			- computar av de la matriz laplaciana. 
+		ok			- Analizar q av predice mejor los grupos (medir el val absoluto de corr. 
+					entre cada av y el vector q indica el grupo)
+		casi		- explicar en el informe
 
 ----------------------------------------------------------
 3.1.		
-								- computar similaridad * atributos, proponer un umbral u y construir un 
-								grafo conectando los nodos que superen el umbral. 
-								- explicar en el informe
+					- computar similaridad * atributos, proponer un umbral u y construir un 
+					grafo conectando los nodos que superen el umbral. 
+					- explicar en el informe
 
 3.2.	
-								- comparar red de amistades original y la construida. Proponer como o sino, 
-								comparar utilizando la correlacion de las m de adyacencia estiradas o con 
-								la corr. entre las listas de av.
-								- explicar en el informe.
+					- comparar red de amistades original y la construida. Proponer como o sino, 
+					comparar utilizando la correlacion de las m de adyacencia estiradas o con 
+					la corr. entre las listas de av.
+					- explicar en el informe.
 
 3.3.	
-								- realizar 3.1. y 3.2. para diferentes valores de umbral y buscar
-								el valor optimo (mas similar a la original).
-								- explicar en el informe.
+					- realizar 3.1. y 3.2. para diferentes valores de umbral y buscar
+					el valor optimo (mas similar a la original).
+					- explicar en el informe.
 
 3.4.
-								- filtrar la matriz de att. usando PCA: computar la matriz de cov., 
-								luego de av. Seleccionar k componentes principales y proyectar al 
-								nuevo espacio. Repetir para varios k y u.
-								- explicar en el informe.
+					- filtrar la matriz de att. usando PCA: computar la matriz de cov., 
+					luego de av. Seleccionar k componentes principales y proyectar al 
+					nuevo espacio. Repetir para varios k y u.
+					- explicar en el informe.
 
 ----------------------------------------------------------
 opc.:
-								- analizar q iteraciones para lograr cierta convergencia y su 
-								comportamiento para los distintos av.
-								- dada matriz de cov C = XtX encontrar una relacion entre sus aval y
-								avec con los de la matriz C = XXt
-								- comparar la performance de computar las componentes V de PCA mediante
-								SVD o mediante XtX/(n-1) = C = VtDV
+					- analizar q iteraciones para lograr cierta convergencia y su 
+					comportamiento para los distintos av.
+					- dada matriz de cov C = XtX encontrar una relacion entre sus aval y
+					avec con los de la matriz C = XXt
+					- comparar la performance de computar las componentes V de PCA mediante
+					SVD o mediante XtX/(n-1) = C = VtDV
 
 ----------------------------------------------------------
 otros:	
-								- test funciones vectores
-								- mover funciones vectores a un archivo propio
-								- test funciones IO
-								*- repensar formato potencia::out_file
-								*- test grafo_a_matriz
-								- mas tests para las funciones de matrices
+					- test funciones vectores
+					- mover funciones vectores a un archivo propio
+					- test funciones IO
+					*- repensar formato potencia::out_file
+					*- test grafo_a_matriz
+					- mas tests para las funciones de matrices
