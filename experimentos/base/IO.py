@@ -8,7 +8,7 @@ EXE_PATH = '../build/tp2'      # si se compilo de otra manera o con otro nombre,
 WSL = True                     # dejar true solo si se utilizó wsl para compilar el programa, false sino
 
 
-def readGrafo(filename):
+def readGrafo(filename):  # TODO: test
     
     with open(filename) as file:
         data = file.read().splitlines()
@@ -54,7 +54,7 @@ def writeMatriz(A, filename):
     np.savetxt(filename, A)
 
 
-def writeGrafo(filename, matrix):
+def writeGrafo(filename, matrix): # TODO: test
     
     n = matrix.shape[0]
     q = np.count_nonzero(matrix != 0)
@@ -101,7 +101,7 @@ def createCSV(filename, columnas):
 
 def run(filename, iter, epsilon, 
         f="matriz", o="./", precision=15, save_as=None, time=False, save_m=False, 
-        exe_path=EXE_PATH):
+        exe_path=EXE_PATH): # TODO: test
 
     call_params = [
         "wsl" if WSL else "",   

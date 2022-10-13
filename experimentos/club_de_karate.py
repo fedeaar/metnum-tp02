@@ -1,11 +1,35 @@
-import networkx as nx
-import numpy as np
 import base.IO as IO
 import base.utils as utils
+
+import numpy as np
+import networkx as nx
 import matplotlib.pyplot as plt
 
 
+"""
+descripcion: 
+    evaluación de centralidad de autovector y partición para el 
+    club de karate.
+"""
 
+
+# IO
+EXPERIMENTO = "club-karate"
+DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO)
+
+# archivos de resultados    
+CENTRALIDAD = f"{DIR}{EXPERIMENTO}_centralidad.txt"
+CORTES      = f"{DIR}{EXPERIMENTO}_cortes.txt"
+CORTES_MIN  = f"{DIR}{EXPERIMENTO}_cortes_min.txt"
+GRAFICO     = f"{DIR}{EXPERIMENTO}.png"
+
+# variables
+KARATE = IO.readMatriz("../catedra/karateclub_matriz.txt")
+LABELS = IO.readMatriz("../catedra/karateclub_labels.txt")
+
+
+
+# utils
 def corr(x, y, epsilon=1e-16):
     xc = x - x.mean()
     yc = y - y.mean()
@@ -14,35 +38,39 @@ def corr(x, y, epsilon=1e-16):
     return a / b if abs(b) >= epsilon else 0
 
 
-karate = IO.readMatriz("../catedra/karateclub_matriz.txt")
-labels = IO.readMatriz("../catedra/karateclub_labels.txt")
-#print(karate)
-# G = nx.from_numpy_array(karate)
-# f = plt.figure(figsize=(20, 10))
-# nx.draw(G, with_labels=True, ax=f.add_subplot())
-# f.savefig("graph.png")
+# metodos
+def grafo():
+    G = nx.from_numpy_array(KARATE)
+    f = plt.figure(figsize=(10, 10))
+    nx.draw(G, with_labels=True, ax=f.add_subplot())
+    f.savefig(GRAFICO)
 
-# centralidad de autovector
-# a, v = utils.metodo_potencia(karate, 10000, 1e-10)
-# print(a, v)
-# print(np.allclose(karate @ v, a * v, 1e-06, 1e-06))
 
-# matriz 
-D = np.diag([np.sum(x) for x in karate])
-L = D - karate
-print(np.allclose(L, L.T))
-w, V = np.linalg.eig(L)#utils.metodo_deflacion(L, L.shape[0], 10000, 1e-10)
-# print(w, '!')
-# for i in range(len(w)):
-#     #print(L @ V[:, i])
-#     #print(w[i] * V[:, i])
-#     print(i, np.allclose(L @ V[:, i], w[i] * V[:, i], 1e-06, 1e-06))
+def centralidad():
+    w, V = np.linalg.eigh(KARATE)  # TODO: utilizar ./tp2
+    i = np.argmax(w)
+    IO.writeMatriz(V[:, i], CENTRALIDAD)
 
-print(w, '\n\n')
-mi, mw, mc = 0, w[0], abs(corr(V[:, 0], labels))
-for i in range(V.shape[0]):
-    tmp = corr(V[:, i], labels)
-    if abs(tmp) > mc:
-        mi, mw, mc = i, w[i], tmp
-print(mi, mw, mc)
 
+def laplace():
+    D = np.diag([np.sum(x) for x in KARATE])
+    L = D - KARATE
+    w, V = np.linalg.eigh(L)  # TODO: utilizar ./tp2
+
+    mi, mw, mc = 0, w[0], abs(corr(V[:, 0], LABELS))
+    for i in range(V.shape[0]):
+        tmp = corr(V[:, i], LABELS)
+        if abs(tmp) > mc:
+            mi, mw, mc = i, w[i], tmp
+
+    IO.writeMatriz(V, CORTES)
+    IO.writeMatriz(V[:, mi], CORTES_MIN)
+
+
+
+
+if __name__ == "__main__":
+    
+    grafo()
+    centralidad()
+    laplace()

@@ -1,19 +1,21 @@
-import numpy as np
 import base.IO as IO
 import base.utils as utils
 
+import numpy as np
+
 
 """
-    casos de TEST para ./tp2 generados de manera aleatoria 
-    (con un valor semilla)
+    casos de TEST para ./tp2 generados de manera aleatoria (con un valor semilla).
 
-    Cada test satisface que la matriz asociada (n x n) tiene n 
-    autovalores diferentes (en magnitud).
-
+    Cada test satisface que la matriz asociada (n x n) tiene n autovalores reales
+    diferentes en magnitud (descontando multiplicidad).
 """
+
 
 # GLOBALS
 TEST_DIR = "./tests-generados"
+
+S = 0   # valor semilla
 
 
 # UTILS
@@ -78,9 +80,8 @@ def TESTS_sdp(n=10, t=10, niter=10000, tol=1e-10, seed=None):
 
 def TESTS_especiales(niter=10000, tol=1e-10):
 
-    n = 3
-
     # simetrico
+    n = 3
     A = np.array([
         [ 7,  2,  -3],
         [ 2,  2,  -2],
@@ -96,18 +97,18 @@ def TESTS_especiales(niter=10000, tol=1e-10):
     A = IO.readMatriz("../catedra/karateclub_matriz.txt")
     D = np.diag([np.sum(x) for x in A])
     L = D - A
-    w, V = np.linalg.eig(L)
-    # w, V = utils.metodo_deflacion(L, L.shape[0], niter, tol)
+    w, V = np.linalg.eig(L) # TODO: utils.metodo_deflacion(L, L.shape[0], niter, tol)
     
     assert_results(L, w, V)
     w = np.sort(w)[::-1]
     make_test(L, niter, tol, w, "karate")
 
 
-if __name__ == "__main__":
 
-    s = 0
-    TESTS_diagonales(seed=s)
-    TESTS_householder(seed=s+10)
-    TESTS_sdp(seed=s+20)
+
+if __name__ == "__main__":
+    
+    TESTS_diagonales(seed=S)
+    TESTS_householder(seed=S+10)
+    TESTS_sdp(seed=S+20)
     TESTS_especiales()
