@@ -1,14 +1,14 @@
 % === INTRO === %
 
 \vspace{1em}
-\subsection{Introducción teórica} El método de la potencia con deflación permite aproximar un subconjunto de los autovalores y autovectores asociados a una matríz. Si la misma satisface que todos sus autovalores (descontando multiplicidad) son diferentes en módulo, entonces permite aproximar el conjunto entero. El método se compone de dos partes:
+\subsection{Introducción teórica} El método de la potencia con deflación permite aproximar un subconjunto de los autovalores y autovectores asociados a una matriz. Si la misma satisface que todos sus autovalores son diferentes en módulo, entonces permite aproximar el conjunto entero. El método se compone en dos partes:
 
 
 \vspace{2em}
-\noindent \textsc{Método de la potencia}: el método de la potencia, \textit{Power method} ó \textit{Power iteration}, es una técnica iterativa para aproximar el autovector asociado al autovalor de módulo máximo de una matríz cuadrada que satisfaga esta característica ---es decir, tenga un autovalor dominante---, a partir de la aplicación de sucesivos productos matriciales, descriptos por la siguiente relación de recurrencia:
+\noindent \textsc{Método de la potencia}: el método de la potencia, \textit{Power method} o \textit{Power iteration}, es una técnica iterativa para aproximar el autovector asociado al autovalor de módulo máximo de una matriz cuadrada que satisfaga esta característica ---es decir, tenga un autovalor dominante---, a partir de la aplicación de sucesivos productos matriciales, descriptos por la siguiente relación de recurrencia:
 
 \begin{equation*}
-    b_0\ \text{es un vector aleatorio unitario}
+    b_0\ \text{es un vector aleatorio} : ||b_0|| = 1
 \end{equation*}
 
 \begin{equation} \label{eqpotencia}
@@ -19,16 +19,19 @@
 \noindent donde $|| \cdot ||$ es una norma vectorial.
 
 \vspace{1em}
-Se puede demostrar \TODO{citar} que, bajo las condiciones mencionadas, si $b_0$ no es ortogonal al autovector asociado al autovalor dominante en módulo de \textbf{A}, $b_k$ convergerá a éste. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
+Se puede demostrar \TODO{citar} que, bajo las condiciones descriptas, si $b_0$ no es ortogonal al autovector asociado al autovalor dominante en módulo de \textbf{A}, $b_k$ convergerá a éste. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh \TODO{citar}:
 
 \vspace{1em}
-\begin{equation}
+\begin{equation} \label{rayleigh}
     \lambda_{max} = \frac{b_k^t\ \mathbf{A}\ b_k}{b_k^t\ b_k}
 \end{equation}
 
 
-\vspace{2em}
-\noindent \textsc{Método de la deflación}: el método de la deflación, por su parte, corresponde a la transformación de la matríz inicial \textbf{A} por una matríz \textbf{B} que comparta autovalores con \textbf{A}, salvo por el autovalor dominante, que se reemplazará por el autovalor 0. Existen numerosos métodos de deflación, entre ellos la deflación de Hotelling \TODO{citar} y la deflación de Wielandt \TODO{citar}. \TODO{completar con una explicación del método que usemos.}  
+\vspace{3em}
+\noindent \textsc{Método de la deflación}: el método de la deflación, por su parte, corresponde a la transformación de la matriz inicial \textbf{A} por una matriz \textbf{B} que comparta sus autovalores salvo por el autovalor dominante que será anulado. Existen numerosos métodos de deflación, entre ellos la deflación de Hotelling \TODO{citar} y la deflación de Wielandt \TODO{citar}. 
+
+\vspace{1em}
+\TODO{completar con una explicación del método que usemos.}  
 
 
 
@@ -36,38 +39,41 @@ Se puede demostrar \TODO{citar} que, bajo las condiciones mencionadas, si $b_0$ 
 % === IMPLEMENTACION === %
 
 \vspace{2em}
-\subsection{Implementación} Procedemos a detallar una posible implementación para ambos métodos. Para no complicar la implementación, nos restringiremos a las matrices cuyos autovalores asociados son reales. Definimos entonces:
+\subsection{Implementación} Procedemos a detallar una posible implementación para ambos métodos. Para no complicarnos con la representación de números complejos, nos restringiremos a matrices cuyos autovalores asociados sean reales. Definimos:
 
 \begin{align*}
-    deflacion&:\ \text{\textit{matriz}$<$n $\times$ n$>$ \textbf{A}}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t} \\
-    &\longrightarrow\ \text{\textit{vector}$<$q$>$}\ \times\ \text{\textit{matriz}$<$n $\times$ q$>$}
+    \text{\textit{deflacion}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t}\
+    \longrightarrow\ \text{\textit{vector}}_q\ \times\ \text{\textit{matriz}}_{n \times q}
     \\ \\
-    potencia&:\ \text{\textit{matriz}$<$n $\times$ n$>$ \textbf{A}}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t}\ \\
-    & \longrightarrow\ \text{\textit{real}}\ \times\ \text{\textit{vector}$<$n$>$}
+    \text{\textit{potencia}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t}\ 
+    \longrightarrow\ \text{\textit{real}}\ \times\ \text{\textit{vector}}_n
 \end{align*}
 
 \vspace{1em}
-\noindent donde $n$ es un natural, \textbf{A} tiene $q$ autovalores reales dominantes en módulo, $0 < q \leq n$, $k$ representa el número máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia de error a partir de la que una solución se considera aceptable. 
+\noindent donde $n$ es un natural, \textbf{A} tiene $q$ autovalores reales dominantes en módulo, $0 < q \leq n$, $k$ representa el número máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia aceptable de error. 
 
 
 \vspace{2em}
-\noindent Proponemos el siguiente algoritmo para $Deflacion$: 
+\noindent Proponemos el siguiente algoritmo para \textit{deflacion}: 
 
 \vspace{1em}
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la deflación.}, label=deflacion]{files/src/.code/deflacion.pseudo}
 
 \vspace{1em}
-El mismo retornará un vector con los $q$ autovalores de \textbf{A}, ordenados descendientemente por tamaño, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores unitarios asociados a los $q$ autovalores. \TODO{explicar un toque aspectos relevantes a su implementacion.}
+El mismo retornará un vector con los $q$ autovalores de \textbf{A}, ordenados descendientemente en módulo, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores asociados a los $q$ autovalores. 
+
+\vspace{1em}
+\TODO{explicar aspectos relevantes a la implementacion.}
 
 
 \vspace{2em}
-\noindent $Potencia$, por su parte, retornará el autovalor de \textbf{A} máximo en módulo y su autovector asociado. Proponemos el siguiente algoritmo:
+\noindent \textit{potencia} por su parte, retornará el autovalor de \textbf{A} máximo en módulo y su autovector asociado. Proponemos el siguiente algoritmo:
 
 \vspace{1em}
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia.}, label=potencia]{files/src/.code/potencia.pseudo}
 
 \vspace{1em}
-\noindent \TODO{explicar aspectos relevantes.}
+\TODO{explicar aspectos relevantes.}
 
 
 
@@ -90,9 +96,12 @@ El mismo retornará un vector con los $q$ autovalores de \textbf{A}, ordenados d
 
 \vspace{1em}
 \begin{enumerate}
-    \item \textit{Matrices Diagonales}: Se generaron cien matrices diagonales con veinticinco autovalores en el rango $[-1e6,\ 1e6]$ tal que ningun autovalor compartiera valor absoluto en módulo con ningún otro, dados signos diferentes. Los mismos se eligieron a partir del rng PCG64 de numpy para evitar distribuciones particulares que pudieran influir en la variabilidad de los autovalores. Notar que los autovalores de una matríz diagonal son los elementos de su diagonal. \\
-    \item \textit{Matrices Diagonalizables}: Se generaron cien matrices diagonalizables $\mathbf{A} = \mathbf{Q}\mathbf{D}\mathbf{Q}^t$ donde cada matríz $\mathbf{D}$ se generó a partir de la metodología (1.) y $\mathbf{Q}$ es un matríz de householder $\mathbf{Q} = \mathbf{I} - 2uu^t$, con $u$ un vector aleatorio ---generado a partir del algoritmo random.rand() de numpy--- tal que $||u||_2 = 1$. \\
-    \item \textit{Matrices Simétricas Definidas Positivas}: Se generaron cien matrices simétricas definidas positivas de enteros de la siguiente manera: se generó la matríz $\mathbf{B}$ con el algoritmo random.randint() de numpy y se definió la matríz $\mathbf{A} = \mathbf{B} \mathbf{B}^t$. 
+    \item \textit{Matrices Diagonales}: Se generaron cien matrices diagonales \textbf{D} con veinticinco autovalores en el rango $[-1e6,\ 1e6]$ tal que ningun autovalor compartiera valor absoluto en módulo con ningún otro. Los mismos se generaron con el rng \textit{PCG64} de numpy para evitar distribuciones particulares que pudieran influir en la variabilidad de los autovalores.
+
+    \item \textit{Matrices Diagonalizables}: Se generaron cien matrices diagonalizables $\mathbf{A} = \mathbf{Q}\mathbf{D}\mathbf{Q}^t$ donde cada matriz $\mathbf{D}$ se generó a partir de la metodología (1.) y $\mathbf{Q} = \mathbf{I} - 2uu^t$ se generó a partir de un vector aleatorio $u$ ---con el algoritmo random.rand() de numpy--- tal que $||u||_2 = 1$.
+
+    \item \textit{Matrices Simétricas Definidas Positivas}: Se generaron cien matrices simétricas definidas positivas de enteros. Para cada caso se generó una matriz aleatoria \textbf{B} con el algoritmo \textit{random.randint()} de numpy y se procedió a definir la matriz $\mathbf{A} = \mathbf{B} \mathbf{B}^t$. 
+
 \end{enumerate}
 
 
