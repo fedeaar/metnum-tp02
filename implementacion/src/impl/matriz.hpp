@@ -354,6 +354,18 @@ void matriz<R>::clear() {
 }
 
 
+template<class R>
+bool matriz<R>::empty() const {
+    bool res = true;
+    for (auto jt = begin(); jt.in_range() && res; jt.next(false)) {
+        for (auto it = begin(jt.row(), jt.col()); it.in_range() && res; it.next()) {
+            res = abs(it.at()) < EPSILON;
+        }
+    }
+    return res;
+}
+
+
 
 
 //
@@ -374,23 +386,4 @@ matriz<R> diagonal(const vector<double> &v) {
 template<class R>
 matriz<R> identity(size_t n) {
     return diagonal<R>(vector<double>(n, 1));
-}
-
-
-
-
-//
-// VECTOR
-//
-
-template<class R>
-matriz<R> outer(const vector<double> &a, const vector<double> &b) {
-    assert(a.size() == b.size());
-    matriz<R> res(a.size(), a.size());
-    for(int i = 0; i < a.size(); ++i) {
-        for (int j = 0; j < a.size(); ++j) {
-            res.set(i, j, a[i] * b[j]);
-        }
-    }
-    return res;
 }

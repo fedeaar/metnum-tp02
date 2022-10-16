@@ -6,42 +6,33 @@
 //
 
 
-
-
-// TODO que hacemos si x queda ortogonal a v1
 template<class R>
 eigen potencia(const matriz<R> &A, size_t niter, double tol) {
-//    niter *= 2;
+    assert(!A.empty());
+    niter = (size_t) niter / 2;
     size_t n = A.n();
+    matriz<R> B = A * A;
     vector<double> cero(n, 0);
-
-    vector<double> x = aleatorio(n);
-    if (eq(x, cero)) { // si x ~= 0, usamos e1.
-        x = cero;
-        x[0] = 1;
-    } else {
-        x = normalizar(x);
-    }
-
-    // estimamos el autovector
-    vector<double> y, z;
-    size_t i = 0;
-    while (i++ < niter) {
-        y = A * (A * x);
-        if (eq(y, cero)) {
-            break;
+    vector<double> x, y, z;
+    bool ortogonal;
+    do {
+        ortogonal = false;
+        x = normalizar(aleatorio(n));
+        for (size_t i = 0; i < niter; ++i) {
+            y = B * x;
+            if (eq(y, cero)) {
+                ortogonal = true;
+                break;
+            }
+            y = normalizar(y);
+            z = x - y;
+            if (sqrt(inner(z, z)) < tol) {
+                break;
+            }
+            x = y;
         }
-        y = y / sqrt(inner(y, y));
-        z = x - y;
-        if (sqrt(inner(z, z)) < tol) {
-            break;
-        }
-        x = y;
-    }
-
-    // estimamos el autovalor
+    } while (ortogonal);
     double a = inner(x, A * x) / inner(x, x);
-
     return {a, x};
 }
 
@@ -52,7 +43,6 @@ pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t n
    matriz<R> B = A;
    vector<double> eigvals;
    matriz<R> eigvecs(n, k);
-
    for (size_t i = 0; i < k; ++i) {
        eigen av = potencia(B, niter, tol);
        eigvals.emplace_back(av.eigval);
@@ -61,6 +51,7 @@ pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t n
        }
        B = B - av.eigval * outer<R>(av.eigvec, av.eigvec);
    }
+   cout << eigvals << endl;
    return {eigvals, eigvecs};
 }
 

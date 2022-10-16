@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
-#include <random>
 
 using namespace std;
 
@@ -86,6 +85,7 @@ public:
     /** OTROS */
     ostream& print(ostream &os) const;
     void clear();
+    bool empty() const; // TODO test
 };
 
 
@@ -105,37 +105,6 @@ matriz<R> operator/(double b, const matriz<R> &a);
 template<class R>
 vector<double> operator*(const vector<double> &b, const matriz<R> &a);
 
-
-//
-// VECTORES
-//
-
-double inner(const vector<double> &a, const vector<double> &b);
-
-template<class R>
-matriz<R> outer(const vector<double> &a, const vector<double> &b);
-
-vector<double> operator*(const vector<double>& a, double b); // TODO test
-vector<double> operator*(double b, const vector<double> &a);
-
-vector<double> operator/(const vector<double>& a, double b); // TODO test
-vector<double> operator/(double b, const vector<double> &a);
-
-vector<double> operator+(const vector<double> &a, const vector<double> &b); // TODO test
-
-vector<double> operator-(const vector<double> &a, const vector<double> &b); // TODO test
-
-vector<double> abs(const vector<double> &a); // TODO test
-
-vector<double> aleatorio(size_t n, pair<int, int> range={INT32_MIN, INT32_MAX}); // TODO test
-
-vector<double> normalizar(const vector<double> &v); // TODO test
-
-bool eq(const vector<double> &a, const vector<double> &b, double epsilon=EPSILON); // TODO test
-
-double inf(const vector<double> &a); // TODO test
-
-size_t maxarg(const vector<double> &a); // TODO test
 
 //
 // OTRAS FUNCIONES

@@ -13,10 +13,12 @@ set(SOURCE_FILES
         src/matriz/matriz_alt.h
         # src/matriz/matriz_sim.h
         src/impl/matriz.hpp
-        src/impl/matriz.cpp
         src/impl/matriz/matriz_base.cpp
         src/impl/matriz/matriz_alt.cpp
         # src/impl/matriz/matriz_sim.cpp
+        src/vector.h
+        src/impl/vector.hpp
+        src/impl/vector.cpp
         src/grafo.h
         src/potencia.h
         src/impl/potencia.hpp

@@ -1,9 +1,5 @@
-#include "../matriz.h"
+#include "../vector.h"
 
-
-//
-// VECTOR
-//
 
 vector<double> operator*(const vector<double>& a, double b) {
     vector<double> res {a};
@@ -53,6 +49,19 @@ vector<double> operator-(const vector<double> &a, const vector<double> &b) {
 }
 
 
+ostream &operator<<(ostream &os, const vector<double> &v) {
+    assert(!v.empty());
+    os << '[';
+    size_t i = 0;
+    while (i < v.size() - 1) {
+        os << v[i] << ", ";
+        ++i;
+    }
+    os << v[i] << ']' << endl;
+    return os;
+}
+
+
 vector<double> abs(const vector<double> &a) {
     vector<double> res {a};
     for (auto &x : res) {
@@ -77,8 +86,13 @@ vector<double> aleatorio(size_t n, pair<int, int> range) {
     random_device rd;
     mt19937 rng {rd()}; // Mersenne Twister
     uniform_int_distribution<int> dist(range.first, range.second);
+    bool cero = true;
     for (double & re : res) {
         re = dist(rng);
+        cero = cero && re == 0;
+    }
+    if (cero) { // si res == 0, usamos e1.
+        res[0] = 1;
     }
     return res;
 }

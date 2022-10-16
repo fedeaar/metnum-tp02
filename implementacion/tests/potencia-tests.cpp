@@ -27,15 +27,10 @@ bool PotenciaTest::base_test(const string &in, const string &out) {
     for (size_t i = 0; i < expected.n && res; ++i) {
         res = std::abs(solucion.first[i] - expected.solucion[i]) < epsilon;
         if (!res) {
-            cout << "autovalor equivocado [" << std::to_string(i) << ": "
+            cout << "autovalor equivocado [" << std::to_string(i) << "]: "
                  << solucion.first[i] << ". expected: " << expected.solucion[i] << endl;
         }
     }
-    // matriz<base> diag   = diagonal<base>(solucion.first);
-    // matriz<base> lambda = solucion.second * diag;
-    // matriz<base> vect   = mat * solucion.second;
-    // res = vect.eq(lambda, epsilon);
-
     for (size_t i = 0; i < expected.n && res; ++i) {
         vector<double> vi;
         for (size_t j = 0; j < solucion.second.n(); ++j) {
@@ -44,11 +39,8 @@ bool PotenciaTest::base_test(const string &in, const string &out) {
         vector<double> tmp = mat * vi;
         res = eq(solucion.first[i] * vi, tmp, epsilon);
         if (!res) {
-            cout << "autovector equivocado [" << std::to_string(i) << "]: [";
-            for (auto x : solucion.first[i] * vi - tmp) {
-                cout << x << ", ";
-            }
-            cout << ']' << endl;
+            cout << "autovector equivocado [" << std::to_string(i) << "]: diff";
+            cout << solucion.first[i] * vi - tmp << endl;
         }
     }
     return res;
@@ -96,11 +88,11 @@ TEST_F(PotenciaTest, simetrico) {
     EXPECT_TRUE(res);
 }
 
-
+/*
 TEST_F(PotenciaTest, karate) {
     string test = "karate";
     cout << "test " << test << ":\n";
     bool res = base_test(test + ".txt", test + ".autovalores.out");
     cout << (res ? "TRUE" : "FALSE") << endl;
     EXPECT_TRUE(res);
-}
+}*/
