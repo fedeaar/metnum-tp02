@@ -2,7 +2,7 @@ import base.IO as IO
 import base.utils as utils
 
 import numpy as np
-
+import itertools
 
 """
     casos de TEST para ./tp2 generados de manera aleatoria (con un valor semilla).
@@ -32,39 +32,41 @@ def make_test(M, niter, tol, w, filename):
     
 
 # TESTS 
-def TESTS_diagonales(n=10, t=10, niter=10000, tol=1e-10, seed=None):
+def TESTS_diagonales(n=10, t=10, niter=10000, tol=1e-20, seed=None):
     
     for i in range(t):
         if seed:
             np.random.seed(seed + i)
-        diagonal = np.random.choice([x if i % 2 == 0 else -x for i, x in enumerate(range(1, 100))], n, replace=False)
+        iterator = np.fromiter(itertools.chain(range(int(-1e4), 0), range(1, int(1e4))), int)
+        diagonal = np.random.choice(iterator, n, replace=False)
         D = np.diag(diagonal)
 
-        w, V = utils.metodo_deflacion(D, n, niter, tol)
+        w, V = utils.eig(D) # utils.metodo_deflacion(D, n, niter, tol)
         
         assert_results(D, w, V)
         make_test(D, niter, tol, w, "diagonal_" + str(i + 1))
         
 
-def TESTS_householder(n=10, t=10, niter=10000, tol=1e-10, seed=None):
+def TESTS_householder(n=10, t=10, niter=10000, tol=1e-20, seed=None):
     
     for i in range(t):
         if seed:
             np.random.seed(seed + i)
-        diagonal = np.random.choice([x if i % 2 == 0 else -x for i, x in enumerate(range(1, 100))], n, replace=False)
+        iterator = np.fromiter(itertools.chain(range(int(-1e4), 0), range(1, int(1e4))), int)
+        diagonal = np.random.choice(iterator, n, replace=False)
         D = np.diag(diagonal)
         u = np.random.rand(n, 1)
         u = u / utils.norma(u, 2)
         Q = np.eye(n) - 2 * (u @ u.T)
         M = Q @ D @ Q.T
 
-        w, V = utils.metodo_deflacion(M, n, niter, tol)
+        w, V = utils.eig(M) #metodo_deflacion(M, n, niter, tol)
    
         assert_results(M, w, V)
         make_test(M, niter, tol, w, "householder_" + str(i + 1))
 
 
-def TESTS_sdp(n=10, t=10, niter=10000, tol=1e-10, seed=None):
+def TESTS_sdp(n=10, t=10, niter=10000, tol=1e-15, seed=None):
     
     for i in range(t):
         if seed:
@@ -72,7 +74,7 @@ def TESTS_sdp(n=10, t=10, niter=10000, tol=1e-10, seed=None):
         S = np.random.randint(1, 100, (n, n))
         S = S @ S.T
 
-        w, V = utils.metodo_deflacion(S, n, niter, tol)
+        w, V = utils.eig(S) #metodo_deflacion(S, n, niter, tol)
    
         assert_results(S, w, V)
         make_test(S, niter, tol, w, "sdp_" + str(i + 1))
@@ -87,21 +89,11 @@ def TESTS_especiales(niter=10000, tol=1e-10):
         [ 2,  2,  -2],
         [-3, -2,  -2]
     ])
-    w, V = utils.metodo_deflacion(A, n, niter, tol)
+    w, V = utils.eig(A) #metodo_deflacion(A, n, niter, tol)
     
     assert_results(A, w, V)
     make_test(A, niter, tol, w, "simetrico")
 
-
-    # club karate 
-    A = IO.readMatriz("../catedra/karateclub_matriz.txt")
-    D = np.diag([np.sum(x) for x in A])
-    L = D - A
-    w, V = np.linalg.eig(L) # TODO: utils.metodo_deflacion(L, L.shape[0], niter, tol)
-    
-    assert_results(L, w, V)
-    w = np.sort(w)[::-1]
-    make_test(L, niter, tol, w, "karate")
 
 
 

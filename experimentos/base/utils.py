@@ -81,13 +81,17 @@ def metodo_deflacion(A, k, niter=10000, epsilon=1e-6):
         eigs.append(a)
         vecs[:, i] = v.T
         A = A - a * (v @ v.T)
-
+        
     return np.array(eigs), vecs
 
 
 def eig(A):
 
-    return np.linalg.eig(A)
+    w, V = np.linalg.eig(A)
+    idx = np.argsort(np.abs(w))[::-1]
+    w = w[idx]
+    V = V[:, idx]
+    return w, V
 
 
 def graficar(x, y, hue, xaxis, yaxis, filename):
