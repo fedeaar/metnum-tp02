@@ -1,3 +1,23 @@
 proc potencia(in A: matriz<n, n>, in k: Nat, in t: Real) {
-    // TODO
+
+    k := k / 2;
+    B := A * A
+
+    v := aleatorio        // un vector no nulo con coord. en [-10, 10]
+    v := v / norma(v, 2)  // ||v||_2 = 1
+
+    i := 0
+    while i < k {
+
+        y := B * v
+        y := y / norma(y, 2)
+        if (norma(v - y, 2) < tol) {
+            break
+        }
+        v := y
+    }
+
+    l := inner(v, A * v) / inner(v, v);
+
+    return l, v
 }
