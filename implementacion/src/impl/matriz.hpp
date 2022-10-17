@@ -327,7 +327,7 @@ template<class R>
 ostream &matriz<R>::print(ostream &os) const {
     for (size_t i = 0; i < n(); ++i) {
         for (size_t j = 0; j < m(); ++j) {
-            os << at(i, j) << (j == m() - 1 ? "\n" : ", ");
+            os << at(i, j) << (j == m() - 1 ? "\n" : " ");
         }
     }
     return os;

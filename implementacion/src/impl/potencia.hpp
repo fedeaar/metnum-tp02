@@ -51,7 +51,7 @@ pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t n
        }
        B = B - av.eigval * outer<R>(av.eigvec, av.eigvec);
    }
-   cout << eigvals << endl;
+   // cout << eigvals << endl;
    return {eigvals, eigvecs};
 }
 
