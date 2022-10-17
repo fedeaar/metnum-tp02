@@ -43,7 +43,7 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 \end{equation}
 
 \vspace{1em}
-\noindent donde $\lambda$ corresponde al autovalor de módulo máximo estimado por el método de la potencia y $v$ su autovector asociado.
+\noindent donde $\lambda$ corresponde al autovalor en módulo máximo estimado por el método de la potencia y $v$ a su autovector asociado.
 
 \vspace{1em}
 Se puede demostrar \TODO{citar} que $\mathbf{B}_{k+1}$ contiene los mismos autovalores que $\mathbf{B}_{k}$, salvo el máximo que quedará anulado. %Además, si \textbf{A} es simétrica: 
@@ -68,24 +68,24 @@ Se puede demostrar \TODO{citar} que $\mathbf{B}_{k+1}$ contiene los mismos autov
 \subsection{Implementación} Procedemos a detallar una posible implementación para ambos métodos, restringiéndonos al caso de autovalores reales. Definimos:
 
 \begin{align*}
-    \text{\textit{deflacion}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t}\
-    \longrightarrow\ \text{\textit{vector}}_q\ \times\ \text{\textit{matriz}}_{n \times q}
+    \text{\textit{deflacion}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{real} t}\
+    \longrightarrow\ \text{\textit{vector}}_k\ \times\ \text{\textit{matriz}}_{n \times k}
     \\ \\
-    \text{\textit{potencia}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{real} t}\ 
+    \text{\textit{potencia}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{real} t}\ 
     \longrightarrow\ \text{\textit{real}}\ \times\ \text{\textit{vector}}_n
 \end{align*}
 
 \vspace{1em}
-\noindent donde $n$ es un natural, \textbf{A} tiene al menos $q$ autovalores reales dominantes en módulo, $0 < q \leq n$, $k$ es un número par\footnote{Esta restricción no es necesaria, pero permite realizar una optimización que se explica en la próxima página.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
+\noindent donde $n$ es un natural, \textbf{A} tiene al menos $k$ autovalores reales dominantes en módulo, $0 < k \leq n$, $q$ es un número par\footnote{Esta restricción no es necesaria, pero permite realizar una optimización que se explica en la próxima página.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
 
 \vspace{1em}
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la deflación.}, label=algo_deflacion]{files/src/.code/deflacion.pseudo}
 
 \vspace{1em}
-El algoritmo (\ref{algo_deflacion}.) retornará un vector con los primeros $q$ autovalores en módulo máximos de \textbf{A}, ordenados descendientemente, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores normalizados asociados a estos autovalores. 
+El algoritmo (\ref{algo_deflacion}.) retornará un vector con los primeros $k$ autovalores en módulo máximos de \textbf{A}, ordenados descendientemente, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores normalizados asociados a estos autovalores. 
 
 \vspace{1em}
-Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el método de la potencia ---\textbf{B}$_k$--- tendrá, por definición, un autovalor cero con multiplicidad algebráica mayor o igual a $k$. En el caso en que la matriz inicial sea simétrica, \textbf{B}$_k$ será simétrica\footnote{Por suma de simétricas. Notar que $v v^t$ siempre resulta en una matriz de este tipo.} y, en consecuencia, diagonalizable. Se puede demostrar que la única matriz diagonalizable con multiplicidad algebráica $\mu_{a}(0) = n$ es la matriz nula, por lo que el método de la deflación de Hotelling tenderá hacia ella. Esto nos permite inferir que el error númerico será mayor para los autovalores más chicos de la matriz.  
+Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el método de la potencia ---\textbf{B}$_k$--- tendrá, por definición, un autovalor cero con multiplicidad algebráica mayor o igual a $k$. En el caso en que la matriz inicial sea simétrica, \textbf{B}$_k$ será simétrica\footnote{Por suma de simétricas. Notar que $v v^t$ siempre resulta en una matriz de este tipo.} y, en consecuencia, diagonalizable. Se puede demostrar que la única matriz diagonalizable con multiplicidad algebráica $\mu_{a}(0) = n$ es la matriz nula, por lo que el método de la deflación de Hotelling tenderá hacia ella. Esto nos permite inferir que el error númerico será proporcional a $k$\footnote{En tanto existirá una correlación. Sin embargo, es esperable que otros factores entren en juego: la variabilidad de los autovalores, el número de condición de la matriz, la selección del vector aleatorio inicial, o la cantidad de iteraciones $q$ a realizar, por ejemplo.}. Es decir, los autovalores más chicos de la matriz serán más susceptibles a errores.  
 
 
 \vspace{2em}
@@ -95,8 +95,14 @@ Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el métod
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia.}, label=algo_potencia]{files/src/.code/potencia.pseudo}
 
 \vspace{1em}
-\TODO{explicar aspectos relevantes.}
+Una primera observación importante es que el algoritmo (\ref{algo_potencia}.) no es capaz de distinguir si la selección inicial del vector $v$ es ortogonal al autovector asociado al autovalor en módulo dominante, por lo que una mala selección puede resultar en que el algoritmo falle. Para reducir la probabilidad de ocurrencia, se propone ---heurísticamente--- que se elija cada coordenada del vector de manera pseudo-aleatoria sobre un rango amplio. Por ejemplo, la máxima representación de enteros con signo en 32 bits.
 
+\vspace{1em}
+Además, proponemos un modelo diferente al que define la relación de recurrencia de la ecuación (\ref{potencia}.). Su convergencia, en realidad, depende del signo del autovalor en módulo dominante. Si este es negativo, la secuencia será acotada. Se puede demostrar\footnote{\TODO{demostrar}} que la subsecuencia definida por $\{b_k\ :\ k\ \text{es par}\}$ siempre convergerá. 
+
+Lo que es más, esta subsecuencia permite que el método funcione para matrices con distintos autovalores en módulo dominantes, en tanto estos no sean nulos\footnote{\TODO{demostrar}}. El algoritmo (\ref{algo_potencia}.) aprovecha estas observaciones. 
+
+Desde un punto de vista temporal, también permite reducir a la mitad el costo de ejecución (se itera $q / 2$ veces).  
 
 
 
@@ -104,28 +110,30 @@ Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el métod
 % === EVALUACION === %
 
 \vspace{2em}
-\subsection{Evaluación cuantitativa} Procederemos a evaluar nuestra implementación del método de la potencia con deflación en C++ acorde a los algoritmos propuestos.
+\subsection{Evaluación cuantitativa} Procedemos a evaluar nuestra implementación del método de la potencia con deflación en C++ acorde a los algoritmos propuestos.
 
-\vspace{1em}
-\textsc{Error relativo} Medimos el error $|\mathbf{A} \mathbf{V} - \mathbf{V} \mathbf{\Lambda}|_1$ en función de la cantidad de iteraciones $k$ para 300 instancias de matrices $\in \mathbb{R}^{25 \times 25}$ generadas aleatoriamente, donde \textbf{V} y $\mathbf{\Lambda}$ representan ---respectivamente--- las matrices aproximadas de autovectores y autovalores de \textbf{A}, tal que $\mathbf{A}\mathbf{V}_i \approx \mathbf{\Lambda}_{ii} \mathbf{V}_i$ $\forall i:\ 1\ ...\ n$.  En total, obtuvimos \TODO{XXX} mediciones\footnote{El script asociado se puede encontrar en $./experimentos/error\_potencia.py$}.  
+\vspace{2em}
+\noindent \textsc{Error relativo}: medimos el error $\ |\mathbf{A} \mathbf{V} - \mathbf{V} \mathbf{\Lambda}|_1\ $ en función de la cantidad de iteraciones $q$ para 300 instancias de matrices $\mathbf{A} \in \mathbb{R}^{20 \times 20}$ generadas aleatoriamente, donde \textbf{V} y $\mathbf{\Lambda}$ representan ---respectivamente--- las matrices aproximadas de autovectores y autovalores de \textbf{A}, tal que $\ \mathbf{A}\mathbf{V}_i \approx \mathbf{\Lambda}_{ii} \mathbf{V}_i$\ \ \ $\forall i:\ 1\ ...\ n$.  En total, obtuvimos tres millones de mediciones\footnote{El script asociado se puede encontrar en $./experimentos/error\_potencia.py$}.  
 
 
-\vspace{1em}
-\noindent \textsc{Metodología}. Se calculó  $\mathbf{\Lambda}, \mathbf{V} = Deflacion(\mathbf{A},\ 25,\ k,\ 0)$ y se midió el error relativo para cada una de las matrices sobre cada valor de $k$ en en el intervalo $(0, 1e6)$, de a saltos de $1e3$.
+\vspace{2em}
+\noindent \textsc{Metodología}: se calculó  $\mathbf{\Lambda}, \mathbf{V} = \text{\textit{deflacion}}(\mathbf{A},\ 20,\ q,\ 0)$ y se midió el error relativo para cada una de las matrices sobre cada valor de $q$ en en el intervalo $(0, 1e5)$, de a saltos de $10$.
 
 \vspace{1em}
 \noindent Cada caso se generó a través de uno de los siguientes tres procedimientos\footnote{Se utilizó un valor semilla para facilitar la reproductibilidad.}:
 
 \vspace{1em}
 \begin{enumerate}
-    \item \textit{Matrices Diagonales}: Se generaron cien matrices diagonales \textbf{D} con veinticinco autovalores en el rango $[-1e6,\ 1e6]$ tal que ningun autovalor compartiera valor absoluto en módulo con ningún otro. Los mismos se generaron con el rng \textit{PCG64} de numpy para evitar distribuciones particulares que pudieran influir en la variabilidad de los autovalores.
-
+    \item \textit{Matrices Diagonales}: Se generaron cien matrices diagonales \textbf{D} con veinte autovalores en el rango $[-1e5, 0) \cup (0,\ 1e5]$. Los mismos se generaron con el rng \textit{PCG64} de numpy para evitar distribuciones particulares que pudieran influir en la variabilidad de los autovalores.
+    \\
     \item \textit{Matrices Diagonalizables}: Se generaron cien matrices diagonalizables $\mathbf{A} = \mathbf{Q}\mathbf{D}\mathbf{Q}^t$ donde cada matriz $\mathbf{D}$ se generó a partir de la metodología (1.) y $\mathbf{Q} = \mathbf{I} - 2uu^t$ se generó a partir de un vector aleatorio $u$ ---con el algoritmo random.rand() de numpy--- tal que $||u||_2 = 1$.
-
-    \item \textit{Matrices Simétricas Definidas Positivas}: Se generaron cien matrices simétricas definidas positivas de enteros. Para cada caso se generó una matriz aleatoria \textbf{B} con el algoritmo \textit{random.randint()} de numpy y se procedió a definir la matriz $\mathbf{A} = \mathbf{B} \mathbf{B}^t$. 
-
+    \\
+    \item \textit{Matrices Simétricas Definidas Positivas}: Se generaron cien matrices simétricas definidas positivas de enteros. Para cada caso se generó una matriz aleatoria \textbf{B} con el algoritmo random.randint() de numpy y se procedió a definir la matriz $\mathbf{A} = \mathbf{B} \mathbf{B}^t$. 
 \end{enumerate}
 
+\vspace{2em}
+\noindent \textsc{Observaciones}: consideramos que la variabilidad de los autovalores y el número de condición de las matrices son variables que afectan de manera significativa al error relativo. El proceso mencionado para la generación de matrices aleatorias fue pensado sobre generadores de números aleatorios para tratar de mantener a ambas variables controladas, en tanto no respondan a ninguna distribución particular que pueda exhibir sus carecterísticas en los resultados del experimento. 
 
-\vspace{1em}
+
+\vspace{2em}
 \noindent \textsc{Resultados}. \TODO{experimento}

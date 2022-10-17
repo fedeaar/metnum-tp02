@@ -1,23 +1,24 @@
-proc potencia(in A: matriz<n, n>, in k: Nat, in t: Real) {
+proc potencia(in A: matriz<n, n>, in q: Nat, in t: Real) {
 
-    k := k / 2;
+    q := q / 2
     B := A * A
 
-    v := aleatorio        // un vector no nulo con coord. en [-10, 10]
+    v := aleatorio(n)     // un vector aleatorio no nulo
     v := v / norma(v, 2)  // ||v||_2 = 1
 
     i := 0
-    while i < k {
+    while i < q {
 
         y := B * v
         y := y / norma(y, 2)
-        if (norma(v - y, 2) < tol) {
+        if (norma(v - y, 2) < t) {  // tolerancia para la convergencia 
             break
         }
         v := y
+        i := i + 1
     }
 
-    l := inner(v, A * v) / inner(v, v);
+    l := (v.t * A * v) / (v.t * v)  // coeficiente de rayleigh
 
     return l, v
 }
