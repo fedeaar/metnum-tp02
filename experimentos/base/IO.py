@@ -25,8 +25,7 @@ def readGrafo(filename):  # TODO: test
 
 def readAutovalores(filename):
 
-    data = np.loadtxt(filename)
-    return data[0, 0], data[1, 0], data[2:, :]  # iteraciones, tolerancia, valores
+    return readMatriz(filename)
 
 
 def readAutovectores(filename):
@@ -100,17 +99,17 @@ def createCSV(filename, columnas):
 
 
 def run(filename, iter, epsilon, 
-        f="matriz", o="./", precision=15, save_as=None, time=False, save_m=False, 
+        f="matriz", o="./", precision=15, save_as=None, time=False,
         exe_path=EXE_PATH): # TODO: test
 
     call_params = [
         "wsl" if WSL else "",   
         exe_path, 
         filename, str(iter), str(epsilon),
-        f"-f {f}"
-        f"-o {o}",
-        "-as {save_as}" if save_as else "", 
-        f"-presicion {precision}", 
-        "-time" if time_it else ""
+        "-f", f"{f}",
+        "-o", f"{o}",
+        f"{'-as' if save_as else ''}", f"{save_as}" if save_as else "", 
+        f"-presicion", f"{precision}", 
+        "-time" if time else ""
     ]
     sub.check_call(call_params)
