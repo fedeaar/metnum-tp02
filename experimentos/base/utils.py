@@ -2,6 +2,9 @@ import base.IO
 
 import numpy as np
 import pandas as pd
+
+import pygraphviz
+import networkx as nx
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(rc={'figure.figsize':(14, 7)}, font="Times New Roman")
@@ -48,20 +51,22 @@ def norma(x, norma):
 
 def metodo_potencia(A, niter=10000, epsilon=1e-6):
 
+    niter = niter // 2
+    B = A @ A
     n = A.shape[0]
-    z = np.zeros((n, 1))
     
     x = np.random.rand(n, 1)
+    z = np.zeros((n, 1))
     if np.allclose(x, z, epsilon):
-        x = z.copy()
+        x = z
         x[0] = 1
     else:
     	x = x / norma(x, 2)
 
     for _ in range(niter):
-        y = A @ x
+        y = B @ x
         n = norma(y, 2)
-        if abs(n) < epsilon or norma(x - y / n, 2) < epsilon:
+        if norma(x - y / n, 2) < epsilon:
         	break
         x = y / n
     a = (x.T @ A @ x) / (x.T @ x)
@@ -94,6 +99,15 @@ def eig(A):
     return w, V
 
 
+def corr(x, y, epsilon=1e-16):
+    
+    xc = x - x.mean()
+    yc = y - y.mean()
+    a = xc.T @ yc
+    b = np.sqrt((xc**2).T @ (yc**2))
+    return a / b if abs(b) >= epsilon else 0
+
+
 def graficar(x, y, hue, xaxis, yaxis, filename):
     
     plt.figure()
@@ -105,5 +119,22 @@ def graficar(x, y, hue, xaxis, yaxis, filename):
     plt.tick_params(axis='both', which='major', labelsize=16)
     plt.legend(title=None)
 
-    fig = plot.get_figure()
     fig.savefig(filename)
+    plt.close(fig)
+
+
+def graficar_grafo(A, filename, colores="lightgray", font_color="k", size=(10, 10), node_size=300, font_size=12):
+
+    G = nx.from_numpy_array(A)
+    f = plt.figure(figsize=size)
+    layout = nx.nx_agraph.graphviz_layout(G, 'neato')
+    options={
+         'node_color': colores,
+         'node_size': node_size,
+         'font_size': font_size,
+         'font_color': font_color
+    }
+    nx.draw(G, layout, with_labels=True, ax=f.add_subplot(), **options)
+
+    f.savefig(filename)
+    plt.close(f)

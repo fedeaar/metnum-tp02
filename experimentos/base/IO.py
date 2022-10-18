@@ -8,39 +8,30 @@ EXE_PATH = '../build/tp2'      # si se compilo de otra manera o con otro nombre,
 WSL = True                     # dejar true solo si se utilizó wsl para compilar el programa, false sino
 
 
-def readGrafo(filename):  # TODO: test
+def readGrafo(filename):
     
     with open(filename) as file:
         data = file.read().splitlines()
-        n = int(data[0])
-        q = int(data[1])
-        links  = [x.split(' ') for x in data[2:]]
+        links = [int(y) for x in data for y in x.split(' ')]
+        n = np.max(links)
         matriz = np.zeros((n, n))
-        for link in links:
-            if (len(link) == 2):
-                matriz[int(link[1]) - 1][int(link[0]) - 1] = 1
+        for i in range(0, len(links), 2):
+            matriz[links[i+1] - 1][links[i] - 1] = 1
 
-    return n, q, matriz # nodos, links, matriz de conectividad
-
-
-def readAutovalores(filename):
-
-    return readMatriz(filename)
+    return matriz
 
 
-def readAutovectores(filename):
+def writeGrafo(filename, matrix):
     
-    return readMatriz(filename)                 # cada columna es un autovector
+    links = np.where(matrix != 0)
+    links = tuple(zip(*links))
+    text  = []
+    for coord in links:
+        text.append(str(coord[1] + 1) + " " + str(coord[0] + 1))
 
+    np.savetxt(filename, text, delimiter="\n", fmt="%s")
 
-def readTime(filename):
-
-    with open(filename) as file:
-        data = file.read().splitlines()
-        scale = data[0]
-        time = int(data[1])
-        
-    return scale, time
+    return links
 
 
 def readMatriz(filename, cols=None):
@@ -53,19 +44,24 @@ def writeMatriz(A, filename):
     np.savetxt(filename, A)
 
 
-def writeGrafo(filename, matrix): # TODO: test
+def readTime(filename):
+
+    with open(filename) as file:
+        data = file.read().splitlines()
+        scale = data[0]
+        time = int(data[1])
+        
+    return scale, time
+
+
+def readAutovalores(filename):
+
+    return readMatriz(filename)
+
+
+def readAutovectores(filename):
     
-    n = matrix.shape[0]
-    q = np.count_nonzero(matrix != 0)
-    links = np.where(matrix != 0)
-    links = tuple(zip(*links))
-    text  = [n, q]
-    for coord in links:
-        text.append(str(coord[1] + 1) + " " + str(coord[0] + 1))
-
-    np.savetxt(filename, text, delimiter="\n", fmt="%s")
-
-    return links
+    return readMatriz(filename)
 
 
 def writeAutovalores(niter, tol, eig, filename):
@@ -99,7 +95,7 @@ def createCSV(filename, columnas):
 
 
 def run(filename, iter, epsilon, 
-        f="matriz", o="./", precision=15, save_as=None, time=False,
+        f="matriz", o="./", precision=15, save_as=None, time=False, verbose=False,
         exe_path=EXE_PATH): # TODO: test
 
     call_params = [
@@ -110,6 +106,7 @@ def run(filename, iter, epsilon,
         "-o", f"{o}",
         f"{'-as' if save_as else ''}", f"{save_as}" if save_as else "", 
         f"-presicion", f"{precision}", 
-        "-time" if time else ""
+        "-time" if time else "",
+        "-v" if verbose else ""
     ]
     sub.check_call(call_params)
