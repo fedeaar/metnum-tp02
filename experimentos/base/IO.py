@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess as sub
 import numpy as np
 
@@ -79,11 +80,13 @@ def writeAutovectores(A, filename):
     writeMatriz(A, filename)
 
 
-def createInOut(filename):
+def createInOut(filename, delete=False):
     
     path = "./resultados/" + filename + "/"
     pathIn =  path + "in/"
     pathOut = path + "out/"
+    if delete and os.path.exists(path): 
+        shutil.rmtree(path)
     if not os.path.exists(pathIn):
         os.makedirs(pathIn)
     if not os.path.exists(pathOut):
