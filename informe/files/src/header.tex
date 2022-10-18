@@ -1,6 +1,8 @@
 \documentclass{./packages/homework}
 \usepackage{./packages/caratula}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
 
 \graphicspath{./files/src/media/}
 \renewcommand{\contentsname}{contenidos}
@@ -8,6 +10,8 @@
 \renewcommand\qedsymbol{$\blacksquare$}
 \renewcommand{\lstlistingname}{Algoritmo}% Listing -> Algorithm
 \renewcommand{\figurename}{Figura}% Listing -> Algorithm
+\renewcommand\thesubfigure{\roman{subfigure}}
+\captionsetup[subfloat]{labelformat=empty}
 
 \lstdefinelanguage{pseudo}{
   morekeywords={

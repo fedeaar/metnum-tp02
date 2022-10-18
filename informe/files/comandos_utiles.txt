@@ -1,6 +1,6 @@
 
 % imagen
-\fig[]{img, **img}{epigrafe}{ref_nombre}
+\fig[]{path}{epigrafe}{ref_nombre}{}
 
 % uso imagen
 Figure \ref{refvar} 

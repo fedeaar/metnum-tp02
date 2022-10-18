@@ -2,13 +2,13 @@ import base.IO as IO
 import base.utils as utils
 
 import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
+import pandas as pd
+import os 
 
 
 """
 descripcion: 
-    evaluación de centralidad de autovector y partición para el 
+    evaluación de centralidad de autovector y corte mínimo para el 
     club de karate.
 """
 
@@ -17,60 +17,81 @@ descripcion:
 EXPERIMENTO = "club-karate"
 DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO)
 
-# archivos de resultados    
-CENTRALIDAD = f"{DIR}{EXPERIMENTO}_centralidad.txt"
-CORTES      = f"{DIR}{EXPERIMENTO}_cortes.txt"
-CORTES_MIN  = f"{DIR}{EXPERIMENTO}_cortes_min.txt"
-GRAFICO     = f"{DIR}{EXPERIMENTO}.png"
+# OUTPUT 
+CENTRALIDAD    = f"{DIR}centralidad.csv"
+AUTOVECTORES   = f"{DIR}karate_laplace.autovectores.txt"
+MIN_AUTOVECTOR = f"{DIR}karate_laplace.min_autovector.txt"
+CORTE_MIN      = f"{DIR}corte.csv"
+GRAFO          = f"{DIR}grafo_conectividad.png"
+GRAFO_CORTE    = DIR + "grafo_corte_{i}_{a}.png"
 
-# variables
-KARATE = IO.readMatriz("../catedra/karateclub_matriz.txt")
-LABELS = IO.readMatriz("../catedra/karateclub_labels.txt")
-
-
-
-# utils
-def corr(x, y, epsilon=1e-16):
-    xc = x - x.mean()
-    yc = y - y.mean()
-    a = xc.T @ yc
-    b = np.sqrt((xc**2).T @ (yc**2))
-    return a / b if abs(b) >= epsilon else 0
+# VARS
+MATRIZ = "../catedra/karateclub_matriz.txt"
+LABELS = "../catedra/karateclub_labels.txt"
 
 
-# metodos
-def grafo():
-    G = nx.from_numpy_array(KARATE)
-    f = plt.figure(figsize=(10, 10))
-    nx.draw(G, with_labels=True, ax=f.add_subplot())
-    f.savefig(GRAFICO)
+# UTILS
+def cortar_grafo(M, v):
+    
+    A = M.copy()
+    for row in range(M.shape[0]):
+        for col in range(M.shape[1]):
+            if (v[row] > 0) != (v[col] > 0):
+                A[row, col] = 0
+
+    return A
 
 
-def centralidad():
-    w, V = np.linalg.eigh(KARATE)  # TODO: utilizar ./tp2
-    i = np.argmax(w)
-    IO.writeMatriz(V[:, i], CENTRALIDAD)
+# EXP
+def medir_centralidad():
+
+    IO.run(MATRIZ, 20000, 1e-20, o=DIR_OUT)
+    a = IO.readAutovalores(f"{DIR_OUT}karateclub_matriz.autovalores.out")
+    V = IO.readAutovectores(f"{DIR_OUT}karateclub_matriz.autovectores.out")
+    i = np.nanargmax(a)
+    CA = np.round(V[:, i], 6)
+
+    IO.createCSV(CENTRALIDAD, "nodo,centralidad")
+    with open(CENTRALIDAD, 'a', encoding="utf-8") as csv:
+        csv.write("".join([f"{i},{CA[i]}\n" for i in range(CA.shape[0])]))
 
 
-def laplace():
-    D = np.diag([np.sum(x) for x in KARATE])
-    L = D - KARATE
-    w, V = np.linalg.eigh(L)  # TODO: utilizar ./tp2
+def medir_corte_minimo():
 
-    mi, mw, mc = 0, w[0], abs(corr(V[:, 0], LABELS))
-    for i in range(V.shape[0]):
-        tmp = corr(V[:, i], LABELS)
-        if abs(tmp) > mc:
-            mi, mw, mc = i, w[i], tmp
+    M = IO.readMatriz(MATRIZ)
+    D = np.diag([np.sum(x) for x in M])
+    L = D - M
 
-    IO.writeMatriz(V, CORTES)
-    IO.writeMatriz(V[:, mi], CORTES_MIN)
+    laplace_file = f"{DIR_IN}karateclub_laplace.txt"
+    IO.writeMatriz(L, laplace_file)
+    IO.run(laplace_file, 20000, 1e-20, o=DIR_OUT)
+    
+    a = IO.readAutovalores(f"{DIR_OUT}karateclub_laplace.autovalores.out")
+    V = IO.readAutovectores(f"{DIR_OUT}karateclub_laplace.autovectores.out")
+    
+    labels = IO.readMatriz(LABELS)
+    colores = ['tab:orange' if x else 'tab:blue' for x in labels]
+
+    IO.createCSV(CORTE_MIN, "autovalor,correlacion")
+    with open(CORTE_MIN, 'a', encoding="utf-8") as csv:
+
+        for i in range(V.shape[0]):  
+            CORTE = cortar_grafo(M, V[:,i])
+            path = GRAFO_CORTE.format(i=i, a=np.round(a[i], 2))
+            utils.graficar_grafo(CORTE, path, colores, font_color='white', size=(10, 10), node_size=1000, font_size=15)
+            csv.write(f"{np.round(a[i], 6)},{np.round(np.abs(utils.corr(V[:, i], labels)), 6)}\n")
+
+    IO.writeMatriz(V, AUTOVECTORES)
+
+    i = np.nanargmin(a)
+    np.savetxt(MIN_AUTOVECTOR, V[:, i], fmt='%1.6f')
 
 
 
 
+# MAIN
 if __name__ == "__main__":
     
-    grafo()
-    centralidad()
-    laplace()
+    utils.graficar_grafo(IO.readMatriz(MATRIZ), GRAFO, size=(10, 10), node_size=1000, font_size=15)
+    medir_centralidad()
+    medir_corte_minimo()

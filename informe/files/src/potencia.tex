@@ -30,8 +30,7 @@ Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si $b_0$ 
 \vspace{3em}
 \noindent \textsc{Método de la deflación}: el método de la deflación, por su parte, corresponde a la transformación de la matriz inicial \textbf{A} por una matriz \textbf{B} con autovalores equivalentes, salvo por el autovalor dominante que será anulado. Existen distintos métodos de deflación, entre ellos la deflación de Hotelling y la deflación de Wielandt \cite{Burden}.  
 
-\vspace{1em}
-En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. El mismo consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación de recurrencia:
+En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. El mismo consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación:
 
 \vspace{1em}
 \begin{equation*}
@@ -43,10 +42,10 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 \end{equation}
 
 \vspace{1em}
-\noindent donde $\lambda$ corresponde al autovalor en módulo máximo estimado por el método de la potencia y $v$ a su autovector asociado.
+\noindent donde $\lambda$ corresponde al autovalor en módulo máximo estimado por el método de la potencia y $v$ es su autovector asociado.
 
 \vspace{1em}
-Se puede demostrar \TODO{citar} que $\mathbf{B}_{k+1}$ contiene los mismos autovalores que $\mathbf{B}_{k}$, salvo el máximo que quedará anulado. %Además, si \textbf{A} es simétrica: 
+Se puede demostrar que $\mathbf{B}_{k+1}$ contiene los mismos autovalores que $\mathbf{B}_{k}$, salvo el máximo que quedará anulado. %Además, si \textbf{A} es simétrica: 
 
 %\vspace{1em}
 %\begin{equation*}
@@ -98,11 +97,9 @@ Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el métod
 Una primera observación importante es que el algoritmo (\ref{algo_potencia}.) no es capaz de distinguir si la selección inicial del vector $v$ es ortogonal al autovector asociado al autovalor en módulo dominante, por lo que una mala selección puede resultar en que el algoritmo falle. Para reducir la probabilidad de ocurrencia, se propone ---heurísticamente--- que se elija cada coordenada del vector de manera pseudo-aleatoria sobre un rango amplio. Por ejemplo, la máxima representación de enteros con signo en 32 bits.
 
 \vspace{1em}
-Además, proponemos un modelo diferente al que define la relación de recurrencia de la ecuación (\ref{potencia}.). Su convergencia, en realidad, depende del signo del autovalor en módulo dominante. Si este es negativo, la secuencia será acotada. Se puede demostrar\footnote{\TODO{demostrar}} que la subsecuencia definida por $\{b_k\ :\ k\ \text{es par}\}$ siempre convergerá. 
+Además, proponemos un modelo diferente al que define la relación de recurrencia de la ecuación (\ref{potencia}.). Su convergencia, en realidad, depende del signo del autovalor en módulo dominante. Si este es negativo, la secuencia es acotada. Se puede demostrar\footnote{Esto se desprende de la demostración de convergencia de la secuencia original, donde la convergencia de $\mathbf{B_k}$ depende de $(\lambda/|\lambda|)^k = signo(\lambda)^k$, con $\lambda$ el autovalor en módulo dominante.} que la subsecuencia definida por $\{b_k\ :\ k\ \text{es par}\}$ siempre convergerá. El algoritmo (\ref{algo_potencia}.) aprovecha estas observaciones. 
 
-Lo que es más, esta subsecuencia permite que el método funcione para matrices con distintos autovalores en módulo dominantes, en tanto estos no sean nulos\footnote{\TODO{demostrar}}. El algoritmo (\ref{algo_potencia}.) aprovecha estas observaciones. 
-
-Desde un punto de vista temporal, también permite reducir a la mitad el costo de ejecución (se itera $q / 2$ veces).  
+Desde un punto de vista temporal, también permite reducir el costo de ejecución, ya que se iterará a lo sumo $q / 2$ veces. Estimamos que la complejidad de \textit{potencia} estará en $\Theta(n^3 + \frac{q}{2} n^2)$.  
 
 
 
@@ -113,26 +110,26 @@ Desde un punto de vista temporal, también permite reducir a la mitad el costo d
 \subsection{Evaluación cuantitativa} Procedemos a evaluar nuestra implementación del método de la potencia con deflación en C++ acorde a los algoritmos propuestos.
 
 \vspace{2em}
-\noindent \textsc{Error relativo}: medimos el error $\ |\mathbf{A} \mathbf{V} - \mathbf{V} \mathbf{\Lambda}|_1\ $ en función de la cantidad de iteraciones $q$ para 300 instancias de matrices $\mathbf{A} \in \mathbb{R}^{20 \times 20}$ generadas aleatoriamente, donde \textbf{V} y $\mathbf{\Lambda}$ representan ---respectivamente--- las matrices aproximadas de autovectores y autovalores de \textbf{A}, tal que $\ \mathbf{A}\mathbf{V}_i \approx \mathbf{\Lambda}_{ii} \mathbf{V}_i$\ \ \ $\forall i:\ 1\ ...\ n$.  En total, obtuvimos tres millones de mediciones\footnote{El script asociado se puede encontrar en $./experimentos/error\_potencia.py$}.  
+\noindent \textsc{Error relativo}. medimos el error\footnote{El script asociado se puede encontrar en \textit{./experimentos/error\_potencia.py}.}   $\ ||\mathbf{A} \mathbf{V} - \mathbf{V} \mathbf{\Lambda}||_1\ $ y $\ ||\mathbf{A} \mathbf{V} - \mathbf{V} \mathbf{\Lambda}||_\infty\ $ para 30 instancias de matriz $\mathbf{A} \in \mathbb{R}^{100 \times 100}$ generadas aleatoriamente, donde \textbf{V} y $\mathbf{\Lambda}$ representan ---respectivamente--- las matrices aproximadas de autovectores y autovalores de \textbf{A}, tal que $\ \mathbf{A}\mathbf{V}_i \approx \mathbf{\Lambda}_{ii} \mathbf{V}_i$\ \ \ $\forall i:\ 1\ ...\ n$.
 
 
 \vspace{2em}
-\noindent \textsc{Metodología}: se calculó  $\mathbf{\Lambda}, \mathbf{V} = \text{\textit{deflacion}}(\mathbf{A},\ 20,\ q,\ 0)$ y se midió el error relativo para cada una de las matrices sobre cada valor de $q$ en en el intervalo $(0, 1e5)$, de a saltos de $10$.
+\noindent \textsc{Metodología}: se calculó  $\mathbf{\Lambda}, \mathbf{V} = \text{\textit{deflacion}}(\mathbf{A},\ 100,\ 50000,\ 1e-10)$ y se midió el error relativo para cada una de las matrices.
 
 \vspace{1em}
 \noindent Cada caso se generó a través de uno de los siguientes tres procedimientos\footnote{Se utilizó un valor semilla para facilitar la reproductibilidad.}:
 
 \vspace{1em}
 \begin{enumerate}
-    \item \textit{Matrices Diagonales}: Se generaron cien matrices diagonales \textbf{D} con veinte autovalores en el rango $[-1e5, 0) \cup (0,\ 1e5]$. Los mismos se generaron con el rng \textit{PCG64} de numpy para evitar distribuciones particulares que pudieran influir en la variabilidad de los autovalores.
+    \item \textit{Matrices Diagonales}: Se generaron mil matrices diagonales \textbf{D} con mil autovalores en el rango $[-1e4, 0)\ \cup\ (0,\ 1e4]$. Los mismos se generaron con el rng \textit{PCG64} de numpy para evitar distribuciones particulares que pudieran influir en la variabilidad de los autovalores.
     \\
-    \item \textit{Matrices Diagonalizables}: Se generaron cien matrices diagonalizables $\mathbf{A} = \mathbf{Q}\mathbf{D}\mathbf{Q}^t$ donde cada matriz $\mathbf{D}$ se generó a partir de la metodología (1.) y $\mathbf{Q} = \mathbf{I} - 2uu^t$ se generó a partir de un vector aleatorio $u$ ---con el algoritmo random.rand() de numpy--- tal que $||u||_2 = 1$.
+    \item \textit{Matrices Diagonalizables}: Se generaron mil matrices diagonalizables $\mathbf{A} := \mathbf{Q} \mathbf{D} \mathbf{Q}^t$ donde cada matriz $\mathbf{D}$ se generó a partir de la metodología (1.) y $\mathbf{Q} := \mathbf{I} - 2uu^t$ se generó a partir de un vector aleatorio $u$ ---con el algoritmo random.rand() de numpy--- tal que $||u||_2 = 1$.
     \\
-    \item \textit{Matrices Simétricas Definidas Positivas}: Se generaron cien matrices simétricas definidas positivas de enteros. Para cada caso se generó una matriz aleatoria \textbf{B} con el algoritmo random.randint() de numpy y se procedió a definir la matriz $\mathbf{A} = \mathbf{B} \mathbf{B}^t$. 
+    \item \textit{Matrices Simétricas Definidas Positivas}: Se generaron mil matrices simétricas definidas positivas de enteros. Para cada caso se generó una matriz aleatoria \textbf{B} con el algoritmo random.randint() de numpy en el rango $[-1e4, 0)\ \cup\ (0,\ 1e4]$ y se procedió a definir $\mathbf{A} := \mathbf{B} \mathbf{B}^t$. 
 \end{enumerate}
 
 \vspace{2em}
-\noindent \textsc{Observaciones}: consideramos que la variabilidad de los autovalores y el número de condición de las matrices son variables que afectan de manera significativa al error relativo. El proceso mencionado para la generación de matrices aleatorias fue pensado sobre generadores de números aleatorios para tratar de mantener a ambas variables controladas, en tanto no respondan a ninguna distribución particular que pueda exhibir sus carecterísticas en los resultados del experimento. 
+\noindent \textsc{Observaciones}: consideramos que la varianza de los autovalores, el número de condición de las matrices, y su tamaño, son variables que afectan de manera significativa en el error del procedimiento. El proceso mencionado para la generación de matrices aleatorias fue pensado sobre generadores de números aleatorios para tratar de minimizar cualquier tendencia que pueda provenir de la utilización de distribuciones particulares. Se controló el tamaño $n$, la cantidad de iteraciones $q$ y la tolerancia $t$. Un estudio más exhaustivo debería también evaluar el comportamiento del algoritmo en función de estos parámetros. 
 
 
 \vspace{2em}
