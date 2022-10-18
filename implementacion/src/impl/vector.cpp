@@ -115,7 +115,7 @@ bool eq(const vector<double> &a, const vector<double> &b, double epsilon) {
 
 double inf(const vector<double> &a) {
     assert(!a.empty());
-    double max = a[0], tmp;
+    double max = abs(a[0]), tmp;
     for (auto x : a) {
         tmp = abs(x);
         if (tmp > max) {
@@ -129,7 +129,7 @@ double inf(const vector<double> &a) {
 size_t maxarg(const vector<double> &a) {
     size_t res = 0;
     for (size_t j = 0; j < a.size(); ++j) {
-        if(a[j] > a[res]) res = j;
+        if (a[j] > a[res]) res = j;
     }
     return res;
 }

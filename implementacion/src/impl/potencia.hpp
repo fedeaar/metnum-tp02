@@ -8,30 +8,24 @@
 
 template<class R>
 eigen potencia(const matriz<R> &A, size_t niter, double tol) {
-    assert(!A.empty());
+
     niter = (size_t) niter / 2;
     size_t n = A.n();
     matriz<R> B = A * A;
-    vector<double> cero(n, 0);
+
     vector<double> x, y, z;
-    bool ortogonal;
-    do {
-        ortogonal = false;
-        x = normalizar(aleatorio(n));
-        for (size_t i = 0; i < niter; ++i) {
-            y = B * x;
-            if (eq(y, cero)) {
-                ortogonal = true;
-                break;
-            }
-            y = normalizar(y);
-            z = x - y;
-            if (sqrt(inner(z, z)) < tol) {
-                break;
-            }
-            x = y;
+    x = normalizar(aleatorio(n));
+
+    for (size_t i = 0; i < niter; ++i) {
+        y = B * x;
+        y = normalizar(y);
+        z = x - y;
+        if (sqrt(inner(z, z)) < tol) {
+            break;
         }
-    } while (ortogonal);
+        x = y;
+    }
+
     double a = inner(x, A * x) / inner(x, x);
     return {a, x};
 }
