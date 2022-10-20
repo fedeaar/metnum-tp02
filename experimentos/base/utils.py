@@ -61,13 +61,13 @@ def metodo_potencia(A, niter=10000, epsilon=1e-6):
         x = z
         x[0] = 1
     else:
-    	x = x / norma(x, 2)
+        x = x / norma(x, 2)
 
     for _ in range(niter):
         y = B @ x
         n = norma(y, 2)
         if norma(x - y / n, 2) < epsilon:
-        	break
+            break
         x = y / n
     a = (x.T @ A @ x) / (x.T @ x)
 
