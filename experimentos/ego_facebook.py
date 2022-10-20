@@ -46,7 +46,10 @@ def correlacion_adyacencia(aproximado, original):
     A = np.pad(A, ((0 , faltantes), (0 , faltantes)))
 
     # Elimino filas con tags invalidas
-
+    A = A[~np.all(O == 0, axis=1)]
+    O = O[~np.all(O == 0, axis=1)]
+    A = A[:,~np.all(O == 0, axis=0)]
+    O = O[:,~np.all(O == 0, axis=0)]
 
     A.flatten()
     O.flatten()
