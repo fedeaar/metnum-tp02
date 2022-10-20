@@ -35,6 +35,18 @@ def writeGrafo(filename, matrix):
     return links
 
 
+def readAtributos(filename):
+
+    feat = readMatriz(filename)
+    col0 = feat[:,0].astype(int)
+    attr = feat[:,1:]
+    idx = np.argsort(col0)
+    col0 = col0[idx]
+    attr = attr[idx,:]
+
+    return col0, attr
+
+
 def readMatriz(filename, cols=None):
 
     return np.loadtxt(filename, usecols=cols) 
