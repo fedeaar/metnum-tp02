@@ -35,7 +35,7 @@ def similaridad_to_grafo(sim, col):
     return text
 
 def correlacion_adyacencia(aproximado, original):
-    # Me fijo el porcentaje de conexiones acertadas
+
     A = IO.readGrafo(aproximado)
     O = IO.readGrafo(original)
 
@@ -54,9 +54,36 @@ def correlacion_adyacencia(aproximado, original):
     A.flatten()
     O.flatten()
     total = O.size
+
     return np.count_nonzero(A == O) / total
 
-#def correlacion_autovalores(grafo1, grafo2):
+def correlacion_autovalores(aproximado, original):
+
+    A = IO.readGrafo(aproximado)
+    O = IO.readGrafo(original)
+
+    # Pueden tener diferente tamaño
+    n = np.size(O, 0)
+    m = np.size(A, 0)
+    faltantes = n - m
+    A = np.pad(A, ((0 , faltantes), (0 , faltantes)))
+
+    # Elimino filas con tags invalidas
+    A = A[~np.all(O == 0, axis=1)]
+    O = O[~np.all(O == 0, axis=1)]
+    A = A[:,~np.all(O == 0, axis=0)]
+    O = O[:,~np.all(O == 0, axis=0)]
+
+    w1, V1 = np.linalg.eig(A)
+    w2, v2 = np.linalg.eig(O)
+
+    idx = np.argsort(w1)[::-1]
+    idx = np.argsort(w2)[::-1]
+
+    r = np.corrcoef(w1, w2)[0][1].real
+    
+    return r
+
 
 # EXP
 
@@ -66,6 +93,7 @@ def aproximar_similaridad():
     # El minimo va a ser 0 ya que atributos tiene 1s y 0s
     umbrales = np.arange(0, np.max(S), 2)
     corr_ady = []
+    corr_autov = []
     
     for u in umbrales:
         T = S
@@ -78,7 +106,9 @@ def aproximar_similaridad():
             path = SIMILARIDAD.format(u = u)
             #np.savetxt(path, grafo, delimiter="\n", fmt="%s") 
             corr_ady.append((u, correlacion_adyacencia(path, GRAFO)))
-    print (corr_ady)
+            corr_autov.append((u, correlacion_autovalores(path, GRAFO)))
+    print(corr_ady)
+    print(corr_autov)
 
 def pca():
 
