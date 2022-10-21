@@ -79,7 +79,7 @@ def graficar_force(A, name, path, size=(1500, 1500)):
     nplot = ds.transfer_functions.dynspread( # op: spread
             shader, 
             threshold=0.5, 
-            max_px=4,
+            max_px=3,
             shape='circle', 
             how=None) 
 
@@ -97,10 +97,12 @@ def graficar_force(A, name, path, size=(1500, 1500)):
 
 if __name__ == "__main__":
     
-    # A = IO.readMatriz(EGO.CLEAN_GRAFO)
-    # graficar_force(A, name='grafo_forceatlas2_facebook', path=EGO.DIR)
-    for i in range(5, 13):
+    A = IO.readMatriz(EGO.CLEAN_GRAFO)
+    graficar_circular(A, name='grafo_circular_facebook', path=EGO.DIR)
+    graficar_force(A, name='grafo_forceatlas2_facebook', path=EGO.DIR)
+    for i in range(0, 13):
         file = EGO.GRAFO_SIM.format(u=f"{i}.0")
         print('graficando:', file)
         A = IO.readMatriz(file)
+        graficar_circular(A, name=f"grafo_circular_{i}", path=EGO.DIR)
         graficar_force(A, name=f"grafo_forceatlas2_{i}", path=EGO.DIR)
