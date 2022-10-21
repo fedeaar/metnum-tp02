@@ -1,15 +1,14 @@
 import base.IO as IO
+import base.utils as utils
 
 import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
-
+import pandas as pd
 
 """
 descripcion: 
     Aproximación por matriz de similaridad con producto interno y
-    análisis de componentes principales (PCA) para la 
-    red-ego de Facebook.
+    análisis de componentes principales (PCA) para la red ego de 
+    Facebook.
 """
 
 
@@ -17,98 +16,85 @@ descripcion:
 EXPERIMENTO = "ego-facebook"
 DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO)
 
+
 # VARS
-GRAFO = "../catedra/ego-facebook.edges"
-ATRIBUTOS = "../catedra/ego-facebook.feat"
+GRAFO       = "../catedra/ego-facebook.edges"
+CLEAN_GRAFO = DIR_IN + "clean_ego-facebook.conn"
+ATRIBUTOS   = "../catedra/ego-facebook.feat"
+CLEAN_ATTR  = DIR_IN + "clean_ego-facebook.feat"
 
 # OUTPUT
-SIMILARIDAD   = DIR + "facebook_similaridad_{u}.txt"
+SIMILARIDAD_RES = DIR + "facebook_similaridad.csv"
+SIMILARIDAD_PNG = DIR + "facebook_similaridad.png"
+GRAFO_SIM       = DIR_OUT + "grafo_similaridad_{u}.txt"
+
+COLS_SIM = "umbral,flat_corr,av_corr"
+FMT_SIM  = "{0},{1},{2}\n"
+
 
 # UTILS
+def clean_data():
 
-def similaridad_to_grafo(sim, col):
-    links = np.where(sim != 0)
-    links = tuple(zip(*links))
-    text  = []
-    for coord in links:
-        text.append(str(col[coord[1]]) + " " + str(col[coord[0]]))
-    return text
+    # grafo
+    O = IO.readGrafo(GRAFO).astype(int)
+    # indexamos
+    O = np.insert(O, 0, range(1, O.shape[0]+1), axis=1)
+    # del vacios
+    O = O[~np.all(O[:,1:] == 0, axis=1)]
+    O = O[:, ~np.all(O == 0, axis=0)]
 
-def correlacion_adyacencia(aproximado, original):
+    # atributos
+    A = IO.readMatriz(ATRIBUTOS).astype(int)
+    # ordenamos
+    idx = np.argsort(A[:, 0])
+    A = A[idx, :]
+    # filtramos solo los que aparecen en O
+    A = A[np.in1d(A[:, 0], O[:, 0])]
 
-    A = IO.readGrafo(aproximado)
-    O = IO.readGrafo(original)
+    assert(np.allclose(A[:, 0], O[:, 0]))
 
-    # Pueden tener diferente tamaño
-    n = np.size(O, 0)
-    m = np.size(A, 0)
-    faltantes = n - m
-    A = np.pad(A, ((0 , faltantes), (0 , faltantes)))
+    np.savetxt(CLEAN_GRAFO, O[:, 1:], fmt='%i')
+    np.savetxt(CLEAN_ATTR, A[:, 1:], fmt='%i')
 
-    # Elimino filas con tags invalidas
-    A = A[~np.all(O == 0, axis=1)]
-    O = O[~np.all(O == 0, axis=1)]
-    A = A[:,~np.all(O == 0, axis=0)]
-    O = O[:,~np.all(O == 0, axis=0)]
+    return A[:, 1:], O[:, 1:]
 
-    A.flatten()
-    O.flatten()
-    total = O.size
 
-    return np.count_nonzero(A == O) / total
+def correlacion_adyacencia(A, O):
 
-def correlacion_autovalores(aproximado, original):
+    return np.abs(utils.corr(A.flatten(), O.flatten()))
 
-    A = IO.readGrafo(aproximado)
-    O = IO.readGrafo(original)
 
-    # Pueden tener diferente tamaño
-    n = np.size(O, 0)
-    m = np.size(A, 0)
-    faltantes = n - m
-    A = np.pad(A, ((0 , faltantes), (0 , faltantes)))
-
-    # Elimino filas con tags invalidas
-    A = A[~np.all(O == 0, axis=1)]
-    O = O[~np.all(O == 0, axis=1)]
-    A = A[:,~np.all(O == 0, axis=0)]
-    O = O[:,~np.all(O == 0, axis=0)]
+def correlacion_autovalores(A, O):
 
     w1, V1 = np.linalg.eig(A)
     w2, v2 = np.linalg.eig(O)
 
-    idx = np.argsort(w1)[::-1]
-    idx = np.argsort(w2)[::-1]
+    w1 = np.sort(w1)[::-1]
+    w2 = np.sort(w2)[::-1]
 
-    r = np.corrcoef(w1, w2)[0][1].real
-    
-    return r
+    return np.abs(utils.corr(w1, w2))
 
 
 # EXP
+def aproximar_similaridad(A, O):
 
-def aproximar_similaridad():
-    col, X = IO.readAtributos(ATRIBUTOS)
-    S = X @ X.T
-    # El minimo va a ser 0 ya que atributos tiene 1s y 0s
-    umbrales = np.arange(0, np.max(S), 2)
-    corr_ady = []
-    corr_autov = []
+    S = A @ A.T
+    umbrales = np.arange(np.max(S))
     
-    for u in umbrales:
-        T = S
-        T = (T > u).astype(int)
-        T = T - np.diag(np.diag(T)) # Quito autoconexiones
-        # Poscion i,j corresponde a la conexion entre col[i] y col[j]
-        grafo = similaridad_to_grafo(T, col) 
-        # Si hay al menos una conexion
-        if grafo: 
-            path = SIMILARIDAD.format(u = u)
-            #np.savetxt(path, grafo, delimiter="\n", fmt="%s") 
-            corr_ady.append((u, correlacion_adyacencia(path, GRAFO)))
-            corr_autov.append((u, correlacion_autovalores(path, GRAFO)))
-    print(corr_ady)
-    print(corr_autov)
+    IO.createCSV(SIMILARIDAD_RES, COLS_SIM)
+    with open(SIMILARIDAD_RES, 'a', encoding='utf-8') as file:
+
+        for u in umbrales:
+            T = S.copy()
+            T = (T > u).astype(int)
+            T = T - np.diag(np.diag(T)) # Quito autoconexiones
+
+            np.savetxt(GRAFO_SIM.format(u=u), T, fmt='%i')
+
+            ady = correlacion_adyacencia(T, O)
+            av  = correlacion_autovalores(T, O)
+            file.write(FMT_SIM.format(u, ady, av))
+
 
 def pca():
 
@@ -151,6 +137,24 @@ def pca():
     #print(D.size)
     #print(negativos + positivos)
 
+
+
+
 if __name__ == "__main__":
 
-    pass # TODO
+    clean_data()
+    
+    O = IO.readMatriz(CLEAN_GRAFO)
+    A = IO.readMatriz(CLEAN_ATTR)
+
+    aproximar_similaridad(A, O)
+    
+    df = pd.read_csv(SIMILARIDAD_RES)
+    utils.graficar(
+        x=df.umbral.to_list() + df.umbral.to_list(),
+        y=df.flat_corr.to_list() + df.av_corr.to_list(),
+        hue=["adyacencia estirada"] * len(df.flat_corr) + ["lista de autovalores"] * len(df.av_corr),
+        xaxis='umbral',
+        yaxis='correlación',
+        filename=SIMILARIDAD_PNG
+    )

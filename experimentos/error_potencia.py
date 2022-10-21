@@ -29,8 +29,8 @@ FMT_COLS   = "{0},{1},{2},{3},{4},{5},{6},{7}\n"
 # VARIABLES
 SEED = 0 # valor semilla
 N = 20
-MAX_VAR  = int(1e3) # par
-MAX_VAR_SDP = int(1e3)
+MAX_VAR  = int(1e3) # autovalores par
+MAX_VAR_SDP = int(1e3) # elementos de la matriz
 TESTS = 100
 TIPO = ['D', 'H', 'S']
 NITER = 20000
@@ -45,6 +45,7 @@ def make_diagonal(seed=0):
     diagonal = np.random.choice(iterator, N, replace=False)
     
     idx = np.argsort(np.abs(diagonal))[::-1]
+
     return  diagonal[idx], np.diag(diagonal) 
 
 
@@ -55,6 +56,7 @@ def make_diagonalizable(seed=0):
     u = np.random.rand(N, 1)
     u = u / np.linalg.norm(u, 2)
     Q = np.eye(N) - 2 * (u @ u.T)
+
     return  a, Q @ D @ Q.T
 
 

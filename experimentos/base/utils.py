@@ -104,7 +104,7 @@ def corr(x, y, epsilon=1e-16):
     xc = x - x.mean()
     yc = y - y.mean()
     a = xc.T @ yc
-    b = np.sqrt((xc**2).T @ (yc**2))
+    b = np.linalg.norm(xc, 2) * np.linalg.norm(yc, 2)
     return a / b if abs(b) >= epsilon else 0
 
 
@@ -119,15 +119,16 @@ def graficar(x, y, hue, xaxis, yaxis, filename):
     plt.tick_params(axis='both', which='major', labelsize=16)
     plt.legend(title=None)
 
+    fig = plot.get_figure()
     fig.savefig(filename)
     plt.close(fig)
 
 
-def graficar_grafo(A, filename, colores="lightgray", font_color="k", size=(10, 10), node_size=300, font_size=12):
+def graficar_grafo(A, filename, colores="lightgray", font_color="k", size=(10, 10), node_size=300, font_size=12, large=False):
 
     G = nx.from_numpy_array(A)
     f = plt.figure(figsize=size)
-    layout = nx.nx_agraph.graphviz_layout(G, 'neato')
+    layout = nx.nx_agraph.graphviz_layout(G, 'circo' if large else 'neato')
     options={
          'node_color': colores,
          'node_size': node_size,

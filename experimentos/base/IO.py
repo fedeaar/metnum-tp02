@@ -14,7 +14,7 @@ def readGrafo(filename):
     with open(filename) as file:
         data = file.read().splitlines()
         links = [int(y) for x in data for y in x.split(' ')]
-        n = np.max(links)
+        n = np.max(links) if links else 1
         matriz = np.zeros((n, n))
         for i in range(0, len(links), 2):
             matriz[links[i+1] - 1][links[i] - 1] = 1
