@@ -5,9 +5,6 @@
 **/build
 **/cmake-build-debug
 
-**/in/
-**/out/
-
 informe/*.aux
 informe/*.fdb_latexmk
 informe/*.fls
