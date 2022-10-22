@@ -3,10 +3,11 @@
 #include "./src/matriz/matriz_base.h"
 
 int main(int argc,  char** argv) {
-    if (argc < 4 || argc > 14) {
+    if (argc < 4 || argc > 16) {
         cout << "error: cantidad invalida de parametros.\n" <<
              "expected: [source] [iteraciones] [tolerancia]\n"  <<
              "optional: -f      (formato)           ['grafo' | 'matriz'], default = 'matriz'\n" <<
+             "          -x      (vector inicial)    [string]                default = {}" <<
              "          -o      (out dir)           [string],             default = ./\n" <<
              "          -as     (save as)           [string],             default = nombre del source)\n" <<
              "          -p      (precision)         [uint(0, 15)],        default = 15.\n" <<
@@ -50,8 +51,14 @@ int main(int argc,  char** argv) {
     if (params.count("-v")) {
         cout << "calculando autovalores y vectores...\n";
     }
+    vector<double> x = {};
+    if(params.count("-x")){
+        matriz<base> xm = IO::read_matriz<base>(params.at("-x"));
+        for(int i = 0; i < xm.m(); ++i) x.push_back(xm.at(0, i));
+    }
+        
     auto inicio = chrono::high_resolution_clock::now();
-    pair<vector<double>, matriz<base>> av = deflacion(m, m.n(), niter, tol);
+    eigen av = potencia(m, niter, tol, x);
     auto fin = chrono::high_resolution_clock::now();
 
     // write files
@@ -59,8 +66,12 @@ int main(int argc,  char** argv) {
     if (params.count("-v")) {
         cout << "guardando resultado en: " + out << " (si el path existe).\n";
     }
-    IO::potencia::write_out(out + ".autovalores.out", av.first, precision);
-    IO::write_matriz(out + ".autovectores.out", av.second, precision);
+    vector<double> autovalor(m.n(), 0);
+    autovalor[0] = av.eigval;
+    IO::potencia::write_out(out + ".autovalores.out", autovalor, precision);
+    matriz<base> autovector(m.n(), m.n());
+    for(int i = 0; i < m.n(); ++i) autovector.set(0, i, av.eigvec[i]);
+    IO::write_matriz(out + ".autovectores.out", autovector, precision);
 
     // time
     if (params.count("-time")) {
