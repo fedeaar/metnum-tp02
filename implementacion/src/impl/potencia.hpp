@@ -9,9 +9,9 @@
 template<class R>
 eigen potencia(const matriz<R> &A, size_t niter, double tol, vector<double> x) {
 
-    //niter = (size_t) niter / 2;
+    niter = (size_t) niter / 2;
     size_t n = A.n();
-    matriz<R> B = A ;//* A;
+    matriz<R> B = A * A;
 
     vector<double> y, z;
     if(x.size() == 0) x = normalizar(aleatorio(n));

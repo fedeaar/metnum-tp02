@@ -29,8 +29,8 @@ FMT_COLS   = "{0},{1},{2}\n"
 
 # VARIABLES
 N = 20
-NITER = 100
-STEP = 1 # tiene que se par para que tenga sentido
+NITER = 1000
+STEP = 100 # tiene que se par para que tenga sentido
 TOL = 1e-20
 
 def createAutovalores(list, size):
@@ -59,8 +59,7 @@ def make_tests():
     S, V, a = make_av_diferentes()
     x = np.random.randint(-100, 100, size=(N, N))
     x = x.astype(float)
-    x[0] = x[0] * 1.0
-    x[0] = x[0] * (1/ np.linalg.norm(x[0], 2))
+    x[0] = x[0] / np.linalg.norm(x[0], 2)
     np.savetxt(f"{DIR_IN}t_matriz.txt", S)
     np.savetxt(f"{DIR_IN}t_autovalores_dom.txt", a)
     np.savetxt(f"{DIR_IN}t0_x.txt", x)
@@ -75,6 +74,8 @@ def run_tests():
         print(f'corriendo iteracion: {i}') 
         IO.run(f"{DIR_IN}t_matriz.txt", 1, TOL, x=f"{DIR_OUT}t_{int(i/STEP)-1}.autovectores.out", o=DIR_OUT, save_as=f"t_{int(i/STEP)}")
 
+def n2(v):
+    return np.linalg.norm(v, 2)
 
 def eval_tests():
     
@@ -92,6 +93,8 @@ def eval_tests():
             v_d = V[0]
             Q = IO.readAutovectores(f"{DIR_IN}t_autovectores_dom.txt")
             q_d = Q.T[0]
+            # if(n2(q_d) > 0 and n2(v_d) < 0): v_d = -1 * v_d
+
             norma2 = np.linalg.norm(v_d - q_d, 2)
 
             file.write(FMT_COLS.format(i*STEP, error, norma2))
@@ -109,8 +112,8 @@ if __name__ == "__main__":
     
     utils.graficar(
         x=df.iter, 
-        # y=df.error_autovalor,
-        y=df.error_n2_autovectores, 
+        y=df.error_autovalor,
+        # y=df.error_n2_autovectores, 
         hue=["caso testigo"]*(int(NITER/STEP)), 
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
