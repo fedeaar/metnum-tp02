@@ -94,49 +94,37 @@ def aproximar_similaridad(A, O):
             ady = correlacion_adyacencia(T, O)
             av  = correlacion_autovalores(T, O)
             file.write(FMT_SIM.format(u, ady, av))
+            print(u, ady, av)
 
 
 def pca():
 
-    # Primero calculo autovectores de matriz de covarianza
-    col, X = IO.readAtributos(ATRIBUTOS)
+    O = IO.readMatriz(CLEAN_GRAFO)
+    X = IO.readMatriz(CLEAN_ATTR)
+
+    # Matriz de covarianza
+    # col, X = IO.readAtributos(ATRIBUTOS)
     Xcentered = X - X.mean(0)
     n = np.size(Xcentered, 0)
     M = (Xcentered.T@Xcentered) / (n-1)
-    a, V = np.linalg.eig(M)
-    idx = np.argsort(a)[::-1]
-    a = a[idx]
-    V = V[:,idx] 
 
-    # Deberian estar ordenados de mayor a menor
-    # A es de m x n
-    # M es de n x n
-    # -> autovalores son de largo n
-    # A * autovalor(M) se puede hacer
+    # Diagonalizacion de M
+    autovals, V = np.linalg.eig(M)
+    idx = np.argsort(autovals)[::-1]    # Indexacion para ordenar autovectores segun autovalores   
+    autovals = autovals[idx]
+    V = V[:,idx]                        # La matriz V se usa para cambio de base
     
     # Observo los diferentes valores de suma acumulada de varianza
-    acc = np.cumsum(a / np.sum(a)).real
+    acc = np.cumsum(autovals / np.sum(autovals)).real
     precisiones = np.array([0.5, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99])
-    for i in precisiones:
-        k = np.where(acc > i)
-        print(f"Autovectores para representar el {i * 100}%: ", k[0][0])
-    print("Total de autovectores:", acc.size)
 
-    # Para empezar voy a tomar k tal que represento el 90%
-    k = np.where(acc > 0.9)[0][0]
-    A = (X @ V[:,:k]).real # Genera nueva matriz de n x k 
-    
-    # Calculo matriz de similaridad
-    D = A @ A.T
-    # Algunos tests despues borro
-    #print(D)
-    #positivos = (D > 0).sum()
-    #print(positivos)
-    #negativos = (D < 0).sum()
-    #print(negativos)
-    #print(D.size)
-    #print(negativos + positivos)
-
+    for p in precisiones:
+        # Valor de k tal que represento el p%
+        k = np.where(acc > p)[0][0]
+        # Cambio de base
+        A = (X @ V[:, :k]).real
+        
+        aproximar_similaridad(A, O)
 
 
 
@@ -144,17 +132,18 @@ if __name__ == "__main__":
 
     clean_data()
     
-    O = IO.readMatriz(CLEAN_GRAFO)
-    A = IO.readMatriz(CLEAN_ATTR)
+    # O = IO.readMatriz(CLEAN_GRAFO)
+    # A = IO.readMatriz(CLEAN_ATTR)
+    # aproximar_similaridad(A, O)
 
-    aproximar_similaridad(A, O)
+    pca()
     
-    df = pd.read_csv(SIMILARIDAD_RES)
-    utils.graficar(
-        x=df.umbral.to_list() + df.umbral.to_list(),
-        y=df.flat_corr.to_list() + df.av_corr.to_list(),
-        hue=["adyacencia estirada"] * len(df.flat_corr) + ["lista de autovalores"] * len(df.av_corr),
-        xaxis='umbral',
-        yaxis='correlación',
-        filename=SIMILARIDAD_PNG
-    )
+    # df = pd.read_csv(SIMILARIDAD_RES)
+    # utils.graficar(
+    #     x=df.umbral.to_list() + df.umbral.to_list(),
+    #     y=df.flat_corr.to_list() + df.av_corr.to_list(),
+    #     hue=["adyacencia estirada"] * len(df.flat_corr) + ["lista de autovalores"] * len(df.av_corr),
+    #     xaxis='umbral',
+    #     yaxis='correlación',
+    #     filename=SIMILARIDAD_PNG
+    # )
