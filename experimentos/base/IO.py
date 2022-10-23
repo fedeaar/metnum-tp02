@@ -110,7 +110,7 @@ def createCSV(filename, columnas):
 
 
 def run(filename, iter, epsilon, 
-        f="matriz",x="./",o="./", precision=15, save_as=None, time=False, verbose=False,
+        f="matriz", o="./", precision=15, save_as=None, time=False, verbose=False,
         exe_path=EXE_PATH): # TODO: test
 
     call_params = [
@@ -118,10 +118,9 @@ def run(filename, iter, epsilon,
         exe_path, 
         filename, str(iter), str(epsilon),
         "-f", f"{f}",
-        "-x", f"{x}",
         "-o", f"{o}",
         f"{'-as' if save_as else ''}", f"{save_as}" if save_as else "", 
-        f"-precision", f"{precision}", 
+        f"-presicion", f"{precision}", 
         "-time" if time else "",
         "-v" if verbose else ""
     ]

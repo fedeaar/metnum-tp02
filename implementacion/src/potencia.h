@@ -14,7 +14,7 @@ struct eigen
 size_t MAX_TRIES = 100;
 
 template<class R>
-eigen potencia(const matriz<R> &A, size_t niter, double tol, vector<double> x = {});
+eigen potencia(const matriz<R> &A, size_t niter, double tol);
 
 template<class R>
 pair<vector<double>, matriz<R>> deflacion(const matriz<R> &A, size_t k, size_t niter, double tol);
