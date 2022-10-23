@@ -1,3 +1,4 @@
+from re import I
 import base.IO
 
 import numpy as np
@@ -49,13 +50,15 @@ def norma(x, norma):
     return np.linalg.norm(x, norma)
 
 
-def metodo_potencia(A, niter=10000, epsilon=1e-6):
+def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
 
-    niter = niter // 2
-    B = A @ A
+    # niter = niter // 2
+    # B = A @ A
     n = A.shape[0]
+    B = A @ np.eye(n)
     
-    x = np.random.rand(n, 1)
+    if(len(x) == 0): x = np.random.rand(n, 1)
+
     z = np.zeros((n, 1))
     if np.allclose(x, z, epsilon):
         x = z
@@ -71,7 +74,7 @@ def metodo_potencia(A, niter=10000, epsilon=1e-6):
         x = y / n
     a = (x.T @ A @ x) / (x.T @ x)
 
-    return a[0, 0], x
+    return a, x
 
 
 def metodo_deflacion(A, k, niter=10000, epsilon=1e-6):
@@ -119,6 +122,7 @@ def graficar(x, y, hue, xaxis, yaxis, filename):
     plt.tick_params(axis='both', which='major', labelsize=16)
     plt.legend(title=None)
 
+    fig = plot.get_figure()
     fig.savefig(filename)
     plt.close(fig)
 
