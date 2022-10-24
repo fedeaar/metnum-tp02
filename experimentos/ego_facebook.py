@@ -32,6 +32,8 @@ GRAFO_PNG       = DIR + "grafo_{name}.png"
 COLS_SIM = "umbral,flat_corr,av_corr"
 FMT_SIM  = "{0},{1},{2}\n"
 
+ERROR = DIR + "error_relativo.csv"
+
 
 # UTILS
 def clean_data():
@@ -76,6 +78,40 @@ def correlacion_autovalores(A, O):
     return np.abs(utils.corr(w1, w2))
 
 
+def correlacion_autovalores_pot(file):
+
+    w1 = IO.readMatriz(file[:-3] + "autovalores.out") 
+    V1 = IO.readMatriz(file[:-3] + "autovectores.out") 
+
+    w2 = IO.readMatriz(CLEAN_GRAFO + "autovalores.out") 
+    V2 = IO.readMatriz(CLEAN_GRAFO + "autovectores.out") 
+
+    return np.abs(utils.corr(w1, w2))
+
+
+def calcular_av(file):
+
+    A = IO.readMatriz(file)
+    mode = "base"
+    if np.sum((A > 0)) > (A.shape[0] ** 2) / 2:
+        mode = "alt"
+    IO.run(grafo, 1e5, 1e-20,
+        f="matriz", m=mode, o=DIR_OUT, precision=15, save_as=None)
+
+    M = IO.readMatriz(file)
+    w = IO.readMatriz(file[:-3] + "autovalores.out") 
+    V = IO.readMatriz(file[:-3] + "autovectores.out")
+
+    error = M @ V - V @ np.diag(w)
+
+    with open(ERROR, 'a', encoding="utf-8") as wfile:
+        for i in range(error.shape[1]):
+            error_inf = np.linalg.norm(error[:, i], np.inf)
+            error_1   = np.linalg.norm(error[:, i], 1)
+            wfile.write(f"{file},{w[i]},{error_inf},{error_1}\n")
+        
+
+
 def correlacion_promedio(A, O):
     
     A = A.flatten()
@@ -90,7 +126,10 @@ def aproximar_similaridad(A, O):
     S = A @ A.T
     umbrales = np.arange(np.max(S))
     
+    calcular_av(CLEAN_GRAFO)
+
     IO.createCSV(SIMILARIDAD_RES, COLS_SIM)
+    IO.createCSV(ERROR, "mat,autovalor,error_inf_avect,error_1_avect")
     with open(SIMILARIDAD_RES, 'a', encoding='utf-8') as file:
 
         for u in umbrales:
@@ -101,7 +140,9 @@ def aproximar_similaridad(A, O):
             np.savetxt(GRAFO_SIM.format(u=u), T, fmt='%i')
 
             ady = correlacion_adyacencia(T, O)
-            av  = correlacion_autovalores(T, O)
+            #av  = correlacion_autovalores(T, O)
+            calcular_av(GRAFO_SIM.format(u=u))
+            av = correlacion_autovalores_pot(GRAFO_SIM.format(u=u))
             file.write(FMT_SIM.format(u, ady, av))
             # print(u, ady, av)
 
@@ -139,11 +180,10 @@ def pca():
 
 if __name__ == "__main__":
 
-    # clean_data()
-    
-    # O = IO.readMatriz(CLEAN_GRAFO)
-    # A = IO.readMatriz(CLEAN_ATTR)
-    # aproximar_similaridad(A, O)
+    clean_data()
+    O = IO.readMatriz(CLEAN_GRAFO)
+    A = IO.readMatriz(CLEAN_ATTR)
+    aproximar_similaridad(A, O)
 
     # pca()
     
