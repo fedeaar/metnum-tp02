@@ -1,0 +1,22 @@
+- Ya vimos que si los autovalores son todos diferentes en módulo el método funciona bien.
+- Pero que es lo que pasa cuando hay autovalores de igual módulo?
+
+Para simplificar el analisis separamos en casos:
+
+    1) 2 autovalores dominantes que son iguales
+    2) 2 autovalores dominantes que tienen el mismo valor absoluto pero son diferentes
+
+1) 
+let norm := |sum(ai * Li * xi)|2
+lim{k⟶∞} yk = sum(ai * Li * xi) / norm
+             = (sum(ai * Li * xi) / L1) / (norm / L1)
+let bi := ai / (norm / L1)
+
+lim{k⟶∞} yk = sum( bi * (Li/L1) * xi)
+             = b1 * x1 + b2 * x2
+
+Por lo tanto yk no converge a x1 ni a x2 sino que converge a la suma de b1 * x1 + b2 * x2
+Pero además observamos otro problema que es que al haber 2 autovalores repetidos, la
+
+
+ 

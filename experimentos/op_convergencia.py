@@ -36,11 +36,10 @@ EPSILON = 1E-4
 REP = 10
 
 def createAutovalores(list, size):
-    list = np.array(list)
     mn = min(list)
     for i in range(size-len(list)):
-        list = np.append(list, np.random.randint(abs(mn)))
-    return list
+        list.append(np.random.randint(abs(mn)-1) + 1)
+    return np.array(list)
 
 def expected(n):
     D = createAutovalores([n], n)    

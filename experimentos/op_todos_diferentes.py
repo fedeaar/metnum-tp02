@@ -35,11 +35,10 @@ STEP = 10 # tiene que se par para que tenga sentido
 TOL = 0
 
 def createAutovalores(list, size):
-    list = np.array(list)
     mn = min(list)
     for i in range(size-len(list)):
-        list = np.append(list, np.random.randint(abs(mn)))
-    return list
+        list.append(np.random.randint(abs(mn)-1) + 1)
+    return np.array(list)
 
 def make_av_diferentes():
     D = createAutovalores([N], N)    

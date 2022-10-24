@@ -22,25 +22,23 @@ AVALS_EXPECTED = f"{DIR_IN}avals_exp.txt"
 
 # OUT
 SUMMARY   = f"{DIR}{EXPERIMENTO}_summary.csv"
-GRAFICO_AVAL = f"{DIR}{EXPERIMENTO}_val.png"
-GRAFICO_AVEC = f"{DIR}{EXPERIMENTO}_vec.png"
+GRAFICO_POS = f"{DIR}{EXPERIMENTO}_pos.png"
+GRAFICO_NEG = f"{DIR}{EXPERIMENTO}_neg.png"
 
 # FMT
-COLS       = 'iter,error_autovalor,error_n2_autovectores'
+COLS       = 'iter,error_v1,error_v2'
 FMT_COLS   = "{0},{1},{2}\n"
 
 # VARIABLES
-N = 5
-NITER = 100
-STEP = 1 # tiene que se par para que tenga sentido
+N = 20
+NITER = 100 # tiene que ser par
 TOL = 0
 
 def createAutovalores(list, size):
-    list = np.array(list)
     mn = min(list)
     for i in range(size-len(list)):
-        list = np.append(list, np.random.randint(abs(mn)))
-    return list
+        list.append(np.random.randint(abs(mn)-1) + 1)
+    return np.array(list)
 
 def make_av_diferentes():
     D = createAutovalores([N, -N], N)    
@@ -54,6 +52,9 @@ def make_av_diferentes():
     a, V = utils.eig(S)
     a = a.astype(float)
     V = V.astype(float)
+    if(a[0] < a[1]): V.T[[0,1]] = V.T[[1, 0]]
+
+
     return S, V, a
 
 
@@ -73,17 +74,11 @@ def make_tests():
 # RUN 
 def run_tests():
     S, x = make_tests()
-
-    print(f'corriendo iteracion: {0}') 
-    a, x = utils.metodo_potencia(S, 0, TOL, x)
-    np.savetxt(pathAvec(0), x)
-    np.savetxt(pathAval(0), [a])
-
-    for i in range(STEP, NITER+1, STEP):
+    for i in range(NITER+1):
         print(f'corriendo iteracion: {i}') 
-        a, x = utils.metodo_potencia(S, STEP, TOL, x)
-        np.savetxt(pathAvec(int(i/STEP)), x)
-        np.savetxt(pathAval(int(i/STEP)), [a])
+        a, x = utils.metodo_potencia(S, 1, TOL, x)
+        np.savetxt(pathAvec(i), x)
+        np.savetxt(pathAval(i), [a])
 
 
 def n2(v):
@@ -91,10 +86,18 @@ def n2(v):
 
 def pathAval(i):
     return f"{DIR_OUT}t_{i}_autovalor.out"
+    
 def pathAvec(i):
     return f"{DIR_OUT}t_{i}_autovector.out"
 
+def cmp(x, y, tol = 1e-3):
+    return np.allclose(x, y, tol)
+
+def nml(x):
+    return x / n2(x)
+
 def eval_tests():
+    # importo S
     S = IO.readMatriz(MATRIZ_IN)
 
     # importo x
@@ -109,21 +112,34 @@ def eval_tests():
     Q = IO.readAutovectores(AVECS_EXPECTED)
     q1 = Q.T[0]
     q2 = Q.T[1]
-    vf = IO.readAutovectores(pathAvec( int(NITER/STEP) ))
-    
-    u = np.dot(y0, q1) * q1 + np.dot(y0, q2) * q2
-    u = u / n2(u)
+
+    vf = IO.readAutovectores(pathAvec( NITER ))
+    vantef = IO.readAutovectores(pathAvec( NITER-1 ))
+
+    invertido_r1 = False
+    if(cmp(nml(vf + vantef), -q1)): invertido_r1 = True
+
+    invertido_r2 = False
+    if(cmp(nml(vf - vantef), -q2)): invertido_r2 = True 
+
     with open(RES, 'a', encoding="utf-8") as file:
-        for i in range(int(NITER/STEP)+1):
+        for i in range(0, NITER, 2):
             print(f'evaluando resultados: {i}') 
 
-            a = IO.readAutovalores(pathAval(i))
-            error = abs(a - e)
+            v1 = IO.readAutovectores(pathAvec(i))
+            v2 = IO.readAutovectores(pathAvec(i+1))
 
-            v = IO.readAutovectores(pathAvec(i))
-            norma2 = utils.norma(v - u, 2)
+            r1 = v1 + v2
+            r1 = r1 / n2(r1)
+            norma2_r1 = n2(r1-q1)
+            if invertido_r1: norma2_r1 = 2 - norma2_r1
 
-            file.write(FMT_COLS.format(i*STEP, error, norma2))
+            r2 = v1 - v2
+            r2 = r2 / n2(r2)
+            norma2_r2 = n2(r2-q2)
+            if invertido_r2: norma2_r2 = 2 - norma2_r2
+
+            file.write(FMT_COLS.format(i, norma2_r1, norma2_r2))
 
 if __name__ == "__main__":
 
@@ -136,16 +152,16 @@ if __name__ == "__main__":
     
     utils.graficar(
         x=df.iter, 
-        y=df.error_n2_autovectores, 
-        hue=["caso testigo"]*(int(NITER/STEP) + 1), 
+        y=df.error_v1, 
+        hue=["caso testigo"]*(NITER//2), 
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
-        filename=GRAFICO_AVEC)
-
+        filename=GRAFICO_POS)
+  
     utils.graficar(
         x=df.iter, 
-        y=df.error_autovalor,
-        hue=["caso testigo"]*(int(NITER/STEP) + 1), 
+        y=df.error_v2, 
+        hue=["caso testigo"]*(NITER//2), 
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
-        filename=GRAFICO_AVAL)
+        filename=GRAFICO_NEG)

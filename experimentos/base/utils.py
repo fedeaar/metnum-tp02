@@ -52,6 +52,7 @@ def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
     
     if(len(x) == 0): 
         x = np.random.rand(n, 1)
+        x = [k[0] for k in x]
 
     z = np.zeros((n, 1))
     if np.allclose(x, z, epsilon):
