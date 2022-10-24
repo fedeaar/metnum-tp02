@@ -1,0 +1,19 @@
+proc potencia'(in A: matriz<n, n>, in q: Nat, in t: Real, 
+               in alpha: Nat, in epsilon: Real) {
+    
+    res := false
+
+    i := 0
+    do {
+
+        l, v := potencia(A, q, t)
+        res  := norma(A * v - v * l, 2) < epsilon
+        i    := i + 1
+
+    } while not res and i < alpha
+
+    if !res {
+        return -1
+    }
+    return l, v
+}
