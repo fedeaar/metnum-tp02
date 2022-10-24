@@ -91,12 +91,13 @@ def correlacion_autovalores_pot(file):
 
 def calcular_av(file):
 
+    print(file)
     A = IO.readMatriz(file)
     mode = "base"
-    if np.sum((A > 0)) > (A.shape[0] ** 2) / 2:
+    if np.sum((A > 0)) / (A.shape[0] ** 2) > 1/3:
         mode = "alt"
-    IO.run(grafo, 1e5, 1e-20,
-        f="matriz", m=mode, o=DIR_OUT, precision=15, save_as=None)
+    IO.run(file, 1e4, 1e-20,
+        f="matriz", m=mode, o=DIR_OUT, precision=15, save_as=None, verbose=True)
 
     M = IO.readMatriz(file)
     w = IO.readMatriz(file[:-3] + "autovalores.out") 
@@ -133,6 +134,7 @@ def aproximar_similaridad(A, O):
     with open(SIMILARIDAD_RES, 'a', encoding='utf-8') as file:
 
         for u in umbrales:
+            print(u)
             T = S.copy()
             T = (T > u).astype(int)
             T = T - np.diag(np.diag(T)) # Quito autoconexiones
@@ -198,16 +200,16 @@ if __name__ == "__main__":
     # )
 
     # grafos
-    grafos = [
-        CLEAN_GRAFO,
-        *[GRAFO_SIM.format(u=f"{i}.0") for i in range(14)]
-    ]
-    for i, grafo in enumerate(grafos):
-        A = IO.readMatriz(grafo)
-        utils.graficar_grafo(A, 
-            GRAFO_PNG.format(name=i if i != 0 else 'facebook'), 
-            node_color='tab:blue', 
-            edge_color='darkgray',
-            size=(20, 20), 
-            node_size=300, 
-            with_labels=False)
+    # grafos = [
+    #     CLEAN_GRAFO,
+    #     *[GRAFO_SIM.format(u=f"{i}.0") for i in range(14)]
+    # ]
+    # for i, grafo in enumerate(grafos):
+    #     A = IO.readMatriz(grafo)
+    #     utils.graficar_grafo(A, 
+    #         GRAFO_PNG.format(name=i if i != 0 else 'facebook'), 
+    #         node_color='tab:blue', 
+    #         edge_color='darkgray',
+    #         size=(20, 20), 
+    #         node_size=300, 
+    #         with_labels=False)

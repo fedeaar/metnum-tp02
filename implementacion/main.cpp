@@ -5,7 +5,7 @@
 
 
 int main(int argc,  char** argv) {
-    if (argc < 4 || argc > 15) {
+    if (argc < 4 || argc > 16) {
         cout << "error: cantidad invalida de parametros.\n" <<
              "expected: [source] [iteraciones] [tolerancia]\n"  <<
              "optional: -f      (formato)           ['grafo' | 'matriz'], default = 'matriz'\n" <<
