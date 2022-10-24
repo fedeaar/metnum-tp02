@@ -98,7 +98,7 @@ if __name__ == "__main__":
     utils.graficar(
         x=df.N, 
         y=df.iteraciones, 
-        hue=["caso testigo"]*(int((N-2)/STEP) + 1), 
+        hue=["caso testigo"]*((N-2)//STEP + 1), 
         xaxis="N", 
         yaxis="ITERACIONES", 
         filename=GRAFICO)

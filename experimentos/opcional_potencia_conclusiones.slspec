@@ -1,5 +1,5 @@
-- Ya vimos que si los autovalores son todos diferentes en módulo el método funciona bien.
-- Pero que es lo que pasa cuando hay autovalores de igual módulo?
+Ya vimos que si los autovalores son todos diferentes en módulo el método funciona bien.
+Pero que es lo que pasa cuando hay autovalores de igual módulo?
 
 Para simplificar el analisis separamos en casos:
 
@@ -7,16 +7,58 @@ Para simplificar el analisis separamos en casos:
     2) 2 autovalores dominantes que tienen el mismo valor absoluto pero son diferentes
 
 1) 
-let norm := |sum(ai * Li * xi)|2
-lim{k⟶∞} yk = sum(ai * Li * xi) / norm
-             = (sum(ai * Li * xi) / L1) / (norm / L1)
-let bi := ai / (norm / L1)
+let norm := |sum(ai * Li^K * xi)|2
+lim{k⟶∞} yk = sum(ai * Li^k * xi) / norm
+             = (sum(ai * Li^k * xi) / L1^k) / (norm / L1^k)
+let bi := ai / (norm / L1^k)
 
-lim{k⟶∞} yk = sum( bi * (Li/L1) * xi)
+lim{k⟶∞} yk = sum( bi * (Li^k/L1^k) * xi)
              = b1 * x1 + b2 * x2
 
-Por lo tanto yk no converge a x1 ni a x2 sino que converge a la suma de b1 * x1 + b2 * x2
-Pero además observamos otro problema que es que al haber 2 autovalores repetidos, la
+Pero algo interesante es que si x1 y x2 son autovectores con el mismo L =>
+
+A (b1 * x1 + b2 * x2) = A * b1 * x1 + A * b2 * x2 = L1 * b1 * x1 + L1 * b1 * x1 = L1 * (b1 * x1 + b2 * x2)
+
+este resultado lo comprobamos experimentalmente, como se puede observar en el *gráfico* en cada iteración del metodo calculamos norma2((b1 * x1 + b2 * x2) - yk) y se puede ver claramente como converge a 0 a medida que la cantidad de iteraciones incrementa. 
+
+o sea que no importa quienes sean b1, b2 se cumple que b1 * x1 + b2 * x2 es un autovector y L1 es su autovalor por lo tanto en el caso donde hay 2 autovalores dominantes iguales, el metodo de la potencia converge correctamente, además vale no solo cuando la cantidad de autovalores dominantes repetidos son 2 sino que no importa la cantidad de veces que este repetido el autovalor dominante se cumple que 
+sum(bi * xi) resulta en un autovector de lambda = L1
+
+2) 
+Por otro lado en el caso donde se encuentran ambos autovalores L1 y -L1
+
+let norm := |sum(ai * Li^K * xi)|2
+lim{k⟶∞} yk = sum(ai * Li^k * xi) / norm
+             = (sum(ai * Li^k * xi) / L1^k) / (norm / L1^k)
+let bi := ai / (norm / L1^k)
+
+lim{k⟶∞} yk = sum( bi * (Li^k/L1^k) * xi)
+              { b1 * x1 + b2 * x2 si k es par
+              { b1 * x1 - b2 * x2 sino
+
+Observamos lo siguiente 
+        A * (b1 * x1 + b2 * x2)  = A * b1 * x1 + A * b2 * x2 = L1 * b1 * x1 - L1 * b2 * x2 = L1 * (b1 * x1 - b2 * x2)
+        Por lo tanto (b1 * x1 + b2 * x2) no es autovector
+
+        A * (b1 * x1 - b2 * x2)  = A * b1 * x1 - A * b2 * x2 = L1 * b1 * x1 + L1 * b2 * x2 = L1 * (b1 * x1 + b2 * x2)
+        Por lo tanto (b1 * x1 - b2 * x2) tampoco es autovector
+
+Pero si computás la suma entre 1 iteración par del método de la potencia y una posición impar obtenes:
+    (b1 * x1 + b2 * x2) + (b1 * x1 - b2 * x2) = 2 * b1 * x1 que sabemos que es autovector
+
+Además si computás la resta entre 1 iteración par del método de la potencia y una posición impar obtenes:
+    (b1 * x1 + b2 * x2) - (b1 * x1 - b2 * x2) = 2 * b2 * x2 que sabemos que tambien es autovector y además es ortogonal a x1
+
+Por lo tanto concluimos que el método de la potencia en el caso donde hay autovalores iguales en módulo no debería funcionar ya que oscila entre iteraciones pares e impares entre 2 vectores que ninguno es autovector, este resultado lo comprobamos experimentalmente, como se puede observar en el *gráfico* se eligió un vector aleatorio constante y en cada iteración del metodo calculamos 
+norma2(randVector - yk) y se puede ver claramente como oscila entre pares e impares. 
+
+Pero proponemos una modificación en el método de la potencia que en caso de fallar calcule la suma y la resta entre sus últimas dos iteraciones y de esa manera obtendrá 2 autovectores correctos en cada llamado al método.
+
+Cabe destacar que este resultado se mantiene sin importar cuantas veces este repetido el autovalor ya sea el positivo o el negativo
+            
+
+
+
 
 
  
