@@ -27,6 +27,7 @@ CLEAN_ATTR  = DIR_IN + "clean_ego-facebook.feat"
 SIMILARIDAD_RES = DIR + "facebook_similaridad.csv"
 SIMILARIDAD_PNG = DIR + "facebook_similaridad.png"
 GRAFO_SIM       = DIR_OUT + "grafo_similaridad_{u}.txt"
+GRAFO_PNG       = DIR + "grafo_{name}.png"
 
 COLS_SIM = "umbral,flat_corr,av_corr"
 FMT_SIM  = "{0},{1},{2}\n"
@@ -94,7 +95,7 @@ def aproximar_similaridad(A, O):
             ady = correlacion_adyacencia(T, O)
             av  = correlacion_autovalores(T, O)
             file.write(FMT_SIM.format(u, ady, av))
-            print(u, ady, av)
+            # print(u, ady, av)
 
 
 def pca():
@@ -130,13 +131,13 @@ def pca():
 
 if __name__ == "__main__":
 
-    clean_data()
+    # clean_data()
     
     # O = IO.readMatriz(CLEAN_GRAFO)
     # A = IO.readMatriz(CLEAN_ATTR)
     # aproximar_similaridad(A, O)
 
-    pca()
+    # pca()
     
     # df = pd.read_csv(SIMILARIDAD_RES)
     # utils.graficar(
@@ -147,3 +148,18 @@ if __name__ == "__main__":
     #     yaxis='correlación',
     #     filename=SIMILARIDAD_PNG
     # )
+
+    # grafos
+    grafos = [
+        CLEAN_GRAFO,
+        *[GRAFO_SIM.format(u=f"{i}.0") for i in range(14)]
+    ]
+    for i, grafo in enumerate(grafos):
+        A = IO.readMatriz(grafo)
+        utils.graficar_grafo(A, 
+            GRAFO_PNG.format(name=i if i != 0 else 'facebook'), 
+            node_color='tab:blue', 
+            edge_color='darkgray',
+            size=(20, 20), 
+            node_size=300, 
+            with_labels=False)

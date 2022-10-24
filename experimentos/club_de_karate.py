@@ -104,7 +104,13 @@ def medir_corte_minimo():
         for i in range(V.shape[0]):  
             CORTE = cortar_grafo(M, V[:,i])
             path = GRAFO_CORTE.format(i=i, a=np.round(a[i], 2))
-            utils.graficar_grafo(CORTE, path, colores, font_color='white', size=(10, 10), node_size=1000, font_size=15)
+            utils.graficar_grafo(CORTE, path, 
+                size=(10, 10),
+                node_size=1000,
+                font_size=15, 
+                node_color=colores, 
+                edge_color='black',
+                font_color='white') 
             csv.write(f"{np.round(a[i], 6)},{np.round(np.abs(utils.corr(V[:, i], labels)), 6)}\n")
 
     # guardamos autovectores y el minimo
@@ -118,6 +124,11 @@ def medir_corte_minimo():
 # MAIN
 if __name__ == "__main__":
     
-    utils.graficar_grafo(IO.readMatriz(MATRIZ), GRAFO, size=(10, 10), node_size=1000, font_size=15)
+    utils.graficar_grafo(IO.readMatriz(MATRIZ), GRAFO, 
+        size=(10, 10), 
+        node_size=1000, 
+        font_size=15, 
+        edge_color='black')
+        
     medir_centralidad()
     medir_corte_minimo()

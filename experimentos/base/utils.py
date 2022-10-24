@@ -124,18 +124,27 @@ def graficar(x, y, hue, xaxis, yaxis, filename):
     plt.close(fig)
 
 
-def graficar_grafo(A, filename, colores="lightgray", font_color="k", size=(10, 10), node_size=300, font_size=12, large=False):
+def graficar_grafo(A, filename, 
+    size=(10, 10),
+    node_size=300,
+    font_size=12, 
+    node_color="lightgray", 
+    edge_color='black',
+    font_color="k", 
+    with_labels=True):
 
     G = nx.from_numpy_array(A)
     f = plt.figure(figsize=size)
-    layout = nx.nx_agraph.graphviz_layout(G, 'circo' if large else 'neato')
+    layout = nx.nx_agraph.graphviz_layout(G, 'neato')
     options={
-         'node_color': colores,
+         'node_color': node_color,
          'node_size': node_size,
          'font_size': font_size,
-         'font_color': font_color
+         'font_color': font_color,
+         'edge_color': edge_color,
+         'with_labels': with_labels
     }
-    nx.draw(G, layout, with_labels=True, ax=f.add_subplot(), **options)
+    nx.draw(G, layout, ax=f.add_subplot(), **options)
 
     f.savefig(filename)
     plt.close(f)
