@@ -32,24 +32,25 @@ Obsérvese que cuanto más alto sea el umbral, menores conexiones tendremos en n
 
 \begin{figure}[!htbp]
     \centering
-    \subfloat[Original]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_facebook.png}}\hfill
-    \subfloat[$u = 0$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_0.png}}\hfill
-    \subfloat[$u = 1$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_1.png}}\hfill
-    \subfloat[$u = 2$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_2.png}}\hfill
+    \subfloat[Original]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_facebook.png}}\hfill
+    \subfloat[$u = 0$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_1.png}}\hfill
+    \subfloat[$u = 1$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_2.png}}\hfill
+    \subfloat[$u = 2$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_3.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[$u = 3$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_3.png}}\hfill
-    \subfloat[$u = 4$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_4.png}}\hfill
-    \subfloat[$u = 5$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_5.png}}\hfill
-    \subfloat[$u = 6$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_6.png}}\hfill
+    \subfloat[$u = 3$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_4.png}}\hfill
+    \subfloat[$u = 4$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_5.png}}\hfill
+    \subfloat[$u = 5$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_6.png}}\hfill
+    \subfloat[$u = 6$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_7.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[$u = 7$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_7.png}}\hfill    
-    \subfloat[$u = 8$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_8.png}}\hfill
-    \subfloat[$u = 9$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_9.png}}\hfill
-    \subfloat[$u = 10$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_10.png}}\hfill
+    \subfloat[$u = 7$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_8.png}}\hfill    
+    \subfloat[$u = 8$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_9.png}}\hfill
+    \subfloat[$u = 9$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_10.png}}\hfill
+    \subfloat[$u = 10$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_11.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[$u = 11$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_11.png}}\hfill
-    \subfloat[$u = 12$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_forceatlas2_12.png}}\hfill
-    \caption{Todos los grafos correspondientes a los diferentes umbrales, tomados para la matriz de similaridad de los atributos \textbf{C}. Observar que al aumentar $u$ crece la cantidad de nodos aislados.}
+    \subfloat[$u = 11$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_12.png}}\hfill
+    \subfloat[$u = 12$]{\includegraphics[width=.25\textwidth]{/files/src/.media/ego/grafo_13.png}}\hfill
+    \caption{Todos los grafos correspondientes a los diferentes umbrales, tomados para la matriz de similaridad de los atributos \textbf{C}. Los números debajo de cada imagen indican la cantidad de conexiones.}
+    \label{grafos_aproximados}
 \end{figure}
 
 \vspace{1em}
@@ -66,26 +67,26 @@ Un primer acercamiento a este problema fue calcular la cantidad de posiciones co
 \begin{figure}[!htbp]
 \begin{equation*}
     \begin{bmatrix}
-    0  &\%\ 7.6054231   \\
-    1  &\%\ 32.947445   \\
-    2  &\%\ 58.570142   \\
-    3  &\%\ 70.993985   \\
-    4  &\%\ 84.162733   \\
-    5  &\%\ 91.537012   \\
-    6  &\%\ 94.322073   \\
-    7  &\%\ 95.214277   \\
-    8  &\%\ 95.403337   \\
-    9  &\%\ 95.446393   \\
-    10 &\%\ 95.455457   \\
-    11 &\%\ 95.458695   \\  
-    12 &\%\ 95.459342   \\
-    13 &\%\ 95.459990   \\
+    0  &\%\ 7.6054231  &298.799 \\
+    1  &\%\ 32.947445  &213.902\\
+    2  &\%\ 58.570142   &127.382\\
+    3  &\%\ 70.993985    &86.847\\
+    4  &\%\ 84.162733   &43.091\\
+    5  &\%\ 91.537012   &16.850 \\
+    6  &\%\ 94.322073   &5.727\\
+    7  &\%\ 95.214277   &1.517\\
+    8  &\%\ 95.403337   &405\\
+    9  &\%\ 95.446393   &108 \\
+    10 &\%\ 95.455457   &36\\
+    11 &\%\ 95.458695   &8\\  
+    12 &\%\ 95.459342   &2\\
+    13 &\%\ 95.459990   &0\\
     \end{bmatrix}
 \end{equation*}
-\caption{Similitud elemento a elemento de las matrices de adyacencia, la primer columna representa el umbral tomado para la aproximación y la segunda el porcentaje de elementos correctamente estimados con respecto a la original. Se incluye un grafo sin aristas, con $u = 13$.} \label{promedio_similaridad}
+\caption{Similitud elemento a elemento de las matrices de adyacencia, la primer columna representa el umbral tomado para la aproximación y la segunda el porcentaje de elementos correctamente estimados con respecto a \textbf{E}. La tercera columna indica la cantidad de aristas del grafo; la red `ego' original cuenta con 14.024.} \label{promedio_similaridad}
 \end{figure}
 
-Como puede observarse, desafortunadamente, los grafos con muy pocas conexiones, como prueban ser tomando los umbrales $u > 10$, tienen de los valores más altos, mientras que otros con cantidad de aristas similares a la red original, como con $u = 5$ o $u = 6$ (16.850 y 5.727 conexiones respectivamente), parecerían ser peores aproximaciones. Esto se da por la naturaleza rala de nuestras matrices de adyacencia. La de la red `ego' \textbf{E} es de $786 \times 786$, con 617.796 elementos, y tan solo 28.048 (\% 4.54) de ellos son no nulos. Es decir, es rala en un \% 95.46. Es por esto que comparar elemento a elemento no prueba ser un método muy descriptivo de qué tan buena es una aproximación, ya que cualquiera con pocos elementos coincidirá en un $\sim$\% 95.
+Como puede observarse en (\ref{promedio_similaridad}.), desafortunadamente, los grafos con muy pocas conexiones, como prueban ser tomando los umbrales $u > 10$, tienen de los valores más altos, mientras que otros con cantidad de aristas similares a la red original, como con $u = 5$ o $u = 6$ (16.850 y 5.727 conexiones respectivamente), parecerían ser peores aproximaciones. Esto se da por la naturaleza rala de nuestras matrices de adyacencia. La de la red `ego' \textbf{E} es de $786 \times 786$, con 617.796 elementos, y tan solo 28.048 (\% 4.54) de ellos son no nulos. Es decir, es rala en un \% 95.46. Es por esto que comparar elemento a elemento no prueba ser un método muy descriptivo de qué tan buena es una aproximación, ya que cualquiera con pocos elementos coincidirá en un $\sim$\% 95.
 
 \vspace{1em}
 
@@ -105,7 +106,7 @@ siendo $\mu$ el valor medio de los vectores.
 \label{grafo_correlaciones}
 \end{figure}
 
-En la figura (\ref{grafo_correlaciones}.) se puede apreciar que se obtienen resultados considerablemente diferentes a los de nuestro primer método de comparación. En un primer lugar, siguiéndonos de la correlación entre las matrices de adyacencia, parecería que las mejores aproximaciones son las de cantidad de aristas similares a la red original, con los umbrales $u \in [4,7]$, mientras que los grafos vacíos con umbrales más altos pasan a tener correlación 0. De la misma forma, analizando con los autovalores se obtienen resultados similares, donde la mayor correlación se halla con los umbrales de valores medios.  
+En la figura (\ref{grafo_correlaciones}.) se puede apreciar que se obtienen resultados considerablemente diferentes a los de nuestro primer método de comparación. En un primer lugar, siguiéndonos de la correlación entre las matrices de adyacencia, parecería que las mejores aproximaciones son, razonablemente, las de cantidad de aristas similares a la red original (ver \ref{grafos_aproximados}.), con los umbrales $u \in [4,7]$, mientras que los grafos vacíos con umbrales más altos pasan a tener correlación 0. De la misma forma, analizando con los autovalores se obtienen resultados similares, donde la mayor correlación se halla con los umbrales de valores medios y decae avanzando para los extremos.  
 
 
 % === OPTIMIZACION === %
@@ -113,7 +114,8 @@ En la figura (\ref{grafo_correlaciones}.) se puede apreciar que se obtienen resu
 \vspace{2em}
 \subsection{Optimización}
 
-
+¿Cuál es entonces el valor para $u$ que genera la mejor aproximación? 
+Observando (\ref{grafo_correlaciones}.), se puede deducir que los mejores umbrales son $u = 5$ y $u = 6$. Los grafos formados bajo estas condiciones parecerían tener las mejores correlaciones con la red `ego' verdadera, sobretodo comparándolos con los de umbrales muy bajos ($u < 2$) o muy altos ($u > 10$). Esto tiene sentido dado que mantienen una cantidad de conexiones similares al grafo original, característica observable en (\ref{grafos_aproximados}.), y los demás umbrales parecerían tener muy pocas aristas (hasta ninguna) o demasiadas.
 
 
 % === PCA === %
