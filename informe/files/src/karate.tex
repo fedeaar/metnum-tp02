@@ -18,15 +18,15 @@ La investigación tuvo como enfoque central demostrar la capacidad del modelo pa
 
 
 \vspace{1em}
-En este análisis\footnote{El script asociado se puede encontrar en \textit{./experimentos/club\_de\_karate.py}, los archivos con los resultados en \textit{./experimentos/resultados/club-karate/}.} utilizaremos sólo la representación matricial de $\mathbf{E}$ para evaluar la importancia de los distintos miembros en la red, y la matriz laplaciana asociada para evaluar el uso de autovectores como predictores de la división del grupo. 
+En este análisis\footnote{El script asociado se puede encontrar en \textit{./experimentos/club\_de\_karate.py}, los archivos con todos los resultados mencionados en \textit{./experimentos/resultados/club-karate/}.} utilizaremos la representación matricial de $\mathbf{E}$ para evaluar la importancia de los distintos miembros en la red, y la matriz laplaciana asociada para evaluar el uso de autovectores como predictores de la división del grupo. 
 
-
+ 
 
 
 % === CENTRALIDAD DE AV === %
 \newpage
 \vspace{2em}
-\subsection{Centralidad de Autovector} La centralidad de autovector es una medida que se utiliza en el análisis de redes para medir la `importancia' de los nodos que componen una red, relativa a la importancia de sus conexiones. Dada una matriz de conectividad \textbf{W}, se define:
+\subsection{Centralidad de Autovector} La centralidad de autovector es una medida que se utiliza en el análisis de redes para evaluar la `importancia' de los nodos que componen una red, relativa a la importancia de sus conexiones. Dada una matriz de conectividad $\mathbf{W} \in \mathbb{R}^{n \times n}$, se define:
 
 \vspace{1em}
 \begin{equation} \label{conectividad}
@@ -34,13 +34,13 @@ En este análisis\footnote{El script asociado se puede encontrar en \textit{./ex
 \end{equation}
 
 \vspace{1em}
-\noindent donde $\lambda$ es el autovalor en módulo máximo de \textbf{W}.
+\noindent donde $\lambda$ es el autovalor en módulo máximo de \textbf{W} y la coordenada $x_i$ ---del autovector $x$ asociado a $\lambda$--- denota la centralidad del nodo $i$, $\forall i:\ 1\ ...\ n$.
 
 \vspace{1em}
-Intuitivamente, se puede pensar que la importancia de cada nodo es proporcional a la suma de las importancias de sus vecinos. Se puede demostrar  \cite{Newman} que, dado las características de esta matriz, el autovector asociado siempre será positivo en coordenadas.
+Intuitivamente, se puede pensar que la importancia de cada nodo es proporcional a la suma de las importancias de sus vecinos. Se puede demostrar \cite{Newman} que, dado las características de esta matriz, el autovector asociado siempre será positivo en coordenadas.
 
 \vspace{1em}
-En tanto la red de \textit{Club de Karate}, podemos ver que la aplicación del metodo de la potencia sobre la matriz de conectividad asociada al grafo $\mathbf{E}$ resulta en el siguiente autovector asociado al autovalor en módulo máximo:
+En tanto la red de \textit{Club de Karate}, podemos ver que la aplicación del metodo de la potencia sobre la matriz de conectividad asociada al grafo $\mathbf{E}$ resulta en el siguiente autovector $x$\footnote{Notamos que el error relativo del resultado fue de $\approx 1.78e^{-14}$ en norma $L_1$.}:
 
 \vspace{1em}
 \begin{figure}[!htbp]
@@ -101,48 +101,48 @@ Vemos que el nodo `0' y el nodo `33' son los más centrales. Esto no es casualid
 En particular, el mínimo autovalor en módulo no nulo ---llamado de conectividad algebráica, o valor de Fiedler--- permite establecer un criterio sobre el que particionar la red en dos. El autovector asociado a este autovalor designará la pertenencia de un nodo a una u otra partición acorde a su signo. 
 
 \vspace{1em}
-Procedemos a analizar qué autovector de la matriz laplaciana asociada a $\mathbf{E}$ permite predecir mejor la división que ocurrió en el \textit{Club de Karate}. Para ello, calculamos los autovectores de la matriz laplaciana con el método de la potencia con deflación y medimos el valor absoluto de la correlación entre cada autovector y un vector que indica la división verdadera que ocurrió en el grupo.
+Procedemos a analizar qué autovector de la matriz laplaciana asociada a $\mathbf{E}$ permite predecir mejor la división que ocurrió en el \textit{Club de Karate}. Para ello, calculamos los autovectores de la matriz con el método de la potencia con deflación\footnote{Notamos que el error relativo de los resultados tuvo una cota superior de $\approx 1e^{-13}$ en norma $L_1$.} y medimos el valor absoluto de la correlación entre cada autovector y un vector que indica la división verdadera que ocurrió en el grupo.
 
 \vspace{1em}
 \begin{figure}[!htbp]
 \begin{equation*} 
     \begin{bmatrix}
-        18.136696 & 0.266429 \\
-        17.055171 & 0.066721 \\
-        13.306122 & 0.457220 \\
-        10.921068 & 0.339844 \\
-        9.777241  & 0.496086 \\
-        6.996197  & 0.060813 \\
-        6.515545  & 0.461652 \\
-        6.331592  & 0.082665 \\
+        18.136696 & 0.045692 \\
+        17.055171 & 0.011443 \\
+        13.306122 & 0.078413 \\
+        10.921068 & 0.058283 \\
+        9.777241  & 0.085078 \\
+        6.996197  & 0.010429 \\
+        6.515545  & 0.079173 \\
+        6.331592  & 0.014177 \\
         5.618034  & 0.0 \\
-        5.378595  & 1.427676 \\
-        4.580793  & 0.465710 \\
-        4.480008  & 0.262230 \\
-        4.275877  & 0.062841 \\
-        3.472187  & 0.001872 \\
+        5.378595  & 0.244844 \\
+        4.580793  & 0.079869 \\
+        4.480008  & 0.044972 \\
+        4.275877  & 0.010777 \\
+        3.472187  & 0.000321 \\
         3.381966  & 0.0 \\
-        3.376154  & 0.379940 \\
-        3.242067  & 0.505417 
+        3.376154  & 0.065159 \\
+        3.242067  & 0.086678 \\
     \end{bmatrix}
     \begin{bmatrix}
-        3.013963 & 0.055720 \\
-        2.749157 & 0.940899 \\
-        2.487092 & 0.684434 \\
+        3.013963 & 0.009556 \\
+        2.749157 & 0.161363 \\
+        2.487092 & 0.117379 \\
         2.0 & 0.0 \\
         2.0 & 0.0 \\
         2.0 & 0.0 \\
         2.0 & 0.0 \\
         2.0 & 0.0 \\
-        1.955050 & 0.065144 \\
-        1.826055 & 0.401069 \\
-        1.761899 & 0.158209 \\
-        1.599283 & 0.325133 \\
-        1.259404 & 0.002377 \\
-        1.125011 & 1.943500 \\
-        0.909248 & 1.550553 \\
-        0.468525 & 4.750632 \\
-        0.0 & nan\footnotemark
+        1.955050 & 0.011172 \\
+        1.826055 & 0.068783 \\
+        1.761899 & 0.027133 \\
+        1.599283 & 0.05576 \\
+        1.259404 & 0.000408 \\
+        1.125011 & 0.333307 \\
+        0.909248 & 0.265918 \\
+        0.468525 & 0.814727 \\
+        0.0 & nan\footnotemark \\
     \end{bmatrix}
 \end{equation*}
 \caption{Correlación entre los autovectores asociados a los autovalores de la red del \textit{Club de Karate} y un vector que indica la división verdadera que ocurrió en el grupo. La columna izquierda denota el autovalor, la derecha la correlación.} \label{conectividad_karate}
@@ -150,55 +150,54 @@ Procedemos a analizar qué autovector de la matriz laplaciana asociada a $\mathb
 \footnotetext{El método de la potencia no está definido si el autovalor máximo en módulo es nulo. Este resultado da cuenta de ello. Como nos interesan solo los autovalores diferentes a `0', optamos por descartarlo.}
 
 \vspace{1em}
-Vemos que el valor de conectividad algebráica ---el autovalor mínimo en módulo no nulo--- tiene asociado el mejor autovector para realizar el corte. En la figura (\ref{prediccion_karate}.) se puede observar que sólo dos nodos obtuvieron una clasificación incorrecta: el `2' y el `8', lo que presenta un desempeño casi igual al logrado en la investigación original\footnote{En este sentido, solo el nodo `2' recibió una clasificación incorrecta. Sobre el `8', Zachary considera \cite{Zachary} que hubo un interés `egoísta', por parte del individuo asociado a ese nodo, que lo hizo actuar de manera distinta a su `afiliación' política (es decir, sus relaciones).}.
+Vemos que el valor de conectividad algebráica ---el autovalor mínimo en módulo no nulo--- tiene asociado el mejor autovector para realizar el corte. En la figura (\ref{prediccion_karate}.) se puede observar que sólo dos nodos obtuvieron una clasificación incorrecta: el `2' y el `8', lo que presenta un desempeño casi igual al logrado en la investigación original\footnote{En este sentido, solo el nodo `2' recibió una clasificación incorrecta. Sobre el `8', Zachary considera \cite{Zachary} que hubo un interés `egoísta' que primó sobre la `afiliación' política (es decir, las relaciones) del nodo.}.
 
-\newpage
-\vspace{2em}
+\vspace{1em}
 \begin{figure}[!htbp]
 \begin{equation*}
     \begin{bmatrix}
-        0   &-0.112137 & 0 & 0 \\ 
-        1   &-0.041288 & 0 & 0 \\
-        2   &0.023219 & 1 & 0 \\
-        3   &-0.055500 & 0 & 0 \\
-        4   &-0.284605 & 0 & 0 \\
-        5   &-0.323727 & 0 & 0 \\
-        6   &-0.323727 & 0 & 0 \\
-        7   &-0.052586 & 0 & 0 \\
-        8   &0.051601 & 1 & 0 \\
-        9   &0.092801 & 1 & 1 \\
-        10  &-0.284605 & 0 & 0 \\
-        11  &-0.210993 & 0 & 0 \\
-        12  &-0.109461 & 0 & 0 \\
-        13  &-0.014742 & 0 & 0 \\
-        14  &0.162751 & 1 & 1 \\
-        15  &0.162751 & 1 & 1 \\
-        16  &-0.422765 & 0 & 0 \\
-    \end{bmatrix}
-    \begin{bmatrix}
-        17  &-0.100181 & 0 & 0 \\
-        18  &0.162751 & 1 & 1 \\
-        19  &-0.013637 & 0 & 0 \\
-        20  &0.162751 & 1 & 1 \\
-        21  &-0.100181 & 0 & 0 \\
-        22  &0.162751 & 1 & 1 \\
-        23  &0.155695 & 1 & 1 \\
-        24  &0.153026 & 1 & 1 \\
-        25  &0.160963 & 1 & 1 \\
-        26  &0.187110 & 1 & 1 \\
-        27  &0.127664 & 1 & 1 \\
-        28  &0.095152 & 1 & 1 \\
-        29  &0.167650 & 1 & 1 \\
-        30  &0.073500 & 1 & 1 \\
-        31  &0.098753 & 1 & 1 \\
-        32  &0.130345 & 1 & 1 \\
-        33  &0.118903 & 1 & 1 \\
+        0   &0.112137 & 0 & 0 \\ 
+        1   &0.041288 & 0 & 0 \\
+        2   &-0.023219  & 1 & 0 \\
+        3   &0.055500 & 0 & 0 \\
+        4   &0.284605 & 0 & 0 \\
+        5   &0.323727 & 0 & 0 \\
+        6   &0.323727 & 0 & 0 \\
+        7   &0.052586  & 0 & 0 \\
+        8   &-0.051601 & 1 & 0 \\
+        9   &-0.092801 & 1 & 1 \\
+        10  &0.284605  & 0 & 0 \\
+        11  &0.210993  & 0 & 0 \\
+        12  &0.109461  & 0 & 0 \\
+        13  &0.014742  & 0 & 0 \\
+        14  &-0.162751 & 1 & 1 \\
+        15  &-0.162751 & 1 & 1 \\
+        16  &0.422765  & 0 & 0 \\
+\end{bmatrix}
+\begin{bmatrix}
+        17  &0.100181  & 0 & 0 \\
+        18  &-0.162751 & 1 & 1 \\
+        19  &0.013637  & 0 & 0 \\
+        20  &-0.162751 & 1 & 1 \\
+        21  &0.100181  & 0 & 0 \\
+        22  &-0.162751 & 1 & 1 \\
+        23  &-0.155695 & 1 & 1 \\
+        24  &-0.153026 & 1 & 1 \\
+        25  &-0.160963 & 1 & 1 \\
+        26  &-0.187110 & 1 & 1 \\
+        27  &-0.127664 & 1 & 1 \\
+        28  &-0.095152 & 1 & 1 \\
+        29  &-0.167650 & 1 & 1 \\
+        30  &-0.073500 & 1 & 1 \\
+        31  &-0.098753 & 1 & 1 \\
+        32  &-0.130345 & 1 & 1 \\
+        33  &-0.118903 & 1 & 1 \\
     \end{bmatrix}
 \end{equation*}
 \caption{Autovector de Conectividad algebráica, la primer columna representa los nodos de la red, la segunda el autovector, la tercera la clasificación de cada nodo acorde a su signo y la cuarta la división verdadera que ocurrió.} \label{prediccion_karate}
 \end{figure}
 
-\vspace{1em}
+%\vspace{1em}
 \begin{figure}[!htbp]
 \includegraphics[scale=0.5, trim=100 90 100 100, clip]{/files/src/.media/grafo_corte_32_0.47.png}
 \caption{La división estimada de la red del \textit{Club de Karate}. Los colores representan la división verdadera de la red. Azul: `0', Naranja: `1'.}

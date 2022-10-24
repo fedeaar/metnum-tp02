@@ -8,16 +8,13 @@
 
 template<class R>
 eigen potencia(const matriz<R> &A, size_t niter, double tol) {
-
-    niter = (size_t) niter / 2;
     size_t n = A.n();
-    matriz<R> B = A * A;
 
     vector<double> x, y, z;
     x = normalizar(aleatorio(n));
-
+    
     for (size_t i = 0; i < niter; ++i) {
-        y = B * x;
+        y = A * x;
         y = normalizar(y);
         z = x - y;
         if (sqrt(inner(z, z)) < tol) {

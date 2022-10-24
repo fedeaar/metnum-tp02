@@ -1,5 +1,3 @@
-import base.IO
-
 import numpy as np
 import pandas as pd
 
@@ -49,13 +47,12 @@ def norma(x, norma):
     return np.linalg.norm(x, norma)
 
 
-def metodo_potencia(A, niter=10000, epsilon=1e-6):
-
-    niter = niter // 2
-    B = A @ A
+def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
     n = A.shape[0]
     
-    x = np.random.rand(n, 1)
+    if(len(x) == 0): 
+        x = np.random.rand(n, 1)
+
     z = np.zeros((n, 1))
     if np.allclose(x, z, epsilon):
         x = z
@@ -64,14 +61,14 @@ def metodo_potencia(A, niter=10000, epsilon=1e-6):
         x = x / norma(x, 2)
 
     for _ in range(niter):
-        y = B @ x
+        y = A @ x
         n = norma(y, 2)
         if norma(x - y / n, 2) < epsilon:
             break
         x = y / n
     a = (x.T @ A @ x) / (x.T @ x)
 
-    return a[0, 0], x
+    return a, x
 
 
 def metodo_deflacion(A, k, niter=10000, epsilon=1e-6):
@@ -124,18 +121,27 @@ def graficar(x, y, hue, xaxis, yaxis, filename):
     plt.close(fig)
 
 
-def graficar_grafo(A, filename, colores="lightgray", font_color="k", size=(10, 10), node_size=300, font_size=12, large=False):
+def graficar_grafo(A, filename, 
+    size=(10, 10),
+    node_size=300,
+    font_size=12, 
+    node_color="lightgray", 
+    edge_color='black',
+    font_color="k", 
+    with_labels=True):
 
     G = nx.from_numpy_array(A)
     f = plt.figure(figsize=size)
-    layout = nx.nx_agraph.graphviz_layout(G, 'circo' if large else 'neato')
+    layout = nx.nx_agraph.graphviz_layout(G, 'neato')
     options={
-         'node_color': colores,
+         'node_color': node_color,
          'node_size': node_size,
          'font_size': font_size,
-         'font_color': font_color
+         'font_color': font_color,
+         'edge_color': edge_color,
+         'with_labels': with_labels
     }
-    nx.draw(G, layout, with_labels=True, ax=f.add_subplot(), **options)
+    nx.draw(G, layout, ax=f.add_subplot(), **options)
 
     f.savefig(filename)
     plt.close(f)
