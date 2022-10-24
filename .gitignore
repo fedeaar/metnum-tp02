@@ -16,3 +16,5 @@ informe/*.blg
 informe/*.bbl
 
 *.exe
+*.out
+*.in
