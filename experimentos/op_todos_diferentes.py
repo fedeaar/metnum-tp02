@@ -1,5 +1,6 @@
 import base.IO as IO
 import base.utils as utils
+from base.utils import n2 as n2
 
 import numpy as np
 import pandas as pd
@@ -30,62 +31,38 @@ FMT_COLS   = "{0},{1},{2}\n"
 
 # VARIABLES
 N = 20
-NITER = 200
-STEP = 10 # tiene que se par para que tenga sentido
+NITER = 100
+STEP = 1 # tiene que se par para que tenga sentido
 TOL = 0
-
-def createAutovalores(list, size):
-    mn = min(list)
-    for i in range(size-len(list)):
-        list.append(np.random.randint(abs(mn)-1) + 1)
-    return np.array(list)
-
-def make_av_diferentes():
-    D = createAutovalores([N], N)    
-    D = np.diag(D)
-    
-    u = np.random.rand(N, 1)
-    u = u / utils.norma(u, 2)
-    H = np.eye(N) - 2 * (u @ u.T)
-    S = H @ D @ H.T
-
-    a, V = utils.eig(S)
-    a = a.astype(float)
-    V = V.astype(float)
-    return S, V, a
 
 
 def make_tests():
     
     print('creando test...')    
-    S, V, a = make_av_diferentes()
-    x = np.random.randint(-100, 100, size=(N, N))
-    x = x.astype(float)
-    x[0] = x[0] / np.linalg.norm(x[0], 2)
+    S, V, a = utils.armarMatriz([N], N)
+    x = utils.armarRandom(N)
     np.savetxt(MATRIZ_IN, S)
     np.savetxt(AVALS_EXPECTED, a)
     np.savetxt(X_IN, x)
     np.savetxt(AVECS_EXPECTED, V)
-    return S, x[0]
+    return S, x
 
 # RUN 
 def run_tests():
     S, x = make_tests()
 
     print(f'corriendo iteracion: {0}') 
-    a, x = utils.metodo_potencia(S, 0, TOL, x)
+    a, x = utils.metodo_potencia(S, 0, TOL, np.reshape(x, (N, 1)))
     np.savetxt(pathAvec(0), x)
     np.savetxt(pathAval(0), [a])
 
     for i in range(STEP, NITER+1, STEP):
         print(f'corriendo iteracion: {i}') 
-        a, x = utils.metodo_potencia(S, STEP, TOL, x)
+        a, x = utils.metodo_potencia(S, STEP, TOL, np.reshape(x, (N, 1)))
         np.savetxt(pathAvec(int(i/STEP)), x)
         np.savetxt(pathAval(int(i/STEP)), [a])
 
 
-def n2(v):
-    return np.linalg.norm(v, 2)
 
 def pathAval(i):
     return f"{DIR_OUT}t_{i}_autovalor.out"
@@ -102,7 +79,7 @@ def eval_tests():
         vf = IO.readAutovectores(pathAvec( int(NITER/STEP) ))
 
         invertido = False
-        if(np.allclose(-vf, q_d, 1e-4)): 
+        if(np.allclose(vf, -q_d, 0.2)): 
             invertido = True
 
         for i in range(int(NITER/STEP)+1):
@@ -112,7 +89,7 @@ def eval_tests():
             error = abs(a - e)
 
             v = IO.readAutovectores(pathAvec(i))
-            norma2 = np.linalg.norm(v - q_d, 2)
+            norma2 = n2(v - q_d)
             if invertido: norma2 = 2 - norma2 
 
             file.write(FMT_COLS.format(i*STEP, error, norma2))

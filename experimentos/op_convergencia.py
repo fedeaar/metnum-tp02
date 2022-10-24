@@ -1,5 +1,6 @@
 import base.IO as IO
 import base.utils as utils
+from base.utils import n2 as n2
 
 import numpy as np
 import pandas as pd
@@ -28,71 +29,50 @@ COLS       = 'N,iteraciones'
 FMT_COLS   = "{0},{1}\n"
 
 # VARIABLES
-NITER = 200
-N = 202
+N = 102 # tiene que terminar en 2
 STEP = 10 # tiene que se par para que tenga sentido
 TOL = 0
 EPSILON = 1E-4
-REP = 10
-
-def createAutovalores(list, size):
-    mn = min(list)
-    for i in range(size-len(list)):
-        list.append(np.random.randint(abs(mn)-1) + 1)
-    return np.array(list)
-
-def expected(n):
-    D = createAutovalores([n], n)    
-    D = np.diag(D)
-    
-    u = np.random.rand(n, 1)
-    u = u / utils.norma(u, 2)
-    H = np.eye(n) - 2 * (u @ u.T)
-    S = H @ D @ H.T
-
-    a, V = utils.eig(S)
-    a = a.astype(float)
-    V = V.astype(float)
-    return S, V, a
+REP = 100
 
 
 def make_tests(n):
     print('creando test...')    
-    S, V, a = expected(n)
-    x = np.random.randint(-100, 100, size=(n, n))
-    x = x.astype(float)
-    x[0] = x[0] / np.linalg.norm(x[0], 2)
+    S, V, a = utils.armarMatriz([n], n)
+    x = utils.armarRandom(n)
+
     np.savetxt(MATRIZ_IN, S)
     np.savetxt(AVALS_EXPECTED, a)
     np.savetxt(X_IN, x)
     np.savetxt(AVECS_EXPECTED, V)
-    return S, V.T[0], a[0], x[0]
+    return S, V.T[0], x
 
 # RUN 
 def run_tests():
 
     for k in range(2, N+1, STEP):
-        sum = 0
+        mx = 0
         print(f'corriendo n: {k}') 
         for j in range(REP):
+            S, v, x = make_tests(k)
+
             print(f'corriendo REP: {j}') 
-            
-            S, v, e, x = make_tests(k)  
+            x = np.reshape(x, (k, 1))  
+            v = np.reshape(v, (k, 1))  
+
             i = 0
             while(True):
                 a, x = utils.metodo_potencia(S, 1, TOL, x)
                 i += 1
                 if(n2(x - v) < EPSILON or n2(x + v) < EPSILON): 
                     break
-            sum += i
-        np.savetxt(pathIter(k), [sum/REP])
+            mx = max(mx, i)
+        np.savetxt(pathIter(k), [mx])
 
         
         
 
 
-def n2(v):
-    return np.linalg.norm(v, 2)
 
 def pathIter(n):
     return f"{DIR_OUT}t_{n}_iteraciones.out"

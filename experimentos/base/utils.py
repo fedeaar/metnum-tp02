@@ -52,7 +52,6 @@ def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
     
     if(len(x) == 0): 
         x = np.random.rand(n, 1)
-        x = [k[0] for k in x]
 
     z = np.zeros((n, 1))
     if np.allclose(x, z, epsilon):
@@ -67,10 +66,9 @@ def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
         if norma(x - y / n, 2) < epsilon:
             break
         x = y / n
-    a = (x.T @ A @ x) / (x.T @ x)
+    a = np.dot(x.T, (A @ x)) / np.dot(x.T, x)
 
-    return a, x
-
+    return a[0,0], x
 
 def metodo_deflacion(A, k, niter=10000, epsilon=1e-6):
 
@@ -146,3 +144,41 @@ def graficar_grafo(A, filename,
 
     f.savefig(filename)
     plt.close(f)
+
+
+def agregarAutovalores(list, size):
+    mn = min(list)
+    mn = abs(mn) - 1
+    while len(list) != size:
+        newInt = np.random.randint(-mn, mn)
+        if(newInt != 0): list.append(newInt)
+
+    return np.array(list)
+
+def armarMatriz(inicial, n):
+    D = agregarAutovalores(inicial, n)    
+    D = np.diag(D)
+    
+    u = np.random.rand(n, 1)
+    u = u / norma(u, 2)
+    H = np.eye(n) - 2 * (u @ u.T)
+    S = H @ D @ H.T
+
+    a, V = eig(S)
+    a = a.astype(float)
+    V = V.astype(float)
+    if(a[0] < a[1]): V.T[[0,1]] = V.T[[1, 0]]
+
+    return S, V, a
+
+def armarRandom(n):
+    x = np.random.randint(-100, 100, size=n)
+    x = x.astype(float)
+    x = nml(x)
+    return x 
+
+def n2(v):
+    return np.linalg.norm(v, 2)
+
+def nml(x):
+    return x / n2(x)

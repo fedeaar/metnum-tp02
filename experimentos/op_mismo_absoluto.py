@@ -1,6 +1,7 @@
-from distutils.log import error
 import base.IO as IO
 import base.utils as utils
+from base.utils import n2 as n2
+from base.utils import nml as nml
 
 import numpy as np
 import pandas as pd
@@ -24,6 +25,7 @@ AVALS_EXPECTED = f"{DIR_IN}avals_exp.txt"
 SUMMARY   = f"{DIR}{EXPERIMENTO}_summary.csv"
 GRAFICO_POS = f"{DIR}{EXPERIMENTO}_pos.png"
 GRAFICO_NEG = f"{DIR}{EXPERIMENTO}_neg.png"
+GRAFICO_OSC = f"{DIR}{EXPERIMENTO}_osc.png"
 
 # FMT
 COLS       = 'iter,error_v1,error_v2'
@@ -34,55 +36,33 @@ N = 20
 NITER = 100 # tiene que ser par
 TOL = 0
 
-def createAutovalores(list, size):
-    mn = min(list)
-    for i in range(size-len(list)):
-        list.append(np.random.randint(abs(mn)-1) + 1)
-    return np.array(list)
 
-def make_av_diferentes():
-    D = createAutovalores([N, -N], N)    
-    D = np.diag(D)
-    
-    u = np.random.rand(N, 1)
-    u = u / utils.norma(u, 2)
-    H = np.eye(N) - 2 * (u @ u.T)
-    S = H @ D @ H.T
-
-    a, V = utils.eig(S)
-    a = a.astype(float)
-    V = V.astype(float)
-    if(a[0] < a[1]): V.T[[0,1]] = V.T[[1, 0]]
-
-
-    return S, V, a
 
 
 def make_tests():
     
     print('creando test...')    
-    S, V, a = make_av_diferentes()
-    x = np.random.randint(-100, 100, size=(N, N))
-    x = x.astype(float)
-    x[0] = x[0] / np.linalg.norm(x[0], 2)
+    S, V, a = utils.armarMatriz([N, -N], N)
+    x = utils.armarRandom(N)
     np.savetxt(MATRIZ_IN, S)
     np.savetxt(AVALS_EXPECTED, a)
     np.savetxt(X_IN, x)
     np.savetxt(AVECS_EXPECTED, V)
-    return S, x[0]
+    return S, x
 
 # RUN 
 def run_tests():
     S, x = make_tests()
-    for i in range(NITER+1):
+    print(f'corriendo iteracion: 0') 
+    a, x = utils.metodo_potencia(S, 0, TOL, np.reshape(x, (N, 1)))
+    np.savetxt(pathAvec(0), x)
+    np.savetxt(pathAval(0), [a])
+    for i in range(1, NITER+1):
         print(f'corriendo iteracion: {i}') 
-        a, x = utils.metodo_potencia(S, 1, TOL, x)
+        a, x = utils.metodo_potencia(S, 1, TOL, np.reshape(x, (N, 1)))
         np.savetxt(pathAvec(i), x)
         np.savetxt(pathAval(i), [a])
 
-
-def n2(v):
-    return np.linalg.norm(v, 2)
 
 def pathAval(i):
     return f"{DIR_OUT}t_{i}_autovalor.out"
@@ -90,11 +70,8 @@ def pathAval(i):
 def pathAvec(i):
     return f"{DIR_OUT}t_{i}_autovector.out"
 
-def cmp(x, y, tol = 1e-3):
+def cmp(x, y, tol=1e-4):
     return np.allclose(x, y, tol)
-
-def nml(x):
-    return x / n2(x)
 
 def eval_tests():
     # importo S
@@ -102,7 +79,6 @@ def eval_tests():
 
     # importo x
     y0 = IO.readAutovectores(X_IN)
-    y0 = y0[0]
 
     # importo los autovalores esperados
     e = IO.readAutovalores(AVALS_EXPECTED)
@@ -113,15 +89,22 @@ def eval_tests():
     q1 = Q.T[0]
     q2 = Q.T[1]
 
+    # elijo un vector aleatorio constante que sirva de referencia
+    u = np.random.rand(N, 1)
+    u = nml(u)
+
     vf = IO.readAutovectores(pathAvec( NITER ))
     vantef = IO.readAutovectores(pathAvec( NITER-1 ))
 
     invertido_r1 = False
-    if(cmp(nml(vf + vantef), -q1)): invertido_r1 = True
+    if(cmp(nml(vf + vantef), -q1, 0.2)): 
+        invertido_r1 = True
 
     invertido_r2 = False
-    if(cmp(nml(vf - vantef), -q2)): invertido_r2 = True 
+    if(cmp(nml(vf - vantef), -q2, 0.2)): 
+        invertido_r2 = True 
 
+    osclist = []
     with open(RES, 'a', encoding="utf-8") as file:
         for i in range(0, NITER, 2):
             print(f'evaluando resultados: {i}') 
@@ -139,7 +122,18 @@ def eval_tests():
             norma2_r2 = n2(r2-q2)
             if invertido_r2: norma2_r2 = 2 - norma2_r2
 
+            osclist.append(n2(v1 - u))
+            osclist.append(n2(v2 - u))
+
             file.write(FMT_COLS.format(i, norma2_r1, norma2_r2))
+
+    utils.graficar(
+        x=np.arange(NITER, dtype=int), 
+        y=osclist, 
+        hue=["caso testigo"]*(NITER), 
+        xaxis="CANTIDAD DE ITERACIONES", 
+        yaxis="ERROR", 
+        filename=GRAFICO_OSC)
 
 if __name__ == "__main__":
 
@@ -165,3 +159,5 @@ if __name__ == "__main__":
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
         filename=GRAFICO_NEG)
+
+
