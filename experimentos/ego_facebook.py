@@ -75,6 +75,14 @@ def correlacion_autovalores(A, O):
     return np.abs(utils.corr(w1, w2))
 
 
+def correlacion_promedio(A, O):
+    
+    A = A.flatten()
+    O = O.flatten()
+    total = O.size
+    return (np.count_nonzero(A == O) / total) * 100
+
+
 # EXP
 def aproximar_similaridad(A, O):
 
