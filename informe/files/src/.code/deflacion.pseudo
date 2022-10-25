@@ -6,11 +6,11 @@ proc deflacion(in A: matriz<n, n>, in k: Nat, in q: Nat, in t: Real) {
     i := 0
     while i < k {
 
-        l, V := potencia(A, q, t)
+        l, v := potencia(A, q, t)
         eigvals[i] := l
-        eigvecs.columna[i] := V
+        eigvecs.columna[i] := v
 
-        A := A - l * (V * V.t)
+        A := A - l * (v * v.t)
         i := i + 1
     }
     

@@ -6,7 +6,7 @@ proc potencia'(in A: matriz<n, n>, in q: Nat, in t: Real,
     i := 0
     do {
 
-        l, v := potencia(A, q, t)
+        l, v := potencia(A, q, t)   // monte carlo
         res  := norma(A * v - v * l, 2) < epsilon
         i    := i + 1
 

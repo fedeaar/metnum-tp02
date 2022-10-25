@@ -7,19 +7,15 @@
 \vspace{2em}
 \noindent \textsc{Método de la potencia}. El método de la potencia, \textit{Power method} o \textit{Power iteration}, es una técnica iterativa para aproximar el autovector asociado al autovalor en módulo máximo de una matriz cuadrada que satisfaga esta característica ---es decir, tenga un autovalor dominante no nulo---, a partir de la aplicación de sucesivos productos matriciales, descriptos por la siguiente relación de recurrencia:
 
-\begin{equation*}
-    b_0\ \text{es un vector aleatorio} : ||b_0|| = 1
-\end{equation*}
-
 \begin{equation} \label{potencia}
-    b_{k+1} = \frac{\mathbf{A}b_k}{||\mathbf{A}b_k||}
+    b_{k+1} = \frac{\mathbf{A}b_k}{||\mathbf{A}b_k||} \qquad \forall k \in \mathbf{N}_0
 \end{equation}
 
 \vspace{1em}
-\noindent donde $|| \cdot ||$ es una norma vectorial.
+\noindent donde $b_0$ es un vector aleatorio, $||b_0|| = 1$ y $|| \cdot ||$ es una norma vectorial.
 
 \vspace{1em}
-Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si $b_0$ no es ortogonal al autovector asociado al autovalor dominante en módulo de \textbf{A}, $b_k$ convergerá a éste. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
+Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si k es par y $b_0$ no es ortogonal al autovector asociado al autovalor en módulo dominante de \textbf{A}, entonces $b_k$ siempre convergerá a éste\footnote{De manera más formal, la secuencia definida por $\{b_k\}_{k \in \mathbf{N}_0}$ es acotada para $k$ y $\lambda_{max}$ arbitrarios, pero la subsecuencia definida para $k$ par es absolutamente convergente.}. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
 
 \vspace{1em}
 \begin{equation} \label{rayleigh}
@@ -30,19 +26,15 @@ Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si $b_0$ 
 \vspace{2em}
 \noindent \textsc{Método de la deflación}. El método de la deflación, por su parte, corresponde a la transformación de la matriz inicial \textbf{A} por una matriz \textbf{B} con autovalores equivalentes, salvo por el autovalor dominante que será anulado. Existen distintos métodos de deflación, entre ellos la deflación de Hotelling y la deflación de Wielandt \cite{Burden}.  
 
-En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. El mismo consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación:
+En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. La misma consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación:
 
 \vspace{1em}
-\begin{equation*}
-    \mathbf{B}_0\ = \mathbf{A}
-\end{equation*}
-
 \begin{equation} \label{deflacion}
-    \mathbf{B}_{k+1} = \mathbf{B}_{k} - \lambda_k\ v_k\ v_k^t 
+    \mathbf{B}_{k+1} = \mathbf{B}_{k} - \lambda_k\ v_k\ v_k^t \qquad \forall k \in \mathbf{N}_0
 \end{equation}
 
-\vspace{1em}
-\noindent donde $\lambda_k$ corresponde al k-ésimo autovalor en módulo máximo de \textbf{A}, estimado por el método de la potencia, y $v_k$ es su autovector asociado.
+\vspace{2em}
+\noindent donde $\mathbf{B}_0 = \mathbf{A}$, $\lambda_k$ corresponde al k-ésimo autovalor en módulo máximo de \textbf{A}, estimado por el método de la potencia, y $v_k$ es su autovector asociado.
 
 %\vspace{1em}
 %Se puede demostrar que $\mathbf{B}_{k+1}$ contiene los mismos autovalores que $\mathbf{B}_{k}$, salvo el máximo que quedará anulado.
@@ -53,7 +45,7 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 % === IMPLEMENTACION === %
 
 \vspace{2em}
-\subsection{Implementación} Procedemos a detallar una posible implementación\footnote{El código, propiamente, se encuentra en \textit{./implementacion/src/}.} para ambos métodos, restringiéndonos al caso de autovalores reales. Definimos:
+\subsection{Implementación} Procedemos a detallar una posible implementación\footnote{El código se puede encontrar en \textit{./implementacion/src/}.} para ambos métodos, restringiéndonos al caso de autovalores reales. Definimos:
 
 \begin{align*}
     \text{\textit{deflacion}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{real} t}\
@@ -64,7 +56,7 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 \end{align*}
 
 \vspace{1em}
-\noindent donde $n$ es un natural, \textbf{A} tiene al menos $k$ autovalores reales dominantes en módulo, $0 < k \leq n$, $q$ es un número par\footnote{Esta restricción no es necesaria, pero permite realizar una optimización que se explicará en la próxima página.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
+\noindent donde $n$ es un natural, \textbf{A} tiene al menos $k$ autovalores reales dominantes en módulo, $0 < k \leq n$, $q$ es un número par\footnote{Esta restricción no es necesaria, pero permite mantener exacta la cantidad de iteraciones a realizar.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
 
 \vspace{1em}
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la deflación.}, label=algo_deflacion]{files/src/.code/deflacion.pseudo}
@@ -83,7 +75,7 @@ Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el métod
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{monte carlo}.}, label=algo_potencia]{files/src/.code/potencia.pseudo}
 
 \vspace{1em}
-Observamos que el algoritmo (\ref{algo_potencia}.) no es capaz de distinguir si la selección inicial del vector $v$ es ortogonal al autovector asociado al autovalor en módulo dominante, por lo que una mala selección puede resultar en una respuesta incorrecta. Este tipo de algoritmo ---que depende de un proceso aleatorio--- se denomina \textit{monte carlo} \cite{Brassard}. 
+Observamos que el algoritmo (\ref{algo_potencia}.) trabaja con la subsecuencia par de $\{b_k\}_{k \in \mathbf{N}_0}$. Como mencionamos antes, esto garantiza la convergencia absoluta del método, dada una selección inicial de $b_0$ ---$v$ en nuestro pseudocódigo--- no ortogonal al autovector asociado al autovalor en módulo dominante. Sin embargo, como esta selección depende de un proceso aleatorio, el algoritmo podrá resultar en una respuesta incorrecta. A este tipo de procesos se los denomina \textit{monte carlo} \cite{Brassard}. 
 
 \vspace{1em}
 Una variante posible, de tipo \textit{las vegas}, se presenta en el algoritmo (\ref{algo_potencia_vegas}.). Hasta llegar a un resultado aceptable, determinado por $\epsilon$, o superar la cantidad de iteraciones permitida, definida por $\alpha$, el algoritmo volverá a intentar resolver el problema. De no alcanzar una respuesta aceptable retornará una señal de error. 
