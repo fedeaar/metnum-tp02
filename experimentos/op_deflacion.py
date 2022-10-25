@@ -19,11 +19,13 @@ import pandas as pd
 
 # VARIABLES
 N = 100
+NITER = 200000
 
 def run_tests():
     S, V, e = utils.armarMatriz([N], N)
-
-    a, U = utils.alt_deflacion(S, N)
+    # S = np.random.randint(-N, N, size=(N,N))
+    
+    a, U = utils.alt_deflacion(S, N, NITER, 1e-8)
 
     size = len(a)
     b = True

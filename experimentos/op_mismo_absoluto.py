@@ -45,7 +45,8 @@ TOL = 0
 def make_tests():
     
     print('creando test...')    
-    S, V, a = utils.armarMatriz([N, -N], N)
+    # nos aseguramos que haya 2 autovalores dominantes iguales en módulo
+    S, V, a = utils.armarMatriz([-N, N], N) 
     x = utils.armarRandom(N)
     np.savetxt(MATRIZ_IN, S)
     np.savetxt(AVALS_EXPECTED, a)

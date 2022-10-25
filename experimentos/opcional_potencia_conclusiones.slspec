@@ -28,6 +28,8 @@ sum(bi * xi) resulta en un autovector de lambda = L1
 
 Cabe destacar que como (k1 * x1 + k2 * x2) es autovector, cualquier combinacion lineal de x1 y x2 va a ser autovector por ende hay infinitas posibilidades para los 2 autovectores dominantes. 
 
+Algo interesante es que si el autovalor es negativo en las iteraciones pares, da (b1 * x1 + b2 * x2) pero en las impares da -(b1 * x1 + b2 * x2) por lo que conviene hacer un método de la potencia que haga de a 2 pasos por vez
+
 2) 
 Por otro lado en el caso donde se encuentran ambos autovalores L1, -L1
 
@@ -78,11 +80,13 @@ proc potencia (in A : matriz <n , n > , in q : Nat , in ε : Real ) {
     l := ( v.t * A * v ) / ( v.t * v ) // coeficiente de rayleigh
     
     v2 := normalizar(A * x) - x // computamos la resta entre 2 iteraciones consecutivas 
-    if |v2|2 > ε:               // si no es nulo significa que el autovalor dominante esta repetido en módulo
+    v3 := normalizar(A * x) + x // computamos la suma entre 2 iteraciones consecutivas 
+    if |v2|2 > ε and |v3|2 > ε: // si ambos son no nulos significa que el autovalor dominante esta repetido en módulo
+        // podemos devolver, v2, v3 o ambos ya que ambos son autovectores pero para 
+        // evitar hacer cambios en el algoritmo de deflación devolvemos 1 solo autovector como siempre
         v2 := normalizar( v2 )
         l2 := ( v2.t * A * v2 ) / ( v2.t * v )      // coeficiente de rayleigh del nuevo posible autovector
-        if |A * x - a * x|2 > |A * v2 - l2 * v2|2 : // chequeamos que el v2 sea autovector
-            return l2, v2
+        return l2, v2 
 
     return l , v
     }
