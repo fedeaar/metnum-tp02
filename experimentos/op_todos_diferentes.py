@@ -7,7 +7,8 @@ import pandas as pd
 
 
 """
-    TODO
+    Este experimento se encarga de observar si el método de la potencia converge en el caso más sencillo que es
+    cuando el autovalor dominante no esta repetido
 """
 
 
@@ -39,6 +40,8 @@ TOL = 0
 def make_tests():
     
     print('creando test...')    
+    # nos aseguramos de que el autovalor maximo no este repetido
+    # los demás autovalores si pueden estar repetidos
     S, V, a = utils.armarMatriz([N], N)
     x = utils.armarRandom(N)
     np.savetxt(MATRIZ_IN, S)
@@ -78,6 +81,9 @@ def eval_tests():
         q_d = Q.T[0]
         vf = IO.readAutovectores(pathAvec( int(NITER/STEP) ))
 
+
+        # hay 2 posibles autovectores de norma2 = 1 a los que puede converger
+        # seteamos invertido para chequear que converga a alguno de los 2
         invertido = False
         if(np.allclose(vf, -q_d, 0.2)): 
             invertido = True

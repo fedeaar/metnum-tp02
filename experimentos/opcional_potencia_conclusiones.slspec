@@ -1,6 +1,8 @@
 Ya vimos que si los autovalores son todos diferentes en módulo el método funciona bien.
 Pero que es lo que pasa cuando hay autovalores de igual módulo?
 
+La primera observación sobre que pasa si la matriz inicial tiene autovalores repetidos es que ahora no hay solo dos autovectores norma2 igual a 1, sino que hay infinitos ya que los dos autovectores dominantes se puede tomar cualquier combinación linealmente independiente de ellos como autovectores por lo tanto hay que tener esto en mente a la hora de realizar comparaciones con los resultados que obtiene numpy
+
 Para simplificar el analisis separamos en casos:
 
     1) 2 autovalores dominantes que son iguales
@@ -24,8 +26,10 @@ este resultado lo comprobamos experimentalmente, como se puede observar en el *g
 o sea que no importa quienes sean b1, b2 se cumple que b1 * x1 + b2 * x2 es un autovector y L1 es su autovalor por lo tanto en el caso donde hay 2 autovalores dominantes iguales, el metodo de la potencia converge correctamente, además vale no solo cuando la cantidad de autovalores dominantes repetidos son 2 sino que no importa la cantidad de veces que este repetido el autovalor dominante se cumple que 
 sum(bi * xi) resulta en un autovector de lambda = L1
 
+Cabe destacar que como (k1 * x1 + k2 * x2) es autovector, cualquier combinacion lineal de x1 y x2 va a ser autovector por ende hay infinitas posibilidades para los 2 autovectores dominantes. 
+
 2) 
-Por otro lado en el caso donde se encuentran ambos autovalores L1 y -L1
+Por otro lado en el caso donde se encuentran ambos autovalores L1, -L1
 
 let norm := |sum(ai * Li^K * xi)|2
 lim{k⟶∞} yk = sum(ai * Li^k * xi) / norm
@@ -52,13 +56,47 @@ Además si computás la resta entre 1 iteración par del método de la potencia 
 Por lo tanto concluimos que el método de la potencia en el caso donde hay autovalores iguales en módulo no debería funcionar ya que oscila entre iteraciones pares e impares entre 2 vectores que ninguno es autovector, este resultado lo comprobamos experimentalmente, como se puede observar en el *gráfico* se eligió un vector aleatorio constante y en cada iteración del metodo calculamos 
 norma2(randVector - yk) y se puede ver claramente como oscila entre pares e impares. 
 
-Pero proponemos una modificación en el método de la potencia que en caso de fallar calcule la suma y la resta entre sus últimas dos iteraciones y de esa manera obtendrá 2 autovectores correctos en cada llamado al método.
+De todos modos, observamos que en caso de calcular la suma y la resta entre sus últimas dos iteraciones obtendría 2 autovectores correctos en cada llamado al método, además este resultado se mantiene sin importar cuantas veces este repetido el autovalor ya sea el positivo o el negativo.
 
-Cabe destacar que este resultado se mantiene sin importar cuantas veces este repetido el autovalor ya sea el positivo o el negativo
+Notar que a diferencia del caso de 2 autovalores iguales dominantes aquí no hay infinitas opciones ya que (k1 * x1 + k2 * x2) no es autovector para ningun k1, k2 != 0, por ende solo hay 2 opciones de norma2 = 1 para cada autovector x y -x
+
+Con este resultado en mente planteamos una alternativa al método de la potencia de la siguiente forma:
+
+proc potencia (in A : matriz <n , n > , in q : Nat , in ε : Real ) {
+    v := normalizar( aleatorio ( n ) ) // un vector aleatorio no nulo de norma 1
+    q := q / 2 // divido por 2 las iteraciones
+
+
+    for (i := 0; i < q; i := i + 1) {
+       y := normalizar(A * normalizar(A * v)) // 2 iteraciones por cada paso
+       if ( |v - y|2 < ε ) { // tolerancia para la convergencia
+           break
+       }
+       v := y
+    }
+    
+    l := ( v.t * A * v ) / ( v.t * v ) // coeficiente de rayleigh
+    
+    v2 := normalizar(A * x) - x // computamos la resta entre 2 iteraciones consecutivas 
+    if |v2|2 > ε:               // si no es nulo significa que el autovalor dominante esta repetido en módulo
+        v2 := normalizar( v2 )
+        l2 := ( v2.t * A * v2 ) / ( v2.t * v )      // coeficiente de rayleigh del nuevo posible autovector
+        if |A * x - a * x|2 > |A * v2 - l2 * v2|2 : // chequeamos que el v2 sea autovector
+            return l2, v2
+
+    return l , v
+    }
+        
+Teniendo en cuenta el resultado de las oscilaciones entre pares e impares, es decir que si el autovalor dominante esta repetido en módulo las posiciones pares convergen a un vector y las impares a otro, por ende conviene hacer el método de a 2 pasos por vez.
+
+Este nuevo algoritmo converge a un autovector de la matriz siempre.
+Cabe Notar que si la cantidad de iteraciones que recibe de input es considerablemente baja genera resultados incoherentes.
+
             
 
 
 
 
-
+Finalmente realizamos otro experimento para observar la complejidad del algoritmo del método de la potencia.
+El procedimiento fue seleccionar una matriz de autovalores diferentes 
  

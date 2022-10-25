@@ -8,7 +8,10 @@ import pandas as pd
 
 
 """
-    TODO
+    Este experimento se encarga de observar si el método de la potencia converge y a que autovalor converge en caso de que 
+    el autovalor dominante de la matriz este repetido pero en módulo.
+    A diferencia del experimento "op_autovalor_repetido" aquí si tiene sentido chequear con numpy a que autovectores 
+    converge el método ya que las opciones estan limitadas por lo explicado en el informe
 """
 
 
@@ -122,7 +125,10 @@ def eval_tests():
             norma2_r2 = n2(r2-q2)
             if invertido_r2: norma2_r2 = 2 - norma2_r2
 
+            # almaceno la distancia del vector de la iteracion i con el aleatorio constante de referencia
             osclist.append(n2(v1 - u))
+            
+            # almaceno la distancia del vector de la iteracion i+1 con el aleatorio constante de referencia
             osclist.append(n2(v2 - u))
 
             file.write(FMT_COLS.format(i, norma2_r1, norma2_r2))
@@ -147,7 +153,7 @@ if __name__ == "__main__":
     utils.graficar(
         x=df.iter, 
         y=df.error_v1, 
-        hue=["caso testigo"]*(NITER//2), 
+        hue=["convergencia del autovector cuyo autovalor es positivo"]*(NITER//2), 
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
         filename=GRAFICO_POS)
@@ -155,7 +161,7 @@ if __name__ == "__main__":
     utils.graficar(
         x=df.iter, 
         y=df.error_v2, 
-        hue=["caso testigo"]*(NITER//2), 
+        hue=["convergencia del autovector cuyo autovalor es negativo"]*(NITER//2), 
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
         filename=GRAFICO_NEG)

@@ -38,20 +38,16 @@ def random_conectividad(n, cantidad, dirigida=True, seed=None):
 
 
 def random_matriz(n, m=None, r=(1, 100)):
-
     return np.random.randint(r[0], r[1], (n, m if m else n))
 
 
 def norma(x, norma):
-
     return np.linalg.norm(x, norma)
-
 
 def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
     n = A.shape[0]
     
-    if(len(x) == 0): 
-        x = np.random.rand(n, 1)
+    if(len(x) == 0): x = np.random.rand(n, 1)
 
     z = np.zeros((n, 1))
     if np.allclose(x, z, epsilon):
@@ -69,6 +65,7 @@ def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
     a = np.dot(x.T, (A @ x)) / np.dot(x.T, x)
 
     return a[0,0], x
+
 
 def metodo_deflacion(A, k, niter=10000, epsilon=1e-6):
 
@@ -110,6 +107,7 @@ def graficar(x, y, hue, xaxis, yaxis, filename):
     df   = pd.DataFrame({"x":x, "y":y, "hue":hue})
     plot = sns.lineplot(data=df, x="x", y="y", hue="hue")
     
+
     plot.set_xlabel(xaxis, fontsize=18, labelpad=12)
     plot.set_ylabel(yaxis, fontsize= 18, labelpad=20) 
     plt.tick_params(axis='both', which='major', labelsize=16)
@@ -118,6 +116,29 @@ def graficar(x, y, hue, xaxis, yaxis, filename):
     fig = plot.get_figure()
     fig.savefig(filename)
     plt.close(fig)
+
+def graficar2(x, y, hue, x2, y2, hue2, xaxis, yaxis, filename):
+    
+    plt.figure()
+    df   = pd.DataFrame({"x":x, "y":y, "hue":hue})
+    plot = sns.lineplot(data=df, x="x", y="y", hue="hue")
+
+    df   = pd.DataFrame({"x":x, "y":y, "hue":hue})
+    plot = sns.lineplot(data=df, x="x", y="y", hue="hue")
+    
+
+    plot.set_xlabel(xaxis, fontsize=18, labelpad=12)
+    plot.set_ylabel(yaxis, fontsize= 18, labelpad=20) 
+    plt.tick_params(axis='both', which='major', labelsize=16)
+    plt.legend(title=None)
+
+    fig = plot.get_figure()
+    fig.savefig(filename)
+    plt.close(fig)
+
+        
+
+
 
 
 def graficar_grafo(A, filename, 
@@ -182,3 +203,48 @@ def n2(v):
 
 def nml(x):
     return x / n2(x)
+
+
+
+
+
+def alt_potencia(A, niter=10000, epsilon=1e-6, x={}):
+    niter //= 2
+    if(len(x) == 0): x = np.random.rand(A.shape[0], 1)
+    
+    x = nml(x)
+    for _ in range(niter):
+        y = nml(A @ nml(A @ x))
+        if n2(x - y) < epsilon: break
+        x = y
+
+    a = np.dot(x.T, (A @ x)) / np.dot(x.T, x)
+    a = a[0, 0]
+
+    x2 = nml(A @ x) - x
+    if n2(x2) > EPSILON and niter > 100:
+        x2 = nml(x2)
+        a2 = np.dot(x2.T, (A @ x2)) / np.dot(x2.T, x2)
+        a2 = a2[0,0]
+        if n2(A @ x - a * x) > n2(A @ x2 - a2 * x2) : 
+            return a2, x2
+
+    return a, x
+
+
+
+def alt_deflacion(A, k, niter=10000, epsilon=1e-6):
+
+    n = A.shape[0]
+    A = A.copy()
+    eigs = []
+    vecs = np.zeros((n, k))
+
+    for i in range(k):
+        if(n2(A) < EPSILON): break
+        a, v = alt_potencia(A, niter, epsilon)
+        eigs.append(a)
+        vecs[:, i] = v.T
+        A = A - a * (v @ v.T)
+        
+    return np.array(eigs), vecs

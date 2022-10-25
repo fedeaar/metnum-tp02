@@ -7,34 +7,35 @@ import pandas as pd
 
 
 """
-    TODO
+    Este experimento se encarga de generar matrices simétricas aleatorias y comprobar que 
+    no importa cual sea la lista de autovalores inicial, se cumple que el método de la potencia 
+    en conjunto con la deflación funcionan correctamente a la hora de calcular la base ortogonal
+    de autovectores y sus correspondientes autovalores.
+    Notar que en caso de haber autovalores repetidos la base ortogonal de autovectores presenta una 
+    infinidad de opciones por lo tanto no se puede comparar por igualdad con los resultados que obtiene numpy.
 """
 
 
 
 # VARIABLES
-N = 20
-NITER = 1000
-TOL = 0
-
+N = 100
 
 def run_tests():
-    S, V, e = utils.armarMatriz([N,N], N)
+    S, V, e = utils.armarMatriz([N], N)
 
-    a, U = utils.metodo_deflacion(S, N)
+    a, U = utils.alt_deflacion(S, N)
 
+    size = len(a)
     b = True
-    for i in range(N):
-        for j in range(i+1, N):
-            if(abs(np.inner(U.T[i], U.T[j])) > utils.EPSILON) :
+    for i in range(size):
+        for j in range(i+1, size):
+            if(abs(np.inner(U.T[i], U.T[j])) > utils.EPSILON) : # chequeo que sean todos ortogonales
                 print(abs(np.inner(U.T[i], U.T[j])))
                 b = False
 
-    for i in range(N):
-        if(abs(np.inner(U.T[i], U.T[i]) - 1) > utils.EPSILON) :
-            b = False
-
-    if(b and np.allclose(a, e)): print("Funca")
+    a = np.pad(a, N - size) # extiendo a agregandole 0s las veces que corresponda con su multiplicidad
+    
+    if(b and utils.n2(np.sort(e) - np.sort(a)) < utils.EPSILON): print("Funca")
     else: print("No Funca")
 
 

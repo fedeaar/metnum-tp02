@@ -7,7 +7,10 @@ import pandas as pd
 
 
 """
-    TODO
+    Este experimento se encarga de observar si el método de la potencia converge y a que autovalor converge en caso de que 
+    el autovalor dominante de la matriz este repetido.
+    No tiene sentido chequear a que autovector converge ya que al estar repetido el autovalor hay infinitas opciones
+    y puede no converger a la misma que dice numpy.
 """
 
 
@@ -23,11 +26,10 @@ AVALS_EXPECTED = f"{DIR_IN}avals_exp.txt"
 # OUT
 SUMMARY   = f"{DIR}{EXPERIMENTO}_summary.csv"
 GRAFICO_AVAL = f"{DIR}{EXPERIMENTO}_val.png"
-GRAFICO_AVEC = f"{DIR}{EXPERIMENTO}_vec.png"
 
 # FMT
-COLS       = 'iter,error_autovalor,error_n2_autovectores'
-FMT_COLS   = "{0},{1},{2}\n"
+COLS       = 'iter,error_autovalor'
+FMT_COLS   = "{0},{1}\n"
 
 # VARIABLES
 N = 20
@@ -39,7 +41,7 @@ TOL = 0
 def make_tests():
     
     print('creando test...')    
-    S, V, a = utils.armarMatriz([N, N], N)
+    S, V, a = utils.armarMatriz([N, N], N) #nos aseguramos de que haya un autovalor repetido
     x = utils.armarRandom(N)
     np.savetxt(MATRIZ_IN, S)
     np.savetxt(AVALS_EXPECTED, a)
@@ -59,7 +61,6 @@ def run_tests():
     for i in range(STEP, NITER+1, STEP):
         print(f'corriendo iteracion: {i}') 
         a, x = utils.metodo_potencia(S, STEP, TOL, np.reshape(x, (N, 1)))
-        np.savetxt(pathAvec(int(i/STEP)), x)
         np.savetxt(pathAval(int(i/STEP)), [a])
 
 
@@ -70,23 +71,10 @@ def pathAvec(i):
     return f"{DIR_OUT}t_{i}_autovector.out"
 
 def eval_tests():
-    S = IO.readMatriz(MATRIZ_IN)
-
-    # importo x
-    y0 = IO.readAutovectores(X_IN)
-
     # importo los autovalores esperados
     e = IO.readAutovalores(AVALS_EXPECTED)
     e = e[0]
 
-    # importo los autovectores esperados
-    Q = IO.readAutovectores(AVECS_EXPECTED)
-    q1 = Q.T[0]
-    q2 = Q.T[1]
-    vf = IO.readAutovectores(pathAvec( int(NITER/STEP) ))
-    
-    u = np.dot(y0, q1) * q1 + np.dot(y0, q2) * q2
-    u = u / n2(u)
     with open(RES, 'a', encoding="utf-8") as file:
         for i in range(int(NITER/STEP)+1):
             print(f'evaluando resultados: {i}') 
@@ -94,11 +82,7 @@ def eval_tests():
             a = IO.readAutovalores(pathAval(i))
             error = abs(a - e)
 
-            v = IO.readAutovectores(pathAvec(i))
-            norma2 = n2(v - u)
-
-            file.write(FMT_COLS.format(i*STEP, error, norma2))
-    print(vf.T @ S @ vf)
+            file.write(FMT_COLS.format(i*STEP, error))
 
 if __name__ == "__main__":
 
@@ -111,16 +95,8 @@ if __name__ == "__main__":
     
     utils.graficar(
         x=df.iter, 
-        y=df.error_n2_autovectores, 
-        hue=["caso testigo"]*(int(NITER/STEP) + 1), 
-        xaxis="CANTIDAD DE ITERACIONES", 
-        yaxis="ERROR", 
-        filename=GRAFICO_AVEC)
-
-    utils.graficar(
-        x=df.iter, 
         y=df.error_autovalor,
-        hue=["caso testigo"]*(int(NITER/STEP) + 1), 
+        hue=["distancia al autovalor esperado"]*(int(NITER/STEP) + 1), 
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
         filename=GRAFICO_AVAL)
