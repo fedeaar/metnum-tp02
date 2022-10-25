@@ -29,8 +29,8 @@ SIMILARIDAD_PNG = DIR + "facebook_similaridad.png"
 GRAFO_SIM       = DIR_OUT + "grafo_similaridad_{u}.txt"
 GRAFO_PNG       = DIR + "grafo_{name}.png"
 
-COLS_SIM = "umbral,flat_corr,av_corr"
-FMT_SIM  = "{0},{1},{2}\n"
+COLS_SIM = "umbral,flat_corr,av_corr,mean_corr"
+FMT_SIM  = "{0},{1},{2},{3}\n"
 
 
 # UTILS
@@ -81,7 +81,7 @@ def correlacion_promedio(A, O):
     A = A.flatten()
     O = O.flatten()
     total = O.size
-    return (np.count_nonzero(A == O) / total) * 100
+    return (np.count_nonzero(A == O) / total)
 
 
 # EXP
@@ -102,7 +102,8 @@ def aproximar_similaridad(A, O):
 
             ady = correlacion_adyacencia(T, O)
             av  = correlacion_autovalores(T, O)
-            file.write(FMT_SIM.format(u, ady, av))
+            cc = correlacion_promedio(T, O)
+            file.write(FMT_SIM.format(u, ady, av, cc))
             # print(u, ady, av)
 
 
@@ -141,33 +142,33 @@ if __name__ == "__main__":
 
     # clean_data()
     
-    # O = IO.readMatriz(CLEAN_GRAFO)
-    # A = IO.readMatriz(CLEAN_ATTR)
-    # aproximar_similaridad(A, O)
+    O = IO.readMatriz(CLEAN_GRAFO)
+    A = IO.readMatriz(CLEAN_ATTR)
+    aproximar_similaridad(A, O)
 
     # pca()
     
-    # df = pd.read_csv(SIMILARIDAD_RES)
-    # utils.graficar(
-    #     x=df.umbral.to_list() + df.umbral.to_list(),
-    #     y=df.flat_corr.to_list() + df.av_corr.to_list(),
-    #     hue=["adyacencia estirada"] * len(df.flat_corr) + ["lista de autovalores"] * len(df.av_corr),
-    #     xaxis='umbral',
-    #     yaxis='correlación',
-    #     filename=SIMILARIDAD_PNG
-    # )
+    df = pd.read_csv(SIMILARIDAD_RES)
+    utils.graficar(
+        x=df.umbral.to_list() * 3,
+        y=df.flat_corr.to_list() + df.av_corr.to_list() + df.mean_corr.to_list(),
+        hue=["adyacencia estirada"] * len(df.flat_corr) + ["lista de autovalores"] * len(df.av_corr) + ["posiciones coincidentes"] * len(df.mean_corr),
+        xaxis='umbral',
+        yaxis='correlación',
+        filename=SIMILARIDAD_PNG
+    )
 
     # grafos
-    grafos = [
-        CLEAN_GRAFO,
-        *[GRAFO_SIM.format(u=f"{i}.0") for i in range(14)]
-    ]
-    for i, grafo in enumerate(grafos):
-        A = IO.readMatriz(grafo)
-        utils.graficar_grafo(A, 
-            GRAFO_PNG.format(name=i if i != 0 else 'facebook'), 
-            node_color='tab:blue', 
-            edge_color='darkgray',
-            size=(20, 20), 
-            node_size=300, 
-            with_labels=False)
+    # grafos = [
+    #     CLEAN_GRAFO,
+    #     *[GRAFO_SIM.format(u=f"{i}.0") for i in range(14)]
+    # ]
+    # for i, grafo in enumerate(grafos):
+    #     A = IO.readMatriz(grafo)
+    #     utils.graficar_grafo(A, 
+    #         GRAFO_PNG.format(name=i if i != 0 else 'facebook'), 
+    #         node_color='tab:blue', 
+    #         edge_color='darkgray',
+    #         size=(20, 20), 
+    #         node_size=300, 
+    #         with_labels=False)

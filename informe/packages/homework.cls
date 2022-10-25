@@ -24,7 +24,7 @@
 \RequirePackage{packages/hwsymb, packages/hwlst} % By Tashfeen
 \hypersetup {
   pdfstartview=FitH,
-  colorlinks=true,
+  %colorlinks=true,
 }
 
 % Question command
