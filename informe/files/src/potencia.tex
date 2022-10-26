@@ -15,7 +15,7 @@
 \noindent donde $b_0$ es un vector aleatorio, $||b_0|| = 1$ y $|| \cdot ||$ es una norma vectorial.
 
 \vspace{1em}
-Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si k es par y $b_0$ no es ortogonal al autovector asociado al autovalor en módulo dominante de \textbf{A}, entonces $b_k$ siempre convergerá a éste\footnote{De manera más formal, la secuencia definida por $\{b_k\}_{k \in \mathbf{N}_0}$ es acotada para $k$ y $\lambda_{max}$ arbitrarios, pero la subsecuencia definida para $k$ par es absolutamente convergente.}. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
+Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si k es par y $b_0$ no es ortogonal al autovector asociado al autovalor en módulo dominante de \textbf{A}, entonces $b_k$ siempre convergerá a éste\footnote{De manera más formal, la secuencia definida por $\{b_k\}_{k \in \mathbb{N}_0}$ es acotada para $k$ y $\lambda_{max}$ arbitrarios, pero la subsecuencia definida para $k$ par es absolutamente convergente.}. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
 
 \vspace{1em}
 \begin{equation} \label{rayleigh}
@@ -59,7 +59,7 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 \noindent donde $n$ es un natural, \textbf{A} tiene al menos $k$ autovalores reales dominantes en módulo, $0 < k \leq n$, $q$ es un número par\footnote{Esta restricción no es necesaria, pero permite mantener exacta la cantidad de iteraciones a realizar.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
 
 \vspace{1em}
-\lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la deflación.}, label=algo_deflacion]{files/src/.code/deflacion.pseudo}
+\lstinputlisting[language=pseudo, label=algo_deflacion, caption={Pseudocódigo para el método de la deflación.}]{files/src/.code/deflacion.pseudo}
 
 %\vspace{1em}
 El algoritmo (\ref{algo_deflacion}.) retornará un vector con los primeros $k$ autovalores en módulo máximos de \textbf{A}, ordenados descendientemente, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores normalizados asociados a estos autovalores. 
@@ -75,7 +75,7 @@ Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el métod
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{monte carlo}.}, label=algo_potencia]{files/src/.code/potencia.pseudo}
 
 \vspace{1em}
-Observamos que el algoritmo (\ref{algo_potencia}.) trabaja con la subsecuencia par de $\{b_k\}_{k \in \mathbf{N}_0}$. Como mencionamos antes, esto garantiza la convergencia absoluta del método, dada una selección inicial de $b_0$ ---$v$ en nuestro pseudocódigo--- no ortogonal al autovector asociado al autovalor en módulo dominante. Sin embargo, como esta selección depende de un proceso aleatorio, el algoritmo podrá resultar en una respuesta incorrecta. A este tipo de procesos se los denomina \textit{monte carlo} \cite{Brassard}. 
+Observamos que el algoritmo (\ref{algo_potencia}.) trabaja con la subsecuencia par de $\{b_k\}_{k \in \mathbb{N}_0}$. Como mencionamos antes, esto garantiza la convergencia absoluta del método, dada una selección inicial de $b_0$ ---$v$ en nuestro pseudocódigo--- no ortogonal al autovector asociado al autovalor en módulo dominante. Sin embargo, como esta selección depende de un proceso aleatorio, el algoritmo podrá resultar en una respuesta incorrecta. A este tipo de procesos se los denomina \textit{monte carlo} \cite{Brassard}. 
 
 \vspace{1em}
 Una variante posible, de tipo \textit{las vegas}, se presenta en el algoritmo (\ref{algo_potencia_vegas}.). Hasta llegar a un resultado aceptable, determinado por $\epsilon$, o superar la cantidad de iteraciones permitida, definida por $\alpha$, el algoritmo volverá a intentar resolver el problema. De no alcanzar una respuesta aceptable retornará una señal de error. 

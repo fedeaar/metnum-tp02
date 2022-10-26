@@ -1,18 +1,18 @@
 proc deflacion(in A: matriz<n, n>, in k: Nat, in q: Nat, in t: Real) {
 
-    eigvals := vector<q>
-    eigvecs := matriz<n, k>
+    Λ := vector<q>      // autovalores
+    V := matriz<n, k>   // autovectores
     
     i := 0
     while i < k {
 
-        l, v := potencia(A, q, t)
-        eigvals[i] := l
-        eigvecs.columna[i] := v
+        λ, v := potencia(A, q, t)
+        Λ[i] := λ
+        V.columna[i] := v
 
-        A := A - l * (v * v.t)
+        A := A - λ * (v * v.t)
         i := i + 1
     }
     
-    return eigvals, eigvecs
+    return Λ, V
 }

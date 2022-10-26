@@ -27,8 +27,8 @@ ATRIBUTOS   = "../catedra/ego-facebook.feat"
 EXPERIMENTO = "ego-facebook"
 DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO)
 
-CLEAN_GRAFO      = DIR_IN + "clean_ego-facebook.conn"
-CLEAN_ATTR       = DIR_IN + "clean_ego-facebook.feat"
+CLEAN_GRAFO      = DIR + "clean_ego-facebook.conn"
+CLEAN_ATTR       = DIR + "clean_ego-facebook.feat"
 
 SIMILARIDAD_RES  = DIR + "facebook_similaridad.csv"
 SIMILARIDAD_COLS = "umbral,flat_corr,av_corr,mean_corr"
