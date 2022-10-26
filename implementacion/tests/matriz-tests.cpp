@@ -1,6 +1,7 @@
 #include "gtest-1.8.1/gtest.h"
 
 #include "../src/matriz.h"
+#include "../src/vector.h"
 #include "../src/matriz/matriz_base.h"
 #include "../src/matriz/matriz_alt.h"
 
@@ -259,37 +260,31 @@ TEST_F(MatrizTest, transpuesta) { // TODO mas tests
 }
 
 
-TEST_F(MatrizTest, inner) { // TODO mas tests
-    vector<double> a = {1, 2, 3, 4};
-    vector<double> b = {1, 3, 4, 1};
-    EXPECT_EQ(inner(a, b), 23);
-}
-
-
-TEST_F(MatrizTest, outter) { // TODO mas tests
-    vector<double> a = {1, 0, 0, 0};
-    vector<double> b = {1, 0, 0, 0};
-    matriz<__ESTR__> ab = outer<__ESTR__>(a, b);
-    matriz<__ESTR__> expected = {
-            {1, 0, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0}
-    };
-    EXPECT_TRUE(expected.eq(ab));
-}
-
-
 TEST_F(MatrizTest, print) {
     ostringstream stream;
     stream << a;
     string a_os = stream.str();
-    EXPECT_EQ(a_os, "1, 2, 3, 4\n4, 0, 0, 1\n1, 1, 1, 1\n1, 2, 3, 7\n");
+    EXPECT_EQ(a_os, "1 2 3 4\n4 0 0 1\n1 1 1 1\n1 2 3 7\n");
 
     stream = ostringstream();
     stream << b;
     string b_os = stream.str();
-    EXPECT_EQ(b_os, "1, 0, 0, 0\n0, 1, 0, 0\n0, 0, 1, 0\n0, 0, 0, 1\n");
+    EXPECT_EQ(b_os, "1 0 0 0\n0 1 0 0\n0 0 1 0\n0 0 0 1\n");
+}
+
+
+TEST_F(MatrizTest, empty) {
+    matriz<__ESTR__> a = {
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0}
+    };
+    EXPECT_TRUE(a.empty());
+    a.set(0, 0, 1);
+    EXPECT_FALSE(a.empty());
+    a.set(0, 0, 0);
+    EXPECT_TRUE(a.empty());
 }
 
 
@@ -329,4 +324,25 @@ TEST_F(MatrizTest, gauss_elim) {
     EXPECT_TRUE(output1.eq(input1.gauss_elim()));
     EXPECT_TRUE(output2.eq(input2.gauss_elim()));
     EXPECT_TRUE(output3.eq(input3.gauss_elim()));
+}
+
+
+TEST_F(MatrizTest, inner) { // TODO mas tests
+    vector<double> a = {1, 2, 3, 4};
+    vector<double> b = {1, 3, 4, 1};
+    EXPECT_EQ(inner(a, b), 23);
+}
+
+
+TEST_F(MatrizTest, outter) { // TODO mas tests
+    vector<double> a = {1, 0, 0, 0};
+    vector<double> b = {1, 0, 0, 0};
+    matriz<__ESTR__> ab = outer<__ESTR__>(a, b);
+    matriz<__ESTR__> expected = {
+            {1, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0}
+    };
+    EXPECT_TRUE(expected.eq(ab));
 }

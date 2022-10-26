@@ -6,10 +6,10 @@ int main(int argc,  char** argv) {
     if (argc < 4 || argc > 14) {
         cout << "error: cantidad invalida de parametros.\n" <<
              "expected: [source] [iteraciones] [tolerancia]\n"  <<
-             "optional: -f      (formato)           ['grafo' | 'matriz'], default = 'matriz'\n" <<
+             "optional: -f      (formato)           ['grafo' | 'matriz'], default = matriz\n" <<
              "          -o      (out dir)           [string],             default = ./\n" <<
-             "          -as     (save as)           [string],             default = nombre del source)\n" <<
-             "          -p      (precision)         [uint(0, 15)],        default = 15.\n" <<
+             "          -as     (save as)           [string],             default = (nombre del source)\n" <<
+             "          -p      (precision)         [uint(0, 15)],        default = 15\n" <<
              "          -time   (tiempo ejecucion)                        default = false\n" <<
              "          -v      (verbose)                                 default = false" << endl;
         return -1;
