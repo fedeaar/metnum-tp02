@@ -23,7 +23,10 @@ set(SOURCE_FILES
         src/potencia.h
         src/impl/potencia.hpp
         src/IO.h
-        src/impl/IO.cpp)
+        src/impl/IO.cpp
+        src/run.h
+        src/impl/run.hpp
+        src/impl/run.cpp)
         
 
 add_executable(TESTS-matriz-base ${SOURCE_FILES} tests/matriz-tests.cpp)
