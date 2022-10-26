@@ -118,6 +118,7 @@ def aproximar_similaridad(A, O):
 
             line = SIMILARIDAD_FMT.format(u, ady, av, cc)
             file.write(line)
+            # print("u=", u, "con", round(np.count_nonzero(T) / 2), "cc", round(cc * 100, 2), "ady", round(ady * 100, 2), "av", round(av * 100, 2))
 
 
 def pca():
@@ -126,7 +127,6 @@ def pca():
     X = np.loadtxt(CLEAN_ATTR)
 
     # Matriz de covarianza
-    # col, X = IO.readAtributos(ATRIBUTOS)
     Xcentered = X - X.mean(0)
     n = np.size(Xcentered, 0)
     M = (Xcentered.T@Xcentered) / (n-1)
