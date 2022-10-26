@@ -119,6 +119,12 @@ def aproximar_similaridad(A, O):
             line = SIMILARIDAD_FMT.format(u, ady, av, cc)
             file.write(line)
             # print("u=", u, "con", round(np.count_nonzero(T) / 2), "cc", round(cc * 100, 2), "ady", round(ady * 100, 2), "av", round(av * 100, 2))
+           
+            #aux = np.where(O == 0, -1, O)
+            #bien = np.where((aux - T) == 0, 1, 0)
+            #extras = np.where((aux - T) == -2, 1, 0)
+            #print(u, np.count_nonzero(bien) / 2, np.count_nonzero(extras) / 2)
+            #print(u, np.count_nonzero(bien) / np.count_nonzero(T) * 100, np.count_nonzero(extras) / np.count_nonzero(T) * 100)
 
 
 def pca():
