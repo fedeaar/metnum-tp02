@@ -40,7 +40,7 @@ En este análisis\footnote{El script asociado se puede encontrar en \textit{./ex
 Intuitivamente, se puede pensar que la importancia de cada nodo es proporcional a la suma de las importancias de sus vecinos. Se puede demostrar \cite{Newman} que, dado las características de esta matriz, el autovector asociado tendrá el mismo signo en todas sus coordenadas.
 
 \vspace{1em}
-En tanto la red de \textit{Club de Karate}, podemos ver que la aplicación del metodo de la potencia sobre la matriz de conectividad asociada al grafo $\mathbf{E}$ resulta en el siguiente autovector $x$\footnote{Notamos que el error relativo del resultado fue de $\approx 7.81e^{-14}$ en norma $L_1$.}:
+En tanto la red de \textit{Club de Karate}, podemos ver que la aplicación del método de la potencia sobre la matriz de conectividad asociada al grafo $\mathbf{E}$ resulta en el siguiente autovector $x$\footnote{Notamos que el error relativo del resultado fue de $\approx 7.81e^{-14}$ en norma $L_1$.}:
 
 \vspace{1em}
 \begin{figure}[!htbp]
@@ -98,7 +98,7 @@ Vemos que el nodo `0' y el nodo `33' son los más centrales. Esto no es casualid
 \vspace{2em}
 \subsection{Autovectores de la matriz laplaciana} La matriz laplaciana $\mathbf{L} = \mathbf{D} - \mathbf{W}$ ---donde \textbf{D} es una matriz diagonal con elementos $d_{ii} = \sum_j w_{ij}$ y \textbf{W} es una matriz de conectividad--- sirve para medir distintas propiedades en una red. 
 
-En particular, el mínimo autovalor en módulo no nulo ---llamado de conectividad algebráica, o valor de Fiedler--- permite establecer un criterio sobre el que particionar la red en dos. El autovector asociado a este autovalor designará la pertenencia de un nodo a una u otra partición acorde a su signo. 
+En particular, el mínimo autovalor en módulo no nulo ---llamado de conectividad algebraica, o valor de Fiedler--- permite establecer un criterio sobre el que particionar la red en dos. El autovector asociado a este autovalor designará la pertenencia de un nodo a una u otra partición acorde a su signo. 
 
 \vspace{1em}
 Procedemos a analizar qué autovector de la matriz laplaciana asociada a $\mathbf{E}$ permite predecir mejor la división que ocurrió en el \textit{Club de Karate}. Para ello, calculamos los autovectores de la matriz con el método de la potencia con deflación\footnote{Notamos que el error relativo de los resultados tuvo una cota superior de $\approx 1.03e^{-13}$ en norma $L_1$.} y medimos el valor absoluto de la correlación entre cada autovector y un vector que indica la división verdadera que ocurrió en el grupo.
@@ -150,7 +150,7 @@ Procedemos a analizar qué autovector de la matriz laplaciana asociada a $\mathb
 \footnotetext{El método de la potencia no está definido si el autovalor máximo en módulo es nulo. Este resultado da cuenta de ello. Como nos interesan solo los autovalores diferentes a `0', optamos por descartarlo.}
 
 \vspace{1em}
-Vemos que el valor de conectividad algebráica ---el autovalor mínimo en módulo no nulo--- tiene asociado el mejor autovector para realizar el corte. En la figura (\ref{prediccion_karate}.) se puede observar que sólo dos nodos obtuvieron una clasificación incorrecta: el `2' y el `8', lo que presenta un desempeño casi igual al logrado en la investigación original\footnote{En este sentido, solo el nodo `2' recibió una clasificación incorrecta. Sobre el `8', Zachary considera \cite{Zachary} que hubo un interés `egoísta' que primó sobre la `afiliación' política (es decir, las relaciones) del nodo.}.
+Vemos que el valor de conectividad algebraica ---el autovalor mínimo en módulo no nulo--- tiene asociado el mejor autovector para realizar el corte. En la figura (\ref{prediccion_karate}.) se puede observar que sólo dos nodos obtuvieron una clasificación incorrecta: el `2' y el `8', lo que presenta un desempeño casi igual al logrado en la investigación original\footnote{En este sentido, solo el nodo `2' recibió una clasificación incorrecta. Sobre el `8', Zachary considera \cite{Zachary} que hubo un interés `egoísta' que primó sobre la `afiliación' política (es decir, las relaciones) del nodo.}.
 
 \vspace{1em}
 \begin{figure}[!htbp]
@@ -194,7 +194,7 @@ Vemos que el valor de conectividad algebráica ---el autovalor mínimo en módul
         33  &0.118903 & 1 & 1 \\
     \end{bmatrix}
 \end{equation*}
-\caption{Autovector de Conectividad algebráica, la primer columna representa los nodos de la red, la segunda el autovector, la tercera la clasificación de cada nodo acorde a su signo y la cuarta la división verdadera que ocurrió.} \label{prediccion_karate}
+\caption{Autovector de Conectividad algebraica, la primer columna representa los nodos de la red, la segunda el autovector, la tercera la clasificación de cada nodo acorde a su signo y la cuarta la división verdadera que ocurrió.} \label{prediccion_karate}
 \end{figure}
 
 %\vspace{1em}
