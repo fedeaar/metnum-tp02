@@ -21,10 +21,11 @@ Pero algo interesante es que si x1 y x2 son autovectores con el mismo L =>
 
 A (b1 * x1 + b2 * x2) = A * b1 * x1 + A * b2 * x2 = L1 * b1 * x1 + L1 * b1 * x1 = L1 * (b1 * x1 + b2 * x2)
 
-este resultado lo comprobamos experimentalmente, como se puede observar en el *gráfico* en cada iteración del metodo calculamos norma2((b1 * x1 + b2 * x2) - yk) y se puede ver claramente como converge a 0 a medida que la cantidad de iteraciones incrementa. 
-
 o sea que no importa quienes sean b1, b2 se cumple que b1 * x1 + b2 * x2 es un autovector y L1 es su autovalor por lo tanto en el caso donde hay 2 autovalores dominantes iguales, el metodo de la potencia converge correctamente, además vale no solo cuando la cantidad de autovalores dominantes repetidos son 2 sino que no importa la cantidad de veces que este repetido el autovalor dominante se cumple que 
 sum(bi * xi) resulta en un autovector de lambda = L1
+
+este resultado lo comprobamos experimentalmente, como se puede observar en el *gráfico* en cada iteración del metodo calculamos norma2((b1 * x1 + b2 * x2) - yk) y se puede ver claramente como converge a 0 a medida que la cantidad de iteraciones incrementa. 
+
 
 Cabe destacar que como (k1 * x1 + k2 * x2) es autovector, cualquier combinacion lineal de x1 y x2 va a ser autovector por ende hay infinitas posibilidades para los 2 autovectores dominantes. 
 
