@@ -87,7 +87,7 @@ def eval_tests():
     print(f'evaluando resultados...') 
     with open(RES, 'a', encoding="utf-8") as file:
         for k in range(2, N+1, STEP):
-            iteraciones = IO.readAutovalores(pathIter(k)) 
+            iteraciones = np.loadtxt(pathIter(k)) 
             file.write(FMT_COLS.format(k, iteraciones[0], iteraciones[1]))
 
 

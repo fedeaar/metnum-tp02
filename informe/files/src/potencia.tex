@@ -7,19 +7,15 @@
 \vspace{2em}
 \noindent \textsc{Método de la potencia}. El método de la potencia, \textit{Power method} o \textit{Power iteration}, es una técnica iterativa para aproximar el autovector asociado al autovalor en módulo máximo de una matriz cuadrada que satisfaga esta característica ---es decir, tenga un autovalor dominante no nulo---, a partir de la aplicación de sucesivos productos matriciales, descriptos por la siguiente relación de recurrencia:
 
-\begin{equation*}
-    b_0\ \text{es un vector aleatorio} : ||b_0|| = 1
-\end{equation*}
-
 \begin{equation} \label{potencia}
-    b_{k+1} = \frac{\mathbf{A}b_k}{||\mathbf{A}b_k||}
+    b_{k+1} = \frac{\mathbf{A}b_k}{||\mathbf{A}b_k||} \qquad \forall k \in \mathbf{N}_0
 \end{equation}
 
 \vspace{1em}
-\noindent donde $|| \cdot ||$ es una norma vectorial.
+\noindent donde $b_0$ es un vector aleatorio, $||b_0|| = 1$ y $|| \cdot ||$ es una norma vectorial.
 
 \vspace{1em}
-Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si $b_0$ no es ortogonal al autovector asociado al autovalor dominante en módulo de \textbf{A}, $b_k$ convergerá a éste. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
+Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si k es par y $b_0$ no es ortogonal al autovector asociado al autovalor en módulo dominante de \textbf{A}, entonces $b_k$ siempre convergerá a éste\footnote{De manera más formal, la secuencia definida por $\{b_k\}_{k \in \mathbb{N}_0}$ es acotada para $k$ y $\lambda_{max}$ arbitrarios, pero la subsecuencia definida para $k$ par es absolutamente convergente.}. Lo que es más, se podrá aproximar el autovalor dominante por medio del coeficiente de Rayleigh:
 
 \vspace{1em}
 \begin{equation} \label{rayleigh}
@@ -30,19 +26,15 @@ Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si $b_0$ 
 \vspace{2em}
 \noindent \textsc{Método de la deflación}. El método de la deflación, por su parte, corresponde a la transformación de la matriz inicial \textbf{A} por una matriz \textbf{B} con autovalores equivalentes, salvo por el autovalor dominante que será anulado. Existen distintos métodos de deflación, entre ellos la deflación de Hotelling y la deflación de Wielandt \cite{Burden}.  
 
-En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. El mismo consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación:
+En este trabajo utilizaremos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. La misma consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación:
 
 \vspace{1em}
-\begin{equation*}
-    \mathbf{B}_0\ = \mathbf{A}
-\end{equation*}
-
 \begin{equation} \label{deflacion}
-    \mathbf{B}_{k+1} = \mathbf{B}_{k} - \lambda_k\ v_k\ v_k^t 
+    \mathbf{B}_{k+1} = \mathbf{B}_{k} - \lambda_k\ v_k\ v_k^t \qquad \forall k \in \mathbf{N}_0
 \end{equation}
 
-\vspace{1em}
-\noindent donde $\lambda_k$ corresponde al k-ésimo autovalor en módulo máximo de \textbf{A}, estimado por el método de la potencia, y $v_k$ es su autovector asociado.
+\vspace{2em}
+\noindent donde $\mathbf{B}_0 = \mathbf{A}$, $\lambda_k$ corresponde al k-ésimo autovalor en módulo máximo de \textbf{A}, estimado por el método de la potencia, y $v_k$ es su autovector asociado.
 
 %\vspace{1em}
 %Se puede demostrar que $\mathbf{B}_{k+1}$ contiene los mismos autovalores que $\mathbf{B}_{k}$, salvo el máximo que quedará anulado.
@@ -53,7 +45,7 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 % === IMPLEMENTACION === %
 
 \vspace{2em}
-\subsection{Implementación} Procedemos a detallar una posible implementación\footnote{El código, propiamente, se encuentra en \textit{./implementacion/src/}.} para ambos métodos, restringiéndonos al caso de autovalores reales. Definimos:
+\subsection{Implementación} Procedemos a detallar una posible implementación\footnote{El código se puede encontrar en \textit{./implementacion/src/}.} para ambos métodos, restringiéndonos al caso de autovalores reales. Definimos:
 
 \begin{align*}
     \text{\textit{deflacion}}&:\ \text{\textit{matriz}}_{n \times n}\ \mathbf{A}\ \times\ \text{\textit{nat} k}\ \times\ \text{\textit{nat} q}\ \times\ \text{\textit{real} t}\
@@ -64,16 +56,16 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 \end{align*}
 
 \vspace{1em}
-\noindent donde $n$ es un natural, \textbf{A} tiene al menos $k$ autovalores reales dominantes en módulo, $0 < k \leq n$, $q$ es un número par\footnote{Esta restricción no es necesaria, pero permite realizar una optimización que se explicará en la próxima página.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
+\noindent donde $n$ es un natural, \textbf{A} tiene al menos $k$ autovalores reales dominantes en módulo, $0 < k \leq n$, $q$ es un número par\footnote{Esta restricción no es necesaria, pero permite mantener exacta la cantidad de iteraciones a realizar.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
 
 \vspace{1em}
-\lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la deflación.}, label=algo_deflacion]{files/src/.code/deflacion.pseudo}
+\lstinputlisting[language=pseudo, label=algo_deflacion, caption={Pseudocódigo para el método de la deflación.}]{files/src/.code/deflacion.pseudo}
 
 %\vspace{1em}
 El algoritmo (\ref{algo_deflacion}.) retornará un vector con los primeros $k$ autovalores en módulo máximos de \textbf{A}, ordenados descendientemente, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores normalizados asociados a estos autovalores. 
 
 \vspace{1em}
-Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el método de la potencia ---\textbf{B}$_k$--- tendrá, por definición, un autovalor cero con multiplicidad algebráica mayor o igual a $k$. En el caso en que la matriz inicial sea simétrica, \textbf{B}$_k$ será simétrica\footnote{Por suma de simétricas. Notar que $v v^t$ siempre resulta en una matriz de este tipo.} y, en consecuencia, diagonalizable. Se puede demostrar que la única matriz diagonalizable con multiplicidad algebráica $\mu_{a}(0) = n$ es la matriz nula, por lo que el método de la deflación de Hotelling tenderá hacia ella. Esto nos permite inferir que el error númerico será proporcional a $k$\footnote{En tanto existirá una correlación. Sin embargo, es esperable que otros factores entren en juego: la varianza de los autovalores, el número de condición de la matriz, la selección del vector aleatorio inicial, o la cantidad de iteraciones $q$ a realizar, por ejemplo.}. Es decir, los autovalores más chicos de la matriz serán más susceptibles a errores.  
+Es interesante notar que la $k$-ésima matriz sobre la que se aplicará el método de la potencia ---\textbf{B}$_k$--- tendrá, por definición, un autovalor cero con multiplicidad algebraica mayor o igual a $k$. En el caso en que la matriz inicial sea simétrica, \textbf{B}$_k$ será simétrica\footnote{Por suma de simétricas. Notar que $v v^t$ siempre resulta en una matriz de este tipo.} y, en consecuencia, diagonalizable. Se puede demostrar que la única matriz diagonalizable con multiplicidad algebraica $\mu_{a}(0) = n$ es la matriz nula, por lo que el método de la deflación de Hotelling tenderá hacia ella. Esto nos permite inferir que el error numérico será proporcional a $k$\footnote{En tanto existirá una correlación. Sin embargo, es esperable que otros factores entren en juego: la varianza de los autovalores, el número de condición de la matriz, la selección del vector aleatorio inicial, o la cantidad de iteraciones $q$ a realizar, por ejemplo.}. Es decir, los autovalores más chicos de la matriz serán más susceptibles a errores.  
 
 
 \vspace{2em}
@@ -83,7 +75,7 @@ Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el métod
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{monte carlo}.}, label=algo_potencia]{files/src/.code/potencia.pseudo}
 
 \vspace{1em}
-Observamos que el algoritmo (\ref{algo_potencia}.) no es capaz de distinguir si la selección inicial del vector $v$ es ortogonal al autovector asociado al autovalor en módulo dominante, por lo que una mala selección puede resultar en una respuesta incorrecta. Este tipo de algoritmo ---que depende de un proceso aleatorio--- se denomina \textit{monte carlo} \cite{Brassard}. 
+Observamos que el algoritmo (\ref{algo_potencia}.) trabaja con la subsecuencia par de $\{b_k\}_{k \in \mathbb{N}_0}$. Como mencionamos antes, esto garantiza la convergencia absoluta del método, dada una selección inicial de $b_0$ ---$v$ en nuestro pseudocódigo--- no ortogonal al autovector asociado al autovalor en módulo dominante. Sin embargo, como esta selección depende de un proceso aleatorio, el algoritmo podrá resultar en una respuesta incorrecta. A este tipo de procesos se los denomina \textit{monte carlo} \cite{Brassard}. 
 
 \vspace{1em}
 Una variante posible, de tipo \textit{las vegas}, se presenta en el algoritmo (\ref{algo_potencia_vegas}.). Hasta llegar a un resultado aceptable, determinado por $\epsilon$, o superar la cantidad de iteraciones permitida, definida por $\alpha$, el algoritmo volverá a intentar resolver el problema. De no alcanzar una respuesta aceptable retornará una señal de error. 
@@ -91,7 +83,7 @@ Una variante posible, de tipo \textit{las vegas}, se presenta en el algoritmo (\
 De este modo, la probabilidad de fallar a causa de una selección inicial ortogonal al autovector al que se espera converger será inversamente proporcional a $\alpha$\footnote{Esto es, considerando que cada selección inicial es independiente.}. 
 
 \vspace{1em}
-Para reducir esta probabilidad desde el comienzo, se propone que se elija cada coordenada del vector de manera pseudo-aleatoria sobre un rango amplio\footnote{Desde un punto de vista geométrico, dos vectores son ortogonales sólo si son perpendiculares. De manera intuitiva, podemos ver que a medida que la direccion inicial posible de un vector tiende al infinito, la probabilidad que forme un ángulo de 90 grados con otro tiende a cero.}. Por ejemplo, la máxima representación de enteros con signo en 32 bits. 
+Para reducir esta probabilidad desde el comienzo, se propone que se elija cada coordenada del vector de manera pseudo-aleatoria sobre un rango amplio\footnote{Desde un punto de vista geométrico, dos vectores son ortogonales sólo si son perpendiculares. De manera intuitiva, podemos ver que a medida que la dirección inicial posible de un vector tiende al infinito, la probabilidad que forme un ángulo de 90 grados con otro tiende a cero.}. Por ejemplo, la máxima representación de enteros con signo en 32 bits. 
 
 \vspace{1em}
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{las vegas}.}, label=algo_potencia_vegas]{files/src/.code/potencia_vegas.pseudo}
@@ -142,13 +134,13 @@ Además, se controló el tamaño de $n$, la cantidad de iteraciones $q$ y la tol
     test                    & $L_1$             & $L_\infty$ \\
     \hline
     mediciones              & 300               & 300 \\
-    error relativo promedio & $2.488868e^{-3}$  & $3.973441e^{-4}$ \\
-    desviación estándar     & $3.403934e^{-2}$  & $5.849651e^{-3}$ \\
+    error relativo promedio & $2.20e^{-3}$  & $3.69e^{-4}$ \\
+    desviación estándar     & $3.36e^{-2}$  & $5.83e^{-3}$ \\
     mínimo                  & 0.0               & 0.0 \\
     25\%                    & 0.0               & 0.0 \\
-    50\%                    & $1.741562e^{-11}$ & $1.043354e^{-11}$ \\
-    75\%                    & $4.240635e^{-6}$  & $7.861135e^{-7}$ \\
-    máximo                  & $5.812401e^{-1}$  & $1.008212e^{-1}$ \\
+    50\%                    & $2.00e^{-11}$ & $1.01e^{-11}$ \\
+    75\%                    & $4.13e^{-6}$  & $7.97e^{-7}$ \\
+    máximo                  & $5.81e^{-1}$  & $1.01e^{-1}$ \\
     \hline
     \end{tabular} \\
     \bigskip
@@ -165,13 +157,13 @@ Además, se controló el tamaño de $n$, la cantidad de iteraciones $q$ y la tol
     test                    & $L_1$             & $L_\infty$ \\
     \hline
     mediciones              & 300               & 300 \\
-    error relativo promedio & $3.490778e^{-7}$  & $2.069772e^{-7}$ \\
-    desviación estándar     & $5.051277e^{-6}$  & $3.309506e^{-6}$ \\
+    error relativo promedio & $3.43e^{-7}$  & $2.05e^{-7}$ \\
+    desviación estándar     & $5.05e^{-6}$  & $3.31e^{-6}$ \\
     mínimo                  & 0.0               & 0.0 \\
     25\%                    & 0.0               & 0.0 \\
-    50\%                    & $2.130074e^{-12}$ & $3.410605e^{-13}$ \\
-    75\%                    & $1.393337e^{-7}$  & $3.352761e^{-8}$ \\
-    máximo                  & $8.753557e^{-5}$  & $5.733664e^{-5}$ \\
+    50\%                    & $2.20e^{-12}$ & $4.55e^{-13}$ \\
+    75\%                    & $1.31e^{-7}$  & $2.98e^{-8}$ \\
+    máximo                  & $8.75e^{-5}$  & $5.73e^{-5}$ \\
     \hline
     \end{tabular} \\
     \bigskip
@@ -179,6 +171,6 @@ Además, se controló el tamaño de $n$, la cantidad de iteraciones $q$ y la tol
 \end{figure}
 
 \vspace{1em}
-Vemos que el metodo funcionó, para el 75\% de las matrices evaluadas, con un error relativo y absoluto menor a $1e^{-4}$. Sin embargo, notamos que existen casos anomalos para los que el error puede ser mayor.
+Vemos que el método funcionó, para el 75\% de las matrices evaluadas, con un error relativo y absoluto menor a $1e^{-4}$. Sin embargo, notamos que existen casos anómalos para los que el error puede ser mayor.
 
 Por la disparidad entre el error relativo y absoluto, podemos inferir ---a modo de futura hipótesis a investigar--- que el método produce más error en los autovectores resultantes que en los autovalores.

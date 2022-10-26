@@ -1,19 +1,19 @@
 proc potencia'(in A: matriz<n, n>, in q: Nat, in t: Real, 
-               in alpha: Nat, in epsilon: Real) {
+               in α: Nat, in ε: Real) {
     
-    res := false
+    s := false
 
     i := 0
     do {
 
-        l, v := potencia(A, q, t)
-        res  := norma(A * v - v * l, 2) < epsilon
+        λ, v := potencia(A, q, t)         // monte carlo
+        s    := || A * v - λ * v || < ε   // norma L2
         i    := i + 1
 
-    } while not res and i < alpha
+    } while not s and i < α
 
-    if !res {
-        return -1
+    if not s {
+        raise error
     }
-    return l, v
+    return λ, v
 }

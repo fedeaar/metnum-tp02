@@ -85,7 +85,7 @@ public:
     /** OTROS */
     ostream& print(ostream &os) const;
     void clear();
-    bool empty() const; // TODO test
+    bool empty() const;
 };
 
 
