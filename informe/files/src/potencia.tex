@@ -26,7 +26,7 @@ Se puede demostrar \cite{Burden} que, bajo las condiciones descriptas, si k es p
 \vspace{2em}
 \noindent \textsc{Método de la deflación}. El método de la deflación, por su parte, corresponde a la transformación de la matriz inicial \textbf{A} por una matriz \textbf{B} con autovalores equivalentes, salvo por el autovalor dominante que será anulado. Existen distintos métodos de deflación, entre ellos la deflación de Hotelling y la deflación de Wielandt \cite{Burden}.  
 
-En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. La misma consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación:
+En este trabajo utilizaremos la deflación de Hotelling por su sencillez, a cuestas de un mayor error numérico \cite{Burden}. La misma consiste en aplicar el método de la potencia para sucesivas matrices que satisfagan la siguiente relación:
 
 \vspace{1em}
 \begin{equation} \label{deflacion}
@@ -65,7 +65,7 @@ En este trabajo utilizarmos la deflación de Hotelling por su sencillez, a cuest
 El algoritmo (\ref{algo_deflacion}.) retornará un vector con los primeros $k$ autovalores en módulo máximos de \textbf{A}, ordenados descendientemente, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores normalizados asociados a estos autovalores. 
 
 \vspace{1em}
-Es intersante notar que la $k$-ésima matriz sobre la que se aplicará el método de la potencia ---\textbf{B}$_k$--- tendrá, por definición, un autovalor cero con multiplicidad algebráica mayor o igual a $k$. En el caso en que la matriz inicial sea simétrica, \textbf{B}$_k$ será simétrica\footnote{Por suma de simétricas. Notar que $v v^t$ siempre resulta en una matriz de este tipo.} y, en consecuencia, diagonalizable. Se puede demostrar que la única matriz diagonalizable con multiplicidad algebráica $\mu_{a}(0) = n$ es la matriz nula, por lo que el método de la deflación de Hotelling tenderá hacia ella. Esto nos permite inferir que el error númerico será proporcional a $k$\footnote{En tanto existirá una correlación. Sin embargo, es esperable que otros factores entren en juego: la varianza de los autovalores, el número de condición de la matriz, la selección del vector aleatorio inicial, o la cantidad de iteraciones $q$ a realizar, por ejemplo.}. Es decir, los autovalores más chicos de la matriz serán más susceptibles a errores.  
+Es interesante notar que la $k$-ésima matriz sobre la que se aplicará el método de la potencia ---\textbf{B}$_k$--- tendrá, por definición, un autovalor cero con multiplicidad algebraica mayor o igual a $k$. En el caso en que la matriz inicial sea simétrica, \textbf{B}$_k$ será simétrica\footnote{Por suma de simétricas. Notar que $v v^t$ siempre resulta en una matriz de este tipo.} y, en consecuencia, diagonalizable. Se puede demostrar que la única matriz diagonalizable con multiplicidad algebraica $\mu_{a}(0) = n$ es la matriz nula, por lo que el método de la deflación de Hotelling tenderá hacia ella. Esto nos permite inferir que el error numérico será proporcional a $k$\footnote{En tanto existirá una correlación. Sin embargo, es esperable que otros factores entren en juego: la varianza de los autovalores, el número de condición de la matriz, la selección del vector aleatorio inicial, o la cantidad de iteraciones $q$ a realizar, por ejemplo.}. Es decir, los autovalores más chicos de la matriz serán más susceptibles a errores.  
 
 
 \vspace{2em}
@@ -83,7 +83,7 @@ Una variante posible, de tipo \textit{las vegas}, se presenta en el algoritmo (\
 De este modo, la probabilidad de fallar a causa de una selección inicial ortogonal al autovector al que se espera converger será inversamente proporcional a $\alpha$\footnote{Esto es, considerando que cada selección inicial es independiente.}. 
 
 \vspace{1em}
-Para reducir esta probabilidad desde el comienzo, se propone que se elija cada coordenada del vector de manera pseudo-aleatoria sobre un rango amplio\footnote{Desde un punto de vista geométrico, dos vectores son ortogonales sólo si son perpendiculares. De manera intuitiva, podemos ver que a medida que la direccion inicial posible de un vector tiende al infinito, la probabilidad que forme un ángulo de 90 grados con otro tiende a cero.}. Por ejemplo, la máxima representación de enteros con signo en 32 bits. 
+Para reducir esta probabilidad desde el comienzo, se propone que se elija cada coordenada del vector de manera pseudo-aleatoria sobre un rango amplio\footnote{Desde un punto de vista geométrico, dos vectores son ortogonales sólo si son perpendiculares. De manera intuitiva, podemos ver que a medida que la dirección inicial posible de un vector tiende al infinito, la probabilidad que forme un ángulo de 90 grados con otro tiende a cero.}. Por ejemplo, la máxima representación de enteros con signo en 32 bits. 
 
 \vspace{1em}
 \lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{las vegas}.}, label=algo_potencia_vegas]{files/src/.code/potencia_vegas.pseudo}
@@ -171,6 +171,6 @@ Además, se controló el tamaño de $n$, la cantidad de iteraciones $q$ y la tol
 \end{figure}
 
 \vspace{1em}
-Vemos que el metodo funcionó, para el 75\% de las matrices evaluadas, con un error relativo y absoluto menor a $1e^{-4}$. Sin embargo, notamos que existen casos anómalos para los que el error puede ser mayor.
+Vemos que el método funcionó, para el 75\% de las matrices evaluadas, con un error relativo y absoluto menor a $1e^{-4}$. Sin embargo, notamos que existen casos anómalos para los que el error puede ser mayor.
 
 Por la disparidad entre el error relativo y absoluto, podemos inferir ---a modo de futura hipótesis a investigar--- que el método produce más error en los autovectores resultantes que en los autovalores.
