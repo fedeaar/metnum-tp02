@@ -40,10 +40,10 @@ C     | ESTADO | DETALLE
 		ok	    - explicar en el informe.
 
 3.4.
-		TODO	- filtrar la matriz de att. usando PCA: computar la matriz de cov., 
+		ok	- filtrar la matriz de att. usando PCA: computar la matriz de cov., 
 				luego de av. Seleccionar k componentes principales y proyectar al 
 				nuevo espacio. Repetir para varios k y u.
-		TODO	- explicar en el informe.
+		ok	- explicar en el informe.
 
 ----------------------------------------------------------
 opc.:
