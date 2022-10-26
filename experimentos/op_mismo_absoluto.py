@@ -79,17 +79,17 @@ def cmp(x, y, tol=1e-4):
 
 def eval_tests():
     # importo S
-    S = IO.readMatriz(MATRIZ_IN)
+    S = np.loadtxt(MATRIZ_IN)
 
     # importo x
-    y0 = IO.readAutovectores(X_IN)
+    y0 = np.loadtxt(X_IN)
 
     # importo los autovalores esperados
-    e = IO.readAutovalores(AVALS_EXPECTED)
+    e = np.loadtxt(AVALS_EXPECTED)
     e = e[0]
 
     # importo los autovectores esperados
-    Q = IO.readAutovectores(AVECS_EXPECTED)
+    Q = np.loadtxt(AVECS_EXPECTED)
     q1 = Q.T[0]
     q2 = Q.T[1]
 
@@ -97,8 +97,8 @@ def eval_tests():
     u = np.random.rand(N, 1)
     u = nml(u)
 
-    vf = IO.readAutovectores(pathAvec( NITER ))
-    vantef = IO.readAutovectores(pathAvec( NITER-1 ))
+    vf = np.loadtxt(pathAvec( NITER ))
+    vantef = np.loadtxt(pathAvec( NITER-1 ))
 
     invertido_r1 = False
     if(cmp(nml(vf + vantef), -q1, 0.2)): 
@@ -113,8 +113,8 @@ def eval_tests():
         for i in range(0, NITER, 2):
             print(f'evaluando resultados: {i}') 
 
-            v1 = IO.readAutovectores(pathAvec(i))
-            v2 = IO.readAutovectores(pathAvec(i+1))
+            v1 = np.loadtxt(pathAvec(i))
+            v2 = np.loadtxt(pathAvec(i+1))
 
             r1 = v1 + v2
             r1 = r1 / n2(r1)

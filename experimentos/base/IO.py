@@ -4,12 +4,16 @@ import subprocess as sub
 import numpy as np
 
 
-# GLOBALES
-EXE_PATH = '../build/tp2'      # si se compilo de otra manera o con otro nombre, cambiar por la direccion correcta
+# GLOBAL
+EXE_PATH = '../build/tp2'      # si se compilo de otra manera, o con otro nombre, cambiar por la direccion correcta
 WSL = True                     # dejar true solo si se utilizó wsl para compilar el programa, false sino
 
 
-def readGrafo(filename):
+#
+# IO files
+#
+
+def read_adylist(filename):
     
     with open(filename) as file:
         data = file.read().splitlines()
@@ -22,7 +26,7 @@ def readGrafo(filename):
     return matriz
 
 
-def writeGrafo(filename, matrix):
+def write_adylist(filename, matrix):
     
     links = np.where(matrix != 0)
     links = tuple(zip(*links))
@@ -32,32 +36,8 @@ def writeGrafo(filename, matrix):
 
     np.savetxt(filename, text, delimiter="\n", fmt="%s")
 
-    return links
 
-
-def readAtributos(filename):
-
-    feat = readMatriz(filename)
-    col0 = feat[:,0].astype(int)
-    attr = feat[:,1:]
-    idx = np.argsort(col0)
-    col0 = col0[idx]
-    attr = attr[idx,:]
-
-    return col0, attr
-
-
-def readMatriz(filename, cols=None):
-
-    return np.loadtxt(filename, usecols=cols) 
-
-
-def writeMatriz(A, filename):
-
-    np.savetxt(filename, A)
-
-
-def readTime(filename):
+def read_time(filename):
 
     with open(filename) as file:
         data = file.read().splitlines()
@@ -67,26 +47,9 @@ def readTime(filename):
     return scale, time
 
 
-def readAutovalores(filename):
-
-    return readMatriz(filename)
-
-
-def readAutovectores(filename):
-    
-    return readMatriz(filename)
-
-
-def writeAutovalores(niter, tol, eig, filename):
-
-    data = [len(eig), niter, tol, *eig]
-    np.savetxt(filename, data)
-
-
-def writeAutovectores(A, filename):
-
-    writeMatriz(A, filename)
-
+#
+# IO experimentos
+#
 
 def createInOut(filename, delete=False):
     
@@ -109,19 +72,25 @@ def createCSV(filename, columnas):
         file.write(columnas + "\n")
 
 
-def run(filename, iter, epsilon, 
-        f="matriz", o="./", precision=15, save_as=None, time=False, verbose=False,
-        exe_path=EXE_PATH): # TODO: test
+#
+# IO ./tp2
+#
+
+def run(filename, niter, tol, 
+        f="matriz", m="base", o="./", p=15, save_as=None, time=False, verbose=False,
+        exe_path=EXE_PATH):
 
     call_params = [
         "wsl" if WSL else "",   
         exe_path, 
-        filename, str(iter), str(epsilon),
-        "-f", f"{f}",
-        "-o", f"{o}",
-        f"{'-as' if save_as else ''}", f"{save_as}" if save_as else "", 
-        f"-presicion", f"{precision}", 
-        "-time" if time else "",
-        "-v" if verbose else ""
+        filename, str(niter), str(tol),
+        "-f", f,
+        "-m", m,
+        "-o", o,
+        "-p", str(p)
     ]
+    if save_as: call_params.extend(["-as", save_as])
+    if verbose: call_params.extend(["-v"])
+    if time: call_params.extend(["-time"])
+
     sub.check_call(call_params)

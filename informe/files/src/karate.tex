@@ -12,7 +12,7 @@ La investigación tuvo como enfoque central demostrar la capacidad del modelo pa
 
 \vspace{1em}
 \begin{figure}[!htbp]
-\includegraphics[scale=0.55, trim=100 80 100 100, clip]{/files/src/.media/grafo_conectividad.png}
+\includegraphics[scale=0.55, trim=100 80 100 100, clip]{/files/src/.media/karate/grafo_conectividad.png}
 \caption{La red del \textit{Club de Karate}. Cada nodo representa un individuo, cada eje la existencia de un vínculo por fuera del club.}
 \end{figure}
 
@@ -37,10 +37,10 @@ En este análisis\footnote{El script asociado se puede encontrar en \textit{./ex
 \noindent donde $\lambda$ es el autovalor en módulo máximo de \textbf{W} y la coordenada $x_i$ ---del autovector $x$ asociado a $\lambda$--- denota la centralidad del nodo $i$, $\forall i:\ 1\ ...\ n$.
 
 \vspace{1em}
-Intuitivamente, se puede pensar que la importancia de cada nodo es proporcional a la suma de las importancias de sus vecinos. Se puede demostrar \cite{Newman} que, dado las características de esta matriz, el autovector asociado siempre será positivo en coordenadas.
+Intuitivamente, se puede pensar que la importancia de cada nodo es proporcional a la suma de las importancias de sus vecinos. Se puede demostrar \cite{Newman} que, dado las características de esta matriz, el autovector asociado tendrá el mismo signo en todas sus coordenadas.
 
 \vspace{1em}
-En tanto la red de \textit{Club de Karate}, podemos ver que la aplicación del metodo de la potencia sobre la matriz de conectividad asociada al grafo $\mathbf{E}$ resulta en el siguiente autovector $x$\footnote{Notamos que el error relativo del resultado fue de $\approx 1.78e^{-14}$ en norma $L_1$.}:
+En tanto la red de \textit{Club de Karate}, podemos ver que la aplicación del metodo de la potencia sobre la matriz de conectividad asociada al grafo $\mathbf{E}$ resulta en el siguiente autovector $x$\footnote{Notamos que el error relativo del resultado fue de $\approx 7.81e^{-14}$ en norma $L_1$.}:
 
 \vspace{1em}
 \begin{figure}[!htbp]
@@ -101,7 +101,7 @@ Vemos que el nodo `0' y el nodo `33' son los más centrales. Esto no es casualid
 En particular, el mínimo autovalor en módulo no nulo ---llamado de conectividad algebráica, o valor de Fiedler--- permite establecer un criterio sobre el que particionar la red en dos. El autovector asociado a este autovalor designará la pertenencia de un nodo a una u otra partición acorde a su signo. 
 
 \vspace{1em}
-Procedemos a analizar qué autovector de la matriz laplaciana asociada a $\mathbf{E}$ permite predecir mejor la división que ocurrió en el \textit{Club de Karate}. Para ello, calculamos los autovectores de la matriz con el método de la potencia con deflación\footnote{Notamos que el error relativo de los resultados tuvo una cota superior de $\approx 1e^{-13}$ en norma $L_1$.} y medimos el valor absoluto de la correlación entre cada autovector y un vector que indica la división verdadera que ocurrió en el grupo.
+Procedemos a analizar qué autovector de la matriz laplaciana asociada a $\mathbf{E}$ permite predecir mejor la división que ocurrió en el \textit{Club de Karate}. Para ello, calculamos los autovectores de la matriz con el método de la potencia con deflación\footnote{Notamos que el error relativo de los resultados tuvo una cota superior de $\approx 1.03e^{-13}$ en norma $L_1$.} y medimos el valor absoluto de la correlación entre cada autovector y un vector que indica la división verdadera que ocurrió en el grupo.
 
 \vspace{1em}
 \begin{figure}[!htbp]
@@ -156,42 +156,42 @@ Vemos que el valor de conectividad algebráica ---el autovalor mínimo en módul
 \begin{figure}[!htbp]
 \begin{equation*}
     \begin{bmatrix}
-        0   &0.112137 & 0 & 0 \\ 
-        1   &0.041288 & 0 & 0 \\
-        2   &-0.023219  & 1 & 0 \\
-        3   &0.055500 & 0 & 0 \\
-        4   &0.284605 & 0 & 0 \\
-        5   &0.323727 & 0 & 0 \\
-        6   &0.323727 & 0 & 0 \\
-        7   &0.052586  & 0 & 0 \\
-        8   &-0.051601 & 1 & 0 \\
-        9   &-0.092801 & 1 & 1 \\
-        10  &0.284605  & 0 & 0 \\
-        11  &0.210993  & 0 & 0 \\
-        12  &0.109461  & 0 & 0 \\
-        13  &0.014742  & 0 & 0 \\
-        14  &-0.162751 & 1 & 1 \\
-        15  &-0.162751 & 1 & 1 \\
-        16  &0.422765  & 0 & 0 \\
+        0   &-0.112137 & 0 & 0 \\ 
+        1   &-0.041288 & 0 & 0 \\
+        2   &0.023219  & 1 & 0 \\
+        3   &-0.055500 & 0 & 0 \\
+        4   &-0.284605 & 0 & 0 \\
+        5   &-0.323727 & 0 & 0 \\
+        6   &-0.323727 & 0 & 0 \\
+        7   &-0.052586  & 0 & 0 \\
+        8   &0.051601 & 1 & 0 \\
+        9   &0.092801 & 1 & 1 \\
+        10  &-0.284605  & 0 & 0 \\
+        11  &-0.210993  & 0 & 0 \\
+        12  &-0.109461  & 0 & 0 \\
+        13  &-0.014742  & 0 & 0 \\
+        14  &0.162751 & 1 & 1 \\
+        15  &0.162751 & 1 & 1 \\
+        16  &-0.422765  & 0 & 0 \\
 \end{bmatrix}
 \begin{bmatrix}
-        17  &0.100181  & 0 & 0 \\
-        18  &-0.162751 & 1 & 1 \\
-        19  &0.013637  & 0 & 0 \\
-        20  &-0.162751 & 1 & 1 \\
-        21  &0.100181  & 0 & 0 \\
-        22  &-0.162751 & 1 & 1 \\
-        23  &-0.155695 & 1 & 1 \\
-        24  &-0.153026 & 1 & 1 \\
-        25  &-0.160963 & 1 & 1 \\
-        26  &-0.187110 & 1 & 1 \\
-        27  &-0.127664 & 1 & 1 \\
-        28  &-0.095152 & 1 & 1 \\
-        29  &-0.167650 & 1 & 1 \\
-        30  &-0.073500 & 1 & 1 \\
-        31  &-0.098753 & 1 & 1 \\
-        32  &-0.130345 & 1 & 1 \\
-        33  &-0.118903 & 1 & 1 \\
+        17  &-0.100181  & 0 & 0 \\
+        18  &0.162751 & 1 & 1 \\
+        19  &-0.013637  & 0 & 0 \\
+        20  &0.162751 & 1 & 1 \\
+        21  &-0.100181  & 0 & 0 \\
+        22  &0.162751 & 1 & 1 \\
+        23  &0.155695 & 1 & 1 \\
+        24  &0.153026 & 1 & 1 \\
+        25  &0.160963 & 1 & 1 \\
+        26  &0.187110 & 1 & 1 \\
+        27  &0.127664 & 1 & 1 \\
+        28  &0.095152 & 1 & 1 \\
+        29  &0.167650 & 1 & 1 \\
+        30  &0.073500 & 1 & 1 \\
+        31  &0.098753 & 1 & 1 \\
+        32  &0.130345 & 1 & 1 \\
+        33  &0.118903 & 1 & 1 \\
     \end{bmatrix}
 \end{equation*}
 \caption{Autovector de Conectividad algebráica, la primer columna representa los nodos de la red, la segunda el autovector, la tercera la clasificación de cada nodo acorde a su signo y la cuarta la división verdadera que ocurrió.} \label{prediccion_karate}
@@ -199,7 +199,7 @@ Vemos que el valor de conectividad algebráica ---el autovalor mínimo en módul
 
 %\vspace{1em}
 \begin{figure}[!htbp]
-\includegraphics[scale=0.5, trim=100 90 100 100, clip]{/files/src/.media/grafo_corte_32_0.47.png}
+\includegraphics[scale=0.5, trim=100 90 100 100, clip]{/files/src/.media/karate/grafo_corte_32_0.47.png}
 \caption{La división estimada de la red del \textit{Club de Karate}. Los colores representan la división verdadera de la red. Azul: `0', Naranja: `1'.}
 \end{figure}
 
@@ -208,49 +208,49 @@ Procedemos a detallar ---a modo de comparación visual--- los cortes realizados 
 
 \begin{figure}[!htbp]
     \centering
-    \subfloat[av $\approx$ 0.91]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_31_0.91.png}}\hfill
-    \subfloat[av $\approx$ 1.13]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_30_1.13.png}}\hfill
-    \subfloat[av $\approx$ 1.26]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_29_1.26.png}}\hfill
-    \subfloat[av $\approx$ 1.60]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_28_1.6.png}}\hfill
+    \subfloat[av $\approx$ 0.91]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_31_0.91.png}}\hfill
+    \subfloat[av $\approx$ 1.13]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_30_1.13.png}}\hfill
+    \subfloat[av $\approx$ 1.26]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_29_1.26.png}}\hfill
+    \subfloat[av $\approx$ 1.60]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_28_1.6.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[av $\approx$ 1.76]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_27_1.76.png}}\hfill
-    \subfloat[av $\approx$ 1.83]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_26_1.83.png}}\hfill
-    \subfloat[av $\approx$ 1.96]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_25_1.96.png}}\hfill
-    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_24_2.0.png}}\hfill
+    \subfloat[av $\approx$ 1.76]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_27_1.76.png}}\hfill
+    \subfloat[av $\approx$ 1.83]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_26_1.83.png}}\hfill
+    \subfloat[av $\approx$ 1.96]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_25_1.96.png}}\hfill
+    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_24_2.0.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_23_2.0.png}}\hfill
-    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_22_2.0.png}}\hfill
-    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_21_2.0.png}}\hfill
-    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_20_2.0.png}}\hfill
+    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_23_2.0.png}}\hfill
+    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_22_2.0.png}}\hfill
+    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_21_2.0.png}}\hfill
+    \subfloat[av $\approx$ 2.00]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_20_2.0.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[av $\approx$ 2.49]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_19_2.49.png}}\hfill
-    \subfloat[av $\approx$ 2.75]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_18_2.75.png}}\hfill
-    \subfloat[av $\approx$ 3.01]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_17_3.01.png}}\hfill
-    \subfloat[av $\approx$ 3.24]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_16_3.24.png}}\hfill
+    \subfloat[av $\approx$ 2.49]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_19_2.49.png}}\hfill
+    \subfloat[av $\approx$ 2.75]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_18_2.75.png}}\hfill
+    \subfloat[av $\approx$ 3.01]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_17_3.01.png}}\hfill
+    \subfloat[av $\approx$ 3.24]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_16_3.24.png}}\hfill
 \end{figure}
 
 \begin{figure}[!htbp]
     \ContinuedFloat
     \centering
-    \subfloat[av $\approx$ 3.38]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_15_3.38.png}}\hfill
-    \subfloat[av $\approx$ 3.38]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_14_3.38.png}}\hfill
-    \subfloat[av $\approx$ 3.47]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_13_3.47.png}}\hfill
-    \subfloat[av $\approx$ 4.28]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_12_4.28.png}}\hfill
+    \subfloat[av $\approx$ 3.38]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_15_3.38.png}}\hfill
+    \subfloat[av $\approx$ 3.38]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_14_3.38.png}}\hfill
+    \subfloat[av $\approx$ 3.47]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_13_3.47.png}}\hfill
+    \subfloat[av $\approx$ 4.28]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_12_4.28.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[av $\approx$ 4.48]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_11_4.48.png}}\hfill
-    \subfloat[av $\approx$ 4.58]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_10_4.58.png}}\hfill
-    \subfloat[av $\approx$ 5.38]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_9_5.38.png}}\hfill
-    \subfloat[av $\approx$ 5.62]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_8_5.62.png}}\hfill
+    \subfloat[av $\approx$ 4.48]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_11_4.48.png}}\hfill
+    \subfloat[av $\approx$ 4.58]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_10_4.58.png}}\hfill
+    \subfloat[av $\approx$ 5.38]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_9_5.38.png}}\hfill
+    \subfloat[av $\approx$ 5.62]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_8_5.62.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[av $\approx$ 6.33]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_7_6.33.png}}\hfill
-    \subfloat[av $\approx$ 6.52]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_6_6.52.png}}\hfill
-    \subfloat[av $\approx$ 7.0]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_5_7.0.png}}\hfill
-    \subfloat[av $\approx$ 9.78]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_4_9.78.png}}\hfill
+    \subfloat[av $\approx$ 6.33]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_7_6.33.png}}\hfill
+    \subfloat[av $\approx$ 6.52]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_6_6.52.png}}\hfill
+    \subfloat[av $\approx$ 7.0]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_5_7.0.png}}\hfill
+    \subfloat[av $\approx$ 9.78]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_4_9.78.png}}\hfill
     \\[\smallskipamount]
-    \subfloat[av $\approx$ 10.92]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_3_10.92.png}}\hfill
-    \subfloat[av $\approx$ 13.31]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_2_13.31.png}}\hfill
-    \subfloat[av $\approx$ 17.06]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_1_17.06.png}}\hfill
-    \subfloat[av $\approx$ 18.14]{\includegraphics[width=.25\textwidth]{/files/src/.media/grafo_corte_0_18.14.png}}\hfill
+    \subfloat[av $\approx$ 10.92]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_3_10.92.png}}\hfill
+    \subfloat[av $\approx$ 13.31]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_2_13.31.png}}\hfill
+    \subfloat[av $\approx$ 17.06]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_1_17.06.png}}\hfill
+    \subfloat[av $\approx$ 18.14]{\includegraphics[width=.25\textwidth]{/files/src/.media/karate/grafo_corte_0_18.14.png}}\hfill
     \\[\smallskipamount]
     \caption{Todos los cortes posibles ---salvo el de Fiedler y el nulo---, correspondientes a los autovectores asociados a la matriz laplaciana de la red del \textit{Club de Karate}. Cada uno se designa por medio de su autovalor.} \label{grafos_av}
 \end{figure}

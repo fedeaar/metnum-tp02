@@ -72,14 +72,14 @@ def pathAvec(i):
 
 def eval_tests():
     # importo los autovalores esperados
-    e = IO.readAutovalores(AVALS_EXPECTED)
+    e = np.loadtxt(AVALS_EXPECTED)
     e = e[0]
 
     with open(RES, 'a', encoding="utf-8") as file:
         for i in range(int(NITER/STEP)+1):
             print(f'evaluando resultados: {i}') 
 
-            a = IO.readAutovalores(pathAval(i))
+            a = np.loadtxt(pathAval(i))
             error = abs(a - e)
 
             file.write(FMT_COLS.format(i*STEP, error))
