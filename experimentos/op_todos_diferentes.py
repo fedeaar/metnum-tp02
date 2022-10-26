@@ -75,11 +75,11 @@ def pathAvec(i):
 def eval_tests():
     
     with open(RES, 'a', encoding="utf-8") as file:
-        e = IO.readAutovalores(AVALS_EXPECTED)
+        e = np.loadtxt(AVALS_EXPECTED)
         e = e[0]
-        Q = IO.readAutovectores(AVECS_EXPECTED)
+        Q = np.loadtxt(AVECS_EXPECTED)
         q_d = Q.T[0]
-        vf = IO.readAutovectores(pathAvec( int(NITER/STEP) ))
+        vf = np.loadtxt(pathAvec( int(NITER/STEP) ))
 
 
         # hay 2 posibles autovectores de norma2 = 1 a los que puede converger
@@ -91,10 +91,10 @@ def eval_tests():
         for i in range(int(NITER/STEP)+1):
             print(f'evaluando resultados: {i}') 
 
-            a = IO.readAutovalores(pathAval(i))
+            a = np.loadtxt(pathAval(i))
             error = abs(a - e)
 
-            v = IO.readAutovectores(pathAvec(i))
+            v = np.loadtxt(pathAvec(i))
             norma2 = n2(v - q_d)
             if invertido: norma2 = 2 - norma2 
 

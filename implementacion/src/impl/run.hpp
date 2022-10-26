@@ -6,7 +6,7 @@
 template<class R>
 void run(const params &program) {
 
-    bool verbose = program.bool_params.count("verbose");
+    bool verbose = program.bool_params.at("verbose");
 
     // read
     bool grafo = program.string_params.at("formato") == "grafo";
@@ -31,7 +31,7 @@ void run(const params &program) {
     IO::write_matriz(out + ".autovectores.out", av.second, precision);
 
     // write time
-    if (program.bool_params.count("time")) {
+    if (program.bool_params.at("time")) {
         string time_out = out + ".time";
         if (verbose) cout << "guardando tiempo de ejecucion en: " + time_out << " (si el path existe)" << endl;
         IO::write_time(time_out, time);

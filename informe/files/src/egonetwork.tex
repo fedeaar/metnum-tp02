@@ -124,6 +124,7 @@ Por su parte, la correlación es una covarianza normalizada con valores en (-1, 
 \vspace{1em}
 \begin{equation}
     Corr(x, y) = \frac{(x - \mu_{x}) \cdot (y - \mu_{y})}{\sqrt[]{(x - \mu_{x})^{2} \cdot (y - \mu_{y})^{2}}}
+    \label{eq:corr}
 \end{equation}
 
 \vspace{1em}
@@ -135,14 +136,14 @@ Por su parte, la correlación es una covarianza normalizada con valores en (-1, 
     \hline
     aproximación & conexiones & coincidentes & adyacencia estirada & autovalores \\
     \hline
-    0            &298.799                 & 7.61\%\     & 1.25\%\               & 47.99\%\ \\
-    1            &213.902                 & 32.95\%\    & 2.32\%\               & 60.86\%\ \\
-    2            &127.382                 & 58.57\%\    & 2.94\%\               & 62.98\%\ \\
-    3            &86.847                  & 70.99\%\    & 5.86\%\               & 75.48\%\ \\
-    4            &43.091                  & 84.16\%\    & 9.61\%\               & 88.29\%\ \\
-    5            &16.850                  & 91.54\%\    & 10.96\%\              & 94.28\%\ \\
-    6            &5.727                   & 94.32\%\    & 9.75\%\               & 95.06\%\ \\
-    7            &1.517                   & 95.21\%\    & 6.90\%\               & 92.64\%\ \\
+    0            &298,799                 & 7.61\%\     & 1.25\%\               & 47.99\%\ \\
+    1            &213,902                 & 32.95\%\    & 2.32\%\               & 60.86\%\ \\
+    2            &127,382                 & 58.57\%\    & 2.94\%\               & 62.98\%\ \\
+    3            &86,847                  & 70.99\%\    & 5.86\%\               & 75.48\%\ \\
+    4            &43,091                  & 84.16\%\    & 9.61\%\               & 88.29\%\ \\
+    5            &16,850                  & 91.54\%\    & 10.96\%\              & 94.28\%\ \\
+    6            &5,727                   & 94.32\%\    & 9.75\%\               & 95.06\%\ \\
+    7            &1,517                   & 95.21\%\    & 6.90\%\               & 92.64\%\ \\
     8            &405                     & 95.40\%\    & 4.15\%\               & 85.62\%\ \\
     9            &108                     & 95.45\%\    & 2.34\%\               & 77.52\%\ \\
     10           &36                      & 95.46\%\    & 1.35\%\               & 63.31\%\ \\
@@ -246,3 +247,81 @@ Sin embargo, notamos que los resultados son considerablementemente distintos a l
 
 \vspace{2em}
 \subsection{PCA}
+
+Ahora bien, el conjunto describe 319 atributos distintos.
+En cada caso su significado puede variar notablemente.
+Su impacto sobre el sistema de conexiones puede diferir de tal manera que el subconjunto de atributos en consideración
+sea relevante para nuestra exploración del mismo, y tal que parte de los datos sea poco pertinente para dicho estudio.
+El Análisis de Componentes Principales (PCA) es un método que podemos aprovechar para reducir la dimensionalidad de los datos.
+Reduciendo la cantidad bajo consideración podemos obtener un conjunto de atributos que sea más relevante para la exploración del sistema de conexiones.
+PCA proyecta los datos en un espacio de menor dimensionalidad, donde los atributos son linealmente independientes, formando una base de vectores ordenados según su varianza de mayor a menor.
+Es decir, PCA organiza la información según su relevancia. Esto podria eventualmente ayudarnos a reducir la redundacía de los datos, y por ende, la cantidad de atributos que debemos considerar.
+Así se espera intercambiar un poco de precisión, deshaciendonos de información redundante, para ganar simplicidad y eficiencia computacional.
+
+Para lograr esto, se busca hacer un cambio de base a la matriz de datos $\textbf{C}$. 
+Y para eso vamos a diagonalizar la matriz de covarianza $\textbf{M}_x$.
+Esta contiene en su diagonal los valores de varianza de cada variable, y la covarianza (definida en \ref{eq:corr}) en el resto de sus posiciones.
+La obtenemos de la siguiente manera:
+
+\begin{equation}
+	\textbf{M}_x = \frac{\textbf{C}^t\textbf{C}}{n-1}
+\end{equation}
+
+Donde $n$ es la cantidad de nodos en el grafo.
+
+Buscamos diagonalizar esta matriz tal que, para $\textbf{M}_x = \textbf{V}\textbf{D}\textbf{V}^t$, $\textbf{V}$ contiene los autovectores de $\textbf{M}_x$ en sus columnas.
+Permutamos las columnas de $\textbf{V}$ para que estén ordenadas de mayor a menor según los valores de la diagonal de $\textbf{D}$, los autovalores de $\textbf{M}_x$, y obtenemos $\textbf{V}^*$. 
+La matriz resultante con base cambiada es $\textbf{C}^* = \textbf{C}\textbf{V}^*$.
+
+Podemos limitar el subconjunto de componentes principales a considerar.
+Definimos una variable $p$ como el porcentage de datos que deseamos preservar en nuestro conjunto de datos.
+El tamaño de la matriz $\textbf{V}^*$ va a depender de este valor.
+Así procedemos a trabajar con el valor $p$ y el umbral $u$ para estudiar nuevamente la aproximación de $\textbf{E}$.
+Usando $\textbf{C}^*$ construimos nuevamente la matriz de similaridad e iteramos sobre el rango de umbrales.
+
+\vspace{1em}
+La totalidad de los resultados obtenidos se adjuntan en el apendice (ver figuras \ref{similaridad_pca} y \ref{similaridad_pca_2}). 
+En la figura \ref{grafo_correlaciones_pca}, ilustramos nuevamente los distintos métodos de comparación para cada iteración de $p$.
+Para los valores de $p$ más pequeños, el grafico difiere notablemente de los obtenidos en la sección anterior. 
+Pero vemos que, como es de esperarse, los resultando tienden a converger al mismo comportamiento observado previamente.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[scale=0.45]{/files/src/.media/ego/facebook_similaridad_pca.png}
+    \caption{Similitud entre las aproximaciones y el grafo \textbf{E} para \textit{posiciones coincidentes}, \textit{adyacencia estirada} y \textit{listas de autovalores}, en función del umbral $u$, para $p \in \{0.4, 0.5, 0.6, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99\}$.}
+    \label{grafo_correlaciones_pca}
+\end{figure}
+
+\vspace{1em}
+Lo más interesante es que, con menos atributos, el valor de correlación máximo difiere solo ligeramente.
+Y este llega a su tope para un umbral $u$ relativamente menor.
+La tabla \ref{tabla_correlaciones_pca} muestra exactamente para que valor de $u$ se alcanza la máxima correlación, para cada valor de $p$, para los métodos de \textit{adyacencia estirada} y \textit{listas de autovalores}.
+
+\vspace{1em}
+\begin{figure}[!htbp]
+    \begin{tabular}{ c|c|c|c|c } 
+    \hline
+     & \multicolumn{2}{c}{adyacencia estirada} & \multicolumn{2}{c}{lista de autovalores} \\
+    \hline
+    p & u & máximo & u & máximo \\
+    \hline
+    0.4            &4       &10.29\%                 & 4    &89.88\%  \\
+    0.5            &4       &10.18\%             & 5    &93.12\%  \\
+    0.6            &5       &10.8\%                & 5     &93.05\%      \\
+    0.75            &5      &10.4\%              & 6    &94.42\%     \\
+    0.8            &5       &10.49\%             & 6    &94.7\%      \\
+    0.85            &5      &10.81\%              & 6       &94.94\% \\
+    0.9            &5       &10.96\%             & 6    &95.2\%  \\
+    0.95            &5      &10.99\%              & 6      &95.26\% \\
+    0.99            &5      &10.99\%               & 6      &95.06\% \\
+    \hline
+    \end{tabular} \\
+    \bigskip
+    \caption{Umbral con correlación máxima para valores de $p$ en los métodos de \textit{adyacencia estirada} y \textit{listas de autovalores}.} \label{tabla_correlaciones_pca}
+\end{figure}
+
+Efectivamente, para menor valores de $p$ empeora nuestra capacidad de aproximar $\textbf{E}$, pero solo levemente.
+Notar que habiendo reducido la cantidad de atributos en un 60\%, perdemos no más que 0.7\% y 5\% en la adyacencia estirada y la lista de autovalores, respectivamente.
+Es decir, de necesitar el uso del PCA para reducir la dimensionalidad de los datos, los resultados obtenidos sufren meramente una leve pérdida de calidad.
+También, constatamos que el rango de umbrales en el que se alcanza la máxima correlación converge a los mismos valores que en la sección anterior.
+Es decir, para $u \in \{5, 6\}$.

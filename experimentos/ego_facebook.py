@@ -12,28 +12,37 @@ descripcion:
 """
 
 
-# IO
+#
+# IN
+#
+
+GRAFO       = "../catedra/ego-facebook.edges"
+ATRIBUTOS   = "../catedra/ego-facebook.feat"
+
+
+# 
+# OUT
+#
+
 EXPERIMENTO = "ego-facebook"
 DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO)
 
+CLEAN_GRAFO      = DIR_IN + "clean_ego-facebook.conn"
+CLEAN_ATTR       = DIR_IN + "clean_ego-facebook.feat"
 
-# VARS
-GRAFO       = "../catedra/ego-facebook.edges"
-CLEAN_GRAFO = DIR_IN + "clean_ego-facebook.conn"
-ATRIBUTOS   = "../catedra/ego-facebook.feat"
-CLEAN_ATTR  = DIR_IN + "clean_ego-facebook.feat"
+SIMILARIDAD_RES  = DIR + "facebook_similaridad.csv"
+SIMILARIDAD_COLS = "umbral,flat_corr,av_corr,mean_corr"
+SIMILARIDAD_FMT  = "{0},{1},{2},{3}\n"
+SIMILARIDAD_PLOT = DIR + "facebook_similaridad.png"
 
-# OUTPUT
-SIMILARIDAD_RES = DIR + "facebook_similaridad.csv"
-SIMILARIDAD_PNG = DIR + "facebook_similaridad.png"
-GRAFO_SIM       = DIR_OUT + "grafo_similaridad_{u}.txt"
-GRAFO_PNG       = DIR + "grafo_{name}.png"
-
-COLS_SIM = "umbral,flat_corr,av_corr,mean_corr"
-FMT_SIM  = "{0},{1},{2},{3}\n"
+UMBRAL_MATRIZ    = DIR_OUT + "grafo_similaridad_{u}.txt"
+UMBRAL_GRAFO     = DIR + "grafo_{name}.png"
 
 
+#
 # UTILS
+#
+
 def clean_data():
 
     # grafo
@@ -84,36 +93,40 @@ def correlacion_promedio(A, O):
     return (np.count_nonzero(A == O) / total)
 
 
-# EXP
+#
+# EXPERMIENTOS
+#
+
 def aproximar_similaridad(A, O):
 
     S = A @ A.T
     umbrales = np.arange(np.max(S))
     
-    IO.createCSV(SIMILARIDAD_RES, COLS_SIM)
+    IO.createCSV(SIMILARIDAD_RES, SIMILARIDAD_COLS)
     with open(SIMILARIDAD_RES, 'a', encoding='utf-8') as file:
 
         for u in umbrales:
             T = S.copy()
             T = (T > u).astype(int)
             T = T - np.diag(np.diag(T)) # Quito autoconexiones
-
-            np.savetxt(GRAFO_SIM.format(u=u), T, fmt='%i')
+            
+            np.savetxt(UMBRAL_MATRIZ.format(u=u), T, fmt='%i')
 
             ady = correlacion_adyacencia(T, O)
             av  = correlacion_autovalores(T, O)
-            cc = correlacion_promedio(T, O)
-            file.write(FMT_SIM.format(u, ady, av, cc))
-            # print(u, ady, av)
+            cc  = correlacion_promedio(T, O)
+
+            line = SIMILARIDAD_FMT.format(u, ady, av, cc)
+            file.write(line)
+            # print("u=", u, "con", round(np.count_nonzero(T) / 2), "cc", round(cc * 100, 2), "ady", round(ady * 100, 2), "av", round(av * 100, 2))
 
 
 def pca():
 
-    O = IO.readMatriz(CLEAN_GRAFO)
-    X = IO.readMatriz(CLEAN_ATTR)
+    O = np.loadtxt(CLEAN_GRAFO)
+    X = np.loadtxt(CLEAN_ATTR)
 
     # Matriz de covarianza
-    # col, X = IO.readAtributos(ATRIBUTOS)
     Xcentered = X - X.mean(0)
     n = np.size(Xcentered, 0)
     M = (Xcentered.T@Xcentered) / (n-1)
@@ -137,38 +150,39 @@ def pca():
         aproximar_similaridad(A, O)
 
 
+#
+# MAIN
+#
 
 if __name__ == "__main__":
 
-    # clean_data()
-    
-    O = IO.readMatriz(CLEAN_GRAFO)
-    A = IO.readMatriz(CLEAN_ATTR)
+    A, O = clean_data()
     aproximar_similaridad(A, O)
 
-    # pca()
-    
     df = pd.read_csv(SIMILARIDAD_RES)
+    l = len(df.umbral)
     utils.graficar(
         x=df.umbral.to_list() * 3,
-        y=df.flat_corr.to_list() + df.av_corr.to_list() + df.mean_corr.to_list(),
-        hue=["adyacencia estirada"] * len(df.flat_corr) + ["lista de autovalores"] * len(df.av_corr) + ["posiciones coincidentes"] * len(df.mean_corr),
+        y=df.flat_corr.to_list() + \ 
+          df.av_corr.to_list() + \
+          df.mean_corr.to_list(),
+        hue=["adyacencia estirada"] * l + \
+            ["lista de autovalores"] * l + \
+            ["posiciones coincidentes"] * l,
         xaxis='umbral',
         yaxis='correlación',
-        filename=SIMILARIDAD_PNG
+        filename=SIMILARIDAD_PLOT
     )
 
-    # grafos
-    # grafos = [
-    #     CLEAN_GRAFO,
-    #     *[GRAFO_SIM.format(u=f"{i}.0") for i in range(14)]
-    # ]
-    # for i, grafo in enumerate(grafos):
-    #     A = IO.readMatriz(grafo)
-    #     utils.graficar_grafo(A, 
-    #         GRAFO_PNG.format(name=i if i != 0 else 'facebook'), 
-    #         node_color='tab:blue', 
-    #         edge_color='darkgray',
-    #         size=(20, 20), 
-    #         node_size=300, 
-    #         with_labels=False)
+    for i in range(15):
+        grafo = CLEAN_GRAFO if i == 0 else UMBRAL_MATRIZ.format(u=f"{i}.0")
+        A = IO.readMatriz(grafo)
+        utils.graficar_grafo(A, 
+            UMBRAL_GRAFO.format(name=(i if i != 0 else 'facebook')), 
+            node_color='tab:blue', 
+            edge_color='darkgray',
+            size=(20, 20), 
+            node_size=300, 
+            with_labels=False)
+
+    # pca()

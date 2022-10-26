@@ -25,10 +25,10 @@ int main(int argc,  char** argv) {
 
     // == run ===
     if (program.string_params["modo"] == "alt") {
-        if (program.bool_params.count("verbose")) cout << "utilizando modo 'alt'" << endl;
+        if (program.bool_params.at("verbose")) cout << "utilizando modo 'alt'" << endl;
         run<alt>(program);
     } else {
-        if (program.bool_params.count("verbose")) cout << "utilizando modo 'base'" << endl;
+        if (program.bool_params.at("verbose")) cout << "utilizando modo 'base'" << endl;
         run<base>(program);
     }
 
