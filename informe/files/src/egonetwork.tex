@@ -167,7 +167,7 @@ En la figura (\ref{grafo_correlaciones}.) se puede apreciar que se obtienen resu
 \begin{figure}[!htbp]
 \centering
 \includegraphics[scale=0.45]{/files/src/.media/ego/facebook_similaridad.png}
-\caption{Similitud entre las aproximaciones y el grafo \textbf{E} para \textit{posiciones coincidentes}, \textit{adyacencia estirada} y \textit{listas de autovalores}, en función del umbral $u$.}
+\caption{Similitud entre las aproximaciones y el grafo \textbf{E} para \textit{posiciones coincidentes}, \textit{adyacencia estirada} y \textit{lista de autovalores}, en función del umbral $u$.}
 \label{grafo_correlaciones}
 \end{figure}
 
@@ -274,10 +274,10 @@ Permutamos las columnas de $\textbf{V}$ para que estén ordenadas de mayor a men
 La matriz resultante con base cambiada es $\textbf{C}^* = \textbf{C}\textbf{V}^*$.
 
 Podemos limitar el subconjunto de componentes principales a considerar.
-Definimos una variable $p$ como el porcentage de datos que deseamos preservar en nuestro conjunto de datos.
-El tamaño de la matriz $\textbf{V}^*$ va a depender de este valor.
+Definimos una variable $p$ como el porcentage de componentes que deseamos preservar en nuestro conjunto.
+Es decir, el tamaño de la matriz $\textbf{V}^*$ va a depender de este valor.
 Así procedemos a trabajar con el valor $p$ y el umbral $u$ para estudiar nuevamente la aproximación de $\textbf{E}$.
-Usando $\textbf{C}^*$ construimos nuevamente la matriz de similaridad e iteramos sobre el rango de umbrales.
+Usando $\textbf{C}^*$ construimos la matriz de similaridad e iteramos sobre el rango de umbrales.
 
 \vspace{1em}
 La totalidad de los resultados obtenidos se adjuntan en el apendice (ver figuras \ref{similaridad_pca} y \ref{similaridad_pca_2}). 
@@ -288,7 +288,7 @@ Pero vemos que, como es de esperarse, los resultando tienden a converger al mism
 \begin{figure}[!htbp]
     \centering
     \includegraphics[scale=0.45]{/files/src/.media/ego/facebook_similaridad_pca.png}
-    \caption{Similitud entre las aproximaciones y el grafo \textbf{E} para \textit{posiciones coincidentes}, \textit{adyacencia estirada} y \textit{listas de autovalores}, en función del umbral $u$, para $p \in \{0.4, 0.5, 0.6, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99\}$.}
+    \caption{Similitud entre las aproximaciones y el grafo \textbf{E} para \textit{posiciones coincidentes}, \textit{adyacencia estirada} y \textit{listas de autovalores}, en función del umbral $u$, para todo $p \in \{0.4, 0.5, 0.6, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99\}$.}
     \label{grafo_correlaciones_pca}
 \end{figure}
 
