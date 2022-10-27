@@ -32,11 +32,11 @@ COLS       = 'N,max_iter,prom_iter'
 FMT_COLS   = "{0},{1},{2}\n"
 
 # VARIABLES
-N = 102 # tiene que terminar en 2
-STEP = 10 # tiene que se par para que tenga sentido
+N = 100 # tiene que terminar en 2
+STEP = 1 # tiene que se par para que tenga sentido
 TOL = 0
 EPSILON = 1E-4
-REP = 10
+REP = 100
 
 
 def make_tests(n):
@@ -100,19 +100,29 @@ if __name__ == "__main__":
     df = pd.read_csv(RES)
     df.describe().to_csv(SUMMARY)
     
-    utils.graficar(
-        x=df.N, 
-        y=df.max_iter, 
-        hue=["iteraciones máximas"]*((N-2)//STEP + 1), 
-        xaxis="TAMAÑO DE LA MATRIZ", 
-        yaxis="ITERACIONES", 
+    # utils.graficar(
+    #     x=df.N, 
+    #     y=df.max_iter, 
+    #     hue=["iteraciones máximas"]*((N-2)//STEP + 1), 
+    #     xaxis="TAMAÑO DE LA MATRIZ", 
+    #     yaxis="ITERACIONES", 
 
-        filename=GRAFICO_MAX)
+    #     filename=GRAFICO_MAX)
 
+    # utils.graficar(
+    #     x=df.N, 
+    #     y=df.prom_iter, 
+    #     hue=["iteraciones promedio"]*((N-2)//STEP + 1), 
+    #     xaxis="TAMAÑO DE LA MATRIZ", 
+    #     yaxis="ITERACIONES", 
+    #     filename=GRAFICO_PROM)
+
+    l = len(df.N)
     utils.graficar(
-        x=df.N, 
-        y=df.prom_iter, 
-        hue=["iteraciones promedio"]*((N-2)//STEP + 1), 
-        xaxis="TAMAÑO DE LA MATRIZ", 
-        yaxis="ITERACIONES", 
-        filename=GRAFICO_PROM)
+        x=df.N.to_list() * 2,
+        y=df.max_iter.to_list() + df.prom_iter.to_list(),
+        hue=["iteraciones máximas"] * l + ["iteraciones promedio"] * l,
+        xaxis='TAMAÑO DE LA MATRIZ',
+        yaxis='ITERACIONES',
+        filename=GRAFICO_PROM
+    )

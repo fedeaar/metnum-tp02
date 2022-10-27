@@ -205,7 +205,8 @@ def nml(x):
     return x / n2(x)
 
 
-
+def rayleigh(A, v):
+    return (np.dot(v.T, (A @ v)) / np.dot(v.T, v))[0,0]
 
 
 def alt_potencia(A, niter=10000, epsilon=1e-6, x={}):
@@ -215,18 +216,16 @@ def alt_potencia(A, niter=10000, epsilon=1e-6, x={}):
     x = nml(x)
     for _ in range(niter):
         y = nml(A @ nml(A @ x))
-        if n2(x - y) < epsilon: break
+        if n2(x - y) < epsilon : break
         x = y
 
-    a = np.dot(x.T, (A @ x)) / np.dot(x.T, x)
-    a = a[0, 0]
+    a = rayleigh(A, x)
 
     x2 = nml(A @ x) - x
     x3 = nml(A @ x) + x
     if n2(x2) > EPSILON and n2(x3) > EPSILON and niter > 100:
         x2 = nml(x2)
-        a2 = np.dot(x2.T, (A @ x2)) / np.dot(x2.T, x2)
-        a2 = a2[0,0]
+        a2 = rayleigh(A, x2)
         return a2, x2
 
     return a, x
@@ -241,11 +240,6 @@ def alt_deflacion(A, k, niter=10000, epsilon=1e-6):
     vecs = np.zeros((n, k))
 
     for i in range(k):
-
-        # e, V = eig(A)
-        # e = e.astype(float)
-        # print(e)
-
         if(n2(A) < EPSILON): break
         a, v = alt_potencia(A, niter, epsilon)
         eigs.append(a)

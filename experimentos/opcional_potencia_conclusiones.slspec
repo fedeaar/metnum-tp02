@@ -99,9 +99,6 @@ Cabe Notar que si la cantidad de iteraciones que recibe de input es considerable
 
             
 
-
-
-
 Finalmente realizamos otro experimento para observar la complejidad del algoritmo del método de la potencia.
 El procedimiento fue seleccionar una matriz de autovalores diferentes 
  
