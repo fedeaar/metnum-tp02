@@ -1,26 +1,16 @@
-proc potencia_modificada(in A : matriz <n , n> , in q : Nat , in $\epsilon$ : $\mathbb{R}$ ) {
-    v := normalizar(aleatorio(n))             // un vector aleatorio no nulo de norma 2 = 1
-    q := q / 2                                // divido por 2 las iteraciones
+proc potencia_ext(in A: matriz<n, n>, in q: Nat, in t: Real) {
+    
+    λ, x := potencia(A, q, t)    // monte carlo original
+    
+    v$_1$ := normalizar(A * x) - x                 
+    v$_2$ := normalizar(A * x) + x                  
 
-    b := True
-    for (i := 0; i < q and b; i := i + 1) {
-       y := normalizar(A * normalizar(A * v)) // 2 iteraciones por cada paso
-       b = $||v - y||_2 \ \geq \ \epsilon$                                   // chequear mayor a tolerancia
-       v := y
+    if $||$v$_1||_2$ > t and $||$v$_2||_2$ > t {   // existe λ$_{max}$, -λ$_{max}$
+    
+        x := normalizar(v$_1$)
+        λ := (x.t * A * x) / (x.t * x)  // coeficiente de rayleigh
     }
     
-    $\lambda$ := @\mbox{\LARGE $\frac{v^t \ * \ A \ * \ v }{ v^t \ * \ v}$}@                            // coeficiente de rayleigh
-    
-    $v_2$ := normalizar(A * x) - x                 // resta entre iteraciones consecutivas 
-    $v_3$ := normalizar(A * x) + x                 //  suma entre iteraciones consecutivas 
-
-    // si ambos son no nulos significa que el autovalor dominante esta repetido en absoluto
-    if $||v_2||_2 > \epsilon$ and $||v_3||_2 > \epsilon$: 
-    
-        $v_2$ := normalizar($v_2$)
-        $\lambda _2$ := @\mbox{\LARGE $\frac{v_2^t \ * \ A \ * \ v_2 }{ v_2^t \ * \ v_2}$}@                       // autovalor del autovector encontrado
-        return $\lambda _2$, $v_2$ 
-
-    return $\lambda$, v
+    return λ, x
 }
  
