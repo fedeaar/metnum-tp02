@@ -1,0 +1,9 @@
+EPSILON = 1e-4
+for i de 2 hasta 100 
+    for j de 1 hasta 100
+        A = matriz_simetrica_aleatoria(size = i)
+        a, x = potencia(matriz=A, iteraciones=2, tolerancia=0)
+        iteraciones_necesarias = 0
+        while(norma2(x - autovector_esperado) > EPSILON)
+            a, x = potencia(matriz=A, iteraciones=2, tolerancia=0)
+            iteraciones_necesarias += 2

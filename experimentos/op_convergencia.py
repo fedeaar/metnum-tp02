@@ -67,11 +67,10 @@ def run_tests():
             v = np.reshape(v, (k, 1))  
 
             i = 0
-            while(True):
+            while(n2(x - v) > EPSILON and n2(x + v) > EPSILON):
                 a, x = utils.alt_potencia(S, 2, TOL, x)
                 i += 2
-                if(n2(x - v) < EPSILON or n2(x + v) < EPSILON): 
-                    break
+
             mx = max(mx, i)
             sum += i
 

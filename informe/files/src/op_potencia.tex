@@ -12,8 +12,8 @@
 \noindent \textsc{Método de la potencia para autovalores dominantes repetidos}
 
 \vspace{2em}
-\noindent Para simplificar el analisis separamos en casos: \\
-\indent 1) Autovalores dominantes que iguales \\
+\noindent Para simplificar el análisis separamos en casos: \\
+\indent 1) Autovalores dominantes iguales \\
 \indent 2) Autovalores dominantes que tienen el mismo valor absoluto
 \vspace{2em}
 
@@ -38,14 +38,15 @@ Pero algo interesante es que como $x_1$ y $x_2$ son autovectores con el mismo $\
     A * (c_1 * x_1 + c_2 * x_2) &= \lambda * (c_1 * x_1 + c_2 * x_2) 
 \end{align}
 
-Lo que se puede concluir de este resultado es que no importa quienes sean $c_1$, $c_2$ se cumple que ($c_1 * x_1 + c_2 * x_2$) es un autovector y $\lambda$ es su autovalor por lo tanto en el caso donde hay 2 autovalores dominantes iguales, el metodo de la potencia converge correctamente, además vale no solo cuando la cantidad de autovalores dominantes repetidos son 2 sino que no importa la cantidad de veces que esté repetido el autovalor dominante se cumple que $\sum_{i=1}^{n} (a_i \ * \ \lambda_{i}^{k} \ * \ x_i)$ resulta en un autovector de A.
-Este resultado lo comprobamos experimentalmente como se ve en el siguiente gráfico, donde se observa que el autovector tiende al autovalor correcto a medida que aumenta la cantidad de iteraciones del algoritmo.
+Lo que se puede concluir de este resultado es que no importa quienes sean $c_1$, $c_2$ se cumple que ($c_1 * x_1 + c_2 * x_2$) es un autovector y $\lambda$ es su autovalor por lo tanto en el caso donde hay 2 autovalores dominantes iguales, el método de la potencia converge correctamente, además vale no solo cuando la cantidad de autovalores dominantes repetidos son 2 sino que no importa la cantidad de veces que esté repetido el autovalor dominante se cumple que $\sum_{i=1}^{n} (a_i \ * \ \lambda_{i}^{k} \ * \ x_i)$ resulta en un autovector de A.
+Este resultado lo comprobamos experimentalmente como se ve en el gráfico (\ref{fig:autovalor_repetido}), donde se observa que el autovector tiende al autovalor correcto a medida que aumenta la cantidad de iteraciones del algoritmo.
 
 
 \vspace{1em}
 \begin{figure}[!htbp]
-\includegraphics[scale=0.45]{files/src/.media/op_autovalor_repetidol.png}
-\caption{Se eligió una matriz de 20x20 con base de autovectores y 2 autovalores dominantes iguales a 20. En cada iteración del método de la potencia almacenamos $|20 - autovalor|$. Se puede observar claramente como a medida que aumenta la cantidad de iteraciones la distancia entre el autovalor y el esperado tiende a 0.}
+    \includegraphics[scale=0.45]{files/src/.media/op_autovalor_repetido.png}
+    \caption{Se eligió una matriz de 20x20 con base de autovectores y 2 autovalores dominantes iguales a 20. En cada iteración del método de la potencia almacenamos $|20 - autovalor|$. Se puede observar claramente como a medida que aumenta la cantidad de iteraciones la distancia entre el autovalor y el esperado tiende a 0.}
+    \label{fig:autovalor_repetido}
 \end{figure}
 
 Cabe destacar que como $(c_1 * x_1 + c_2 * x_2)$ es autovector $\forall c_1, c_2$ es lo mismo que decir que cualquier combinación lineal de $x_1$ y $x_2$ va a ser autovector por ende hay infinitas posibilidades para los 2 autovectores dominantes. A diferencia del caso en el que todos los autovalores son diferentes en módulo donde solo hay dos autovectores con norma 2 igual a 1, ahora las posibilidades son infinitas, por lo tanto hay que tener esto en mente a la hora de realizar comparaciones con los resultados que obtiene numpy. 
@@ -74,11 +75,12 @@ Algo interesante es que si $\lambda$ es negativo y $b_i$ esta definido de la sig
 Pero si k es impar: \\
 \indent \indent $\lim_{k \to \infty} y_k = b_1 * x_1 - b_2 * x_2$ \\ \\
 Se ve claramente que si $b_2 * x_2$ no es 0 son dos vectores diferentes.
-Pero para mayor seguridad lo comprobamos experimentalmente, como se puede observar en el siguiente gráfico:
+Pero para mayor seguridad lo comprobamos experimentalmente, como se puede observar en el gráfico (\ref{fig:oscilante}).
 
 \begin{figure}[!htbp]
-\includegraphics[scale=0.45]{files/src/.media/op_oscilante.png}
-\caption{Se eligió una matriz de 20x20 con base de autovectores y 2 autovalores dominantes 20, -20. Además se seleccionó un vector aleatorio constante normalizado y en cada iteración del metodo de la potencia calculamos $||randVector - y_k||_2$. Se puede apreciar claramente como la distancia al randVector oscila entre las iteraciones pares e impares.}
+    \includegraphics[scale=0.45]{files/src/.media/op_oscilante.png}
+    \caption{Se eligió una matriz de 20x20 con base de autovectores y 2 autovalores dominantes 20, -20. Además se seleccionó un vector aleatorio constante normalizado y en cada iteración del método de la potencia calculamos $||randVector - y_k||_2$. Se puede apreciar claramente como la distancia al randVector oscila entre las iteraciones pares e impares.}
+    \label{fig:oscilante}
 \end{figure}
 
 \vspace{2em}
@@ -123,13 +125,28 @@ Con este resultado en mente planteamos una alternativa al método de la potencia
 \lstinputlisting[mathescape=true, escapechar=@, language=pseudo, label=potencia_modificada, caption={Pseudocódigo mostrando la alternativa a la potencia que soluciona cuando hay autovalores repetidos}]{files/src/.code/potencia_modificada.pseudo}
 
 \vspace{1em}
-Este nuevo algoritmo converge a un autovector de la matriz siempre que sus autovalores pertenezcan a los reales.
+Dada una matriz inicial cuyos autovalores pertenecen a los reales, con este nuevo algoritmo sumado a la deflación original sin modificaciones se pueden obtener todos los autovectores y autovalores de la matriz.
 
 \vspace{1em}
 
 \begin{large}  
     \textbf{¿Cuantás iteraciones del método de la potencia son necesarias para que converja según el tamaño de la matriz?}
-    \vspace{1em}
-    Para responder esta pregunta generamos una matriz de tamaño variable
-
 \end{large}  
+
+\vspace{1em}
+Para responder esta pregunta experimentamos de la siguiente manera:
+
+\vspace{1em}
+\lstinputlisting[language=pseudo, label=experimento_iteraciones, caption={Experimento para entender la complejidad del método de la potencia}]{files/src/.code/experimento_iteraciones.pseudo}
+\vspace{1em}
+
+\vspace{1em}
+\begin{figure}[!htbp]
+    \includegraphics[scale=0.45]{files/src/.media/op_experimento_iteraciones.png}
+    \caption{Por cada i del algoritmo mostrado arriba se calculó el promedio de las iteraciones y la cantidad máxima de iteraciones.}
+    \label{fig:iteraciones}
+\end{figure}
+\vspace{1em}
+
+Se puede apreciar en el gráfico (\ref{fig:iteraciones}) que ambas curvas asemejan ser funciones lineales, deducimos que la cantidad de iteraciones necesarias para que el método de la potencia converja es lineal con respecto al tamaño de la matriz inicial.
+Este resultado, sumado a que la complejidad del método de la potencia es $O(N^2 * iteraciones)$ nos permite concluir que la complejidad promedio del método de la potencia es $\Theta(N^3)$
