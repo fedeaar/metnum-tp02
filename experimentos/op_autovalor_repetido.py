@@ -40,7 +40,8 @@ TOL = 0
 
 def make_tests():
     
-    print('creando test...')    
+    print('creando test...')   
+    
     S, V, a = utils.armarMatriz([N, N], N) #nos aseguramos de que haya un autovalor repetido
     x = utils.armarRandom(N)
     np.savetxt(MATRIZ_IN, S)
