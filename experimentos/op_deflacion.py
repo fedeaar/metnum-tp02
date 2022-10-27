@@ -1,4 +1,3 @@
-from cmath import inf
 import base.IO as IO
 import base.utils as utils
 
@@ -23,29 +22,30 @@ from op_convergencia import EPSILON
 # VARIABLES
 N = 100
 NITER = 20000
+TESTS = 100
 
-def run_tests():
+def run_tests(t):
     S, U, e = utils.armarMatriz([N], N)
     a, V = utils.alt_deflacion(S, N, NITER, 1e-8)
 
     size = len(a)
+    for i in range(N - size): a = np.append(a, 0) #extiendo con 0s
+
     b = True
-    for i in range(size):
-        for j in range(i+1, size):
-            if(abs(np.inner(V.T[i], V.T[j])) > 1e-3) : # chequeo que sean todos ortogonales
-                print(abs(np.inner(V.T[i], V.T[j])))
-                b = False
+    if(utils.n2(V @ V.T) - 1 > EPSILON):
+        print("se re pico", utils.n2(V @ V.T))
+        b = False
 
     for v in V.T:
         if(utils.n2(v * (v @ S @ v)  - S @ v) > 1e-3) : # chequeo que sean todos ortogonales
             print(utils.n2(v * (v @ S @ v)  - S @ v))
             b = False
 
-    a = np.pad(a, N - size) # extiendo a agregandole 0s las veces que corresponda con su multiplicidad
     
-    if(b and utils.n2(np.sort(e) - np.sort(a)) < EPSILON): print("Funca")
-    else: print("No Funca")
+    if(b and utils.n2(np.sort(e) - np.sort(a)) < EPSILON): print(str(t)+": Funca")
+    else: print(str(t)+": No Funca")
 
 
 if __name__ == "__main__":
-    run_tests()
+    for t in range(TESTS):
+        run_tests(t)

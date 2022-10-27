@@ -214,6 +214,7 @@ def alt_potencia(A, niter=10000, epsilon=1e-6, x={}):
     x2 = nml(A @ x) - x
     x3 = nml(A @ x) + x
     if n2(x2) > EPSILON and n2(x3) > EPSILON and niter > 100:
+        print("entree...")
         x2 = nml(x2)
         a2 = rayleigh(A, x2)
         return a2, x2

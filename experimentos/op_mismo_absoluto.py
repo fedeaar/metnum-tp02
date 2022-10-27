@@ -138,8 +138,8 @@ def eval_tests():
         x=np.arange(NITER, dtype=int), 
         y=osclist, 
         hue=["caso testigo"]*(NITER), 
-        xaxis="CANTIDAD DE ITERACIONES", 
-        yaxis="ERROR", 
+        xaxis="cantidad de iteraciones", 
+        yaxis="distancia al vector aleatorio", 
         filename=GRAFICO_OSC)
 
 if __name__ == "__main__":

@@ -98,6 +98,6 @@ if __name__ == "__main__":
         x=df.iter, 
         y=df.error_autovalor,
         hue=["distancia al autovalor esperado"]*(int(NITER/STEP) + 1), 
-        xaxis="CANTIDAD DE ITERACIONES", 
-        yaxis="ERROR", 
+        xaxis="cantidad de iteraciones", 
+        yaxis="error", 
         filename=GRAFICO_AVAL)
