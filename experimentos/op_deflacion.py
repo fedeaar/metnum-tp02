@@ -9,20 +9,35 @@ from op_convergencia import EPSILON
 
 
 """
-    Este experimento se encarga de generar matrices simétricas aleatorias y comprobar que 
-    no importa cual sea la lista de autovalores inicial, se cumple que el método de la potencia 
-    en conjunto con la deflación funcionan correctamente a la hora de calcular la base ortogonal
-    de autovectores y sus correspondientes autovalores.
-    Notar que en caso de haber autovalores repetidos la base ortogonal de autovectores presenta una 
-    infinidad de opciones por lo tanto no se puede comparar por igualdad con los resultados que obtiene numpy.
+    Este experimento se encarga de generar matrices simétricas 
+    aleatorias y comprobar que no importa cual sea la lista de 
+    autovalores inicial, se cumple que el método de la potencia 
+    en conjunto con la deflación funcionan correctamente a la
+    hora de calcular la base ortogonal de autovectores y sus 
+    correspondientes autovalores.
+    Notar que en caso de haber autovalores repetidos la base
+    ortogonal de autovectores presenta una infinidad de opciones 
+    por lo tanto no se puede comparar por igualdad con los 
+    resultados que obtiene numpy.
+
+    Nota: correr el experimento regenera todos los archivos, lo que 
+    puede resultar en pequeñas discrepancias con los resultados del 
+    informe.
 """
 
 
-
+# 
 # VARIABLES
+#
+
 N = 100
 NITER = 20000
 TESTS = 100
+
+
+#
+# RUN
+#
 
 def run_tests(t):
     S, U, e = utils.armarMatriz([N], N)
@@ -46,6 +61,11 @@ def run_tests(t):
     else: print(str(t)+": No Funca")
 
 
+#
+# MAIN
+#
+
 if __name__ == "__main__":
+
     for t in range(TESTS):
         run_tests(t)

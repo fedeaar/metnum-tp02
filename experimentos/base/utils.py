@@ -44,6 +44,7 @@ def random_matriz(n, m=None, r=(1, 100)):
 def norma(x, norma):
     return np.linalg.norm(x, norma)
 
+
 def metodo_potencia(A, niter=10000, epsilon=1e-6, x={}):
     n = A.shape[0]
     
@@ -101,11 +102,20 @@ def corr(x, y, epsilon=1e-16):
     return a / b if abs(b) >= epsilon else 0
 
 
-def graficar(x, y, hue, xaxis, yaxis, filename):
+def graficar(x, y, hue, xaxis, yaxis, filename, units=None):
     
     plt.figure()
     df   = pd.DataFrame({"x":x, "y":y, "hue":hue})
-    plot = sns.lineplot(data=df, x="x", y="y", hue="hue")
+    kwargs = {
+        "data":df, 
+        "x":"x", 
+        "y":"y", 
+        "hue":"hue", 
+        "units":units
+    }
+    if units:
+        kwargs["estimator"] = None
+    plot = sns.lineplot(**kwargs)
     
 
     plot.set_xlabel(xaxis, fontsize=18, labelpad=12)
@@ -135,10 +145,6 @@ def graficar2(x, y, hue, x2, y2, hue2, xaxis, yaxis, filename):
     fig = plot.get_figure()
     fig.savefig(filename)
     plt.close(fig)
-
-        
-
-
 
 
 def graficar_grafo(A, filename, 
@@ -182,14 +188,17 @@ def armarMatriz(inicial, n):
 
     return S, V, a
 
+
 def armarRandom(n):
     x = np.random.randint(-100, 100, size=n)
     x = x.astype(float)
     x = nml(x)
     return x 
 
+
 def n2(v):
     return np.linalg.norm(v, 2)
+
 
 def nml(x):
     return x / n2(x)
@@ -222,7 +231,6 @@ def alt_potencia(A, niter=10000, epsilon=1e-6, x={}):
     return a, x
 
 
-
 def alt_deflacion(A, k, niter=10000, epsilon=1e-6):
 
     n = A.shape[0]
@@ -238,3 +246,4 @@ def alt_deflacion(A, k, niter=10000, epsilon=1e-6):
         A = A - a * (v @ v.T)
         
     return np.array(eigs), vecs
+    

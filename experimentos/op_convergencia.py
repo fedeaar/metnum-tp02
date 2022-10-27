@@ -7,13 +7,22 @@ import pandas as pd
 
 
 """
-    Este experimento se encarga de observar cuantas iteraciones son necesarias en promedio y como máximo
-    para que el autovector converga por debajo de cierto epsilon.
-    El resultado del experimento es de interés ya que nos permite obtener un mayor conocimiento sobre la complejidad del algoritmo
+    Este experimento se encarga de observar cuantas iteraciones 
+    son necesarias en promedio y como máximo para que el autovector 
+    converga por debajo de cierto epsilon.
+    El resultado del experimento es de interés ya que nos permite 
+    obtener un mayor conocimiento sobre la complejidad del algoritmo.
+
+    Nota: correr el experimento regenera todos los archivos, lo que 
+    puede resultar en pequeñas discrepancias con los resultados del 
+    informe.
 """
 
 
+# 
 # IO
+#
+
 EXPERIMENTO = "op_convergencia"
 DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO, delete=True)
 RES = f"{DIR}{EXPERIMENTO}.csv"
@@ -22,16 +31,18 @@ X_IN          = f"{DIR_IN}x.txt"
 AVECS_EXPECTED = f"{DIR_IN}avecs_exp.txt"
 AVALS_EXPECTED = f"{DIR_IN}avals_exp.txt"
 
-# OUT
 SUMMARY   = f"{DIR}{EXPERIMENTO}_summary.csv"
 GRAFICO_MAX = f"{DIR}{EXPERIMENTO}_MAX.png"
 GRAFICO_PROM = f"{DIR}{EXPERIMENTO}_PROM.png"
 
-# FMT
 COLS       = 'N,max_iter,prom_iter'
 FMT_COLS   = "{0},{1},{2}\n"
 
+
+#
 # VARIABLES
+#
+
 N_INICIAL = 2
 N_FINAL = 1002 # recomendable que (N_FINAL - N_INICIAL) % STEP = 0
 STEP = 100 # tiene que se par para que tenga sentido
@@ -39,6 +50,10 @@ EPSILON = 1E-4
 TOL = 0
 REP = 100
 
+
+#
+# UTILS
+#
 
 def make_tests(n):
     print('creando test...')    
@@ -55,7 +70,15 @@ def make_tests(n):
     np.savetxt(X_IN, x)
     return S, x
 
+
+def pathIter(n):
+    return f"{DIR_OUT}t_{n}_iteraciones.out"
+
+
+#
 # RUN 
+#
+
 def run_tests():
 
     for k in range(N_INICIAL, N_FINAL+1, STEP):
@@ -80,10 +103,6 @@ def run_tests():
         np.savetxt(pathIter(k), [mx, sum/REP])
 
         
-        
-def pathIter(n):
-    return f"{DIR_OUT}t_{n}_iteraciones.out"
-
 def eval_tests():
     
     print(f'evaluando resultados...') 
@@ -92,6 +111,10 @@ def eval_tests():
             iteraciones = np.loadtxt(pathIter(k)) 
             file.write(FMT_COLS.format(k, iteraciones[0], iteraciones[1]))
 
+
+#
+# MAIN
+#
 
 if __name__ == "__main__":
 

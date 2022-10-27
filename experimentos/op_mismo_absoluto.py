@@ -8,14 +8,25 @@ import pandas as pd
 
 
 """
-    Este experimento se encarga de observar si el método de la potencia converge y a que autovalor converge en caso de que 
+    Este experimento se encarga de observar si el método de 
+    la potencia converge y a que autovalor converge en caso de que 
     el autovalor dominante de la matriz este repetido pero en módulo.
-    A diferencia del experimento "op_autovalor_repetido" aquí si tiene sentido chequear con numpy a que autovectores 
-    converge el método ya que las opciones estan limitadas por lo explicado en el informe
+    
+    A diferencia del experimento "op_autovalor_repetido" aquí si 
+    tiene sentido chequear con numpy a que autovectores converge 
+    el método ya que las opciones estan limitadas por lo explicado 
+    en el informe.
+
+    Nota: correr el experimento regenera todos los archivos, lo que 
+    puede resultar en pequeñas discrepancias con los resultados del 
+    informe.
 """
 
 
+# 
 # IO
+#
+
 EXPERIMENTO = "op_mismo_absoluto"
 DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO, delete=True)
 RES = f"{DIR}{EXPERIMENTO}.csv"
@@ -24,23 +35,26 @@ X_IN          = f"{DIR_IN}x.txt"
 AVECS_EXPECTED = f"{DIR_IN}avecs_exp.txt"
 AVALS_EXPECTED = f"{DIR_IN}avals_exp.txt"
 
-# OUT
 SUMMARY   = f"{DIR}{EXPERIMENTO}_summary.csv"
 GRAFICO_POS = f"{DIR}{EXPERIMENTO}_pos.png"
 GRAFICO_NEG = f"{DIR}{EXPERIMENTO}_neg.png"
 GRAFICO_OSC = f"{DIR}{EXPERIMENTO}_osc.png"
 
-# FMT
 COLS       = 'iter,error_v1,error_v2'
 FMT_COLS   = "{0},{1},{2}\n"
 
+# 
 # VARIABLES
+#
+
 N = 20
 NITER = 100 # tiene que ser par
 TOL = 0
 
 
-
+#
+# UTILS
+#
 
 def make_tests():
     
@@ -54,7 +68,23 @@ def make_tests():
     np.savetxt(AVECS_EXPECTED, V)
     return S, x
 
+
+def pathAval(i):
+    return f"{DIR_OUT}t_{i}_autovalor.out"
+    
+
+def pathAvec(i):
+    return f"{DIR_OUT}t_{i}_autovector.out"
+
+
+def cmp(x, y, tol=1e-4):
+    return np.allclose(x, y, tol)
+
+
+# 
 # RUN 
+#
+
 def run_tests():
     S, x = make_tests()
     print(f'corriendo iteracion: 0') 
@@ -68,14 +98,7 @@ def run_tests():
         np.savetxt(pathAval(i), [a])
 
 
-def pathAval(i):
-    return f"{DIR_OUT}t_{i}_autovalor.out"
-    
-def pathAvec(i):
-    return f"{DIR_OUT}t_{i}_autovector.out"
 
-def cmp(x, y, tol=1e-4):
-    return np.allclose(x, y, tol)
 
 def eval_tests():
     # importo S
@@ -142,6 +165,13 @@ def eval_tests():
         yaxis="distancia al vector aleatorio", 
         filename=GRAFICO_OSC)
 
+
+
+
+#
+# MAIN
+#
+
 if __name__ == "__main__":
 
     run_tests()
@@ -166,5 +196,3 @@ if __name__ == "__main__":
         xaxis="CANTIDAD DE ITERACIONES", 
         yaxis="ERROR", 
         filename=GRAFICO_NEG)
-
-

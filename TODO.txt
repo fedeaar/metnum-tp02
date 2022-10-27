@@ -40,14 +40,14 @@ C     | ESTADO | DETALLE
 		ok	    - explicar en el informe.
 
 3.4.
-		ok	- filtrar la matriz de att. usando PCA: computar la matriz de cov., 
+		ok		- filtrar la matriz de att. usando PCA: computar la matriz de cov., 
 				luego de av. Seleccionar k componentes principales y proyectar al 
 				nuevo espacio. Repetir para varios k y u.
-		ok	- explicar en el informe.
+		ok		- explicar en el informe.
 
 ----------------------------------------------------------
 opc.:
-		TODO	- analizar q iteraciones para lograr cierta convergencia y su 
+				- analizar q iteraciones para lograr cierta convergencia y su 
 				comportamiento para los distintos av.
 				- dada matriz de cov C = XtX encontrar una relacion entre sus aval y
 				avec con los de la matriz C = XXt

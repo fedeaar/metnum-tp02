@@ -7,13 +7,21 @@ import pandas as pd
 
 
 """
-    Este experimento se encarga de observar si el método de la potencia converge en el caso más sencillo que es
-    cuando el autovalor dominante no esta repetido
+    Este experimento se encarga de observar si el método de 
+    la potencia converge en el caso más sencillo que es
+    cuando el autovalor dominante no esta repetido.
+
+    Nota: correr el experimento regenera todos los archivos, lo que 
+    puede resultar en pequeñas discrepancias con los resultados del 
+    informe.
 """
 
 
+# 
 # IO
-EXPERIMENTO = "op_todos_diferentes"
+#
+
+EXPERIMENTO = "op_todos-diferentes"
 DIR_IN, DIR_OUT, DIR = IO.createInOut(EXPERIMENTO, delete=True)
 RES = f"{DIR}{EXPERIMENTO}.csv"
 MATRIZ_IN     = f"{DIR_IN}matriz.txt"
@@ -21,21 +29,26 @@ X_IN          = f"{DIR_IN}x.txt"
 AVECS_EXPECTED = f"{DIR_IN}avecs_exp.txt"
 AVALS_EXPECTED = f"{DIR_IN}avals_exp.txt"
 
-# OUT
 SUMMARY   = f"{DIR}{EXPERIMENTO}_summary.csv"
 GRAFICO_AVAL = f"{DIR}{EXPERIMENTO}_val.png"
 GRAFICO_AVEC = f"{DIR}{EXPERIMENTO}_vec.png"
 
-# FMT
 COLS       = 'iter,error_autovalor,error_n2_autovectores'
 FMT_COLS   = "{0},{1},{2}\n"
 
+
+# 
 # VARIABLES
+#
 N = 20
 NITER = 100
 STEP = 1 # tiene que se par para que tenga sentido
 TOL = 0
 
+
+#
+# UTILS
+#
 
 def make_tests():
     
@@ -50,7 +63,19 @@ def make_tests():
     np.savetxt(AVECS_EXPECTED, V)
     return S, x
 
-# RUN 
+
+def pathAval(i):
+    return f"{DIR_OUT}t_{i}_autovalor.out"
+
+
+def pathAvec(i):
+    return f"{DIR_OUT}t_{i}_autovector.out"
+
+
+# 
+# RUN
+#
+
 def run_tests():
     S, x = make_tests()
 
@@ -65,12 +90,6 @@ def run_tests():
         np.savetxt(pathAvec(int(i/STEP)), x)
         np.savetxt(pathAval(int(i/STEP)), [a])
 
-
-
-def pathAval(i):
-    return f"{DIR_OUT}t_{i}_autovalor.out"
-def pathAvec(i):
-    return f"{DIR_OUT}t_{i}_autovector.out"
 
 def eval_tests():
     
@@ -100,6 +119,10 @@ def eval_tests():
 
             file.write(FMT_COLS.format(i*STEP, error, norma2))
 
+
+#
+# MAIN
+#
 
 if __name__ == "__main__":
 
