@@ -1,6 +1,6 @@
 import base.IO as IO
 import base.utils as utils
-from base.utils import n2 as n2
+from base.utils import n2 as n2, random_matriz
 
 import numpy as np
 import pandas as pd
@@ -32,10 +32,11 @@ COLS       = 'N,max_iter,prom_iter'
 FMT_COLS   = "{0},{1},{2}\n"
 
 # VARIABLES
-N = 100 # tiene que terminar en 2
-STEP = 1 # tiene que se par para que tenga sentido
-TOL = 0
+N_INICIAL = 2
+N_FINAL = 1002 # recomendable que (N_FINAL - N_INICIAL) % STEP = 0
+STEP = 100 # tiene que se par para que tenga sentido
 EPSILON = 1E-4
+TOL = 0
 REP = 100
 
 
@@ -43,31 +44,33 @@ def make_tests(n):
     print('creando test...')    
     # nos aseguramos de que el autovalor maximo no este repetido
     # para evitar complicaciones que no tienen sentido en este análisis
-    S, V, a = utils.armarMatriz([n], n) 
+    S = utils.random_matriz(n, n)
+    for i in range(n):
+        for j in range(i):
+            S[i][j] = S[j][i]
+
     x = utils.armarRandom(n)
 
     np.savetxt(MATRIZ_IN, S)
-    np.savetxt(AVALS_EXPECTED, a)
     np.savetxt(X_IN, x)
-    np.savetxt(AVECS_EXPECTED, V)
-    return S, V.T[0], x
+    return S, x
 
 # RUN 
 def run_tests():
 
-    for k in range(2, N+1, STEP):
+    for k in range(N_INICIAL, N_FINAL+1, STEP):
         mx = 0
         sum = 0
         print(f'corriendo n: {k}') 
         for j in range(REP):
-            S, v, x = make_tests(k)
+            S, x = make_tests(k)
 
             print(f'corriendo REP: {j}') 
             x = np.reshape(x, (k, 1))  
-            v = np.reshape(v, (k, 1))  
-
+            a = utils.rayleigh(S, x) 
             i = 0
-            while(n2(x - v) > EPSILON and n2(x + v) > EPSILON):
+
+            while(utils.n2(a * x - S @ x) > EPSILON):
                 a, x = utils.alt_potencia(S, 2, TOL, x)
                 i += 2
 
@@ -85,7 +88,7 @@ def eval_tests():
     
     print(f'evaluando resultados...') 
     with open(RES, 'a', encoding="utf-8") as file:
-        for k in range(2, N+1, STEP):
+        for k in range(N_INICIAL, N_FINAL+1, STEP):
             iteraciones = np.loadtxt(pathIter(k)) 
             file.write(FMT_COLS.format(k, iteraciones[0], iteraciones[1]))
 
@@ -99,29 +102,21 @@ if __name__ == "__main__":
     df = pd.read_csv(RES)
     df.describe().to_csv(SUMMARY)
     
-    # utils.graficar(
-    #     x=df.N, 
-    #     y=df.max_iter, 
-    #     hue=["iteraciones máximas"]*((N-2)//STEP + 1), 
-    #     xaxis="TAMAÑO DE LA MATRIZ", 
-    #     yaxis="ITERACIONES", 
-
-    #     filename=GRAFICO_MAX)
-
-    # utils.graficar(
-    #     x=df.N, 
-    #     y=df.prom_iter, 
-    #     hue=["iteraciones promedio"]*((N-2)//STEP + 1), 
-    #     xaxis="TAMAÑO DE LA MATRIZ", 
-    #     yaxis="ITERACIONES", 
-    #     filename=GRAFICO_PROM)
-
     l = len(df.N)
     utils.graficar(
-        x=df.N.to_list() * 2,
-        y=df.max_iter.to_list() + df.prom_iter.to_list(),
-        hue=["iteraciones máximas"] * l + ["iteraciones promedio"] * l,
-        xaxis='TAMAÑO DE LA MATRIZ',
-        yaxis='ITERACIONES',
-        filename=GRAFICO_PROM
-    )
+        x=df.N, 
+        y=df.prom_iter, 
+        hue=["iteraciones promedio"]*l, 
+        xaxis="TAMAÑO DE LA MATRIZ", 
+        yaxis="ITERACIONES", 
+        filename=GRAFICO_PROM)
+
+    # l = len(df.N)
+    # utils.graficar(
+    #     x=df.N.to_list() * 2,
+    #     y=df.max_iter.to_list() + df.prom_iter.to_list(),
+    #     hue=["iteraciones máximas"] * l + ["iteraciones promedio"] * l,
+    #     xaxis='TAMAÑO DE LA MATRIZ',
+    #     yaxis='ITERACIONES',
+    #     filename=GRAFICO_PROM
+    # )

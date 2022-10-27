@@ -167,21 +167,11 @@ def graficar_grafo(A, filename,
     plt.close(f)
 
 
-def agregarAutovalores(list, size):
-    mn = min(list)
-    mn = abs(mn) - 1
-    while len(list) != size:
-        newInt = np.random.randint(-mn, mn)
-        if(newInt != 0): list.append(newInt)
-
-    return np.array(list)
-
 def armarMatriz(inicial, n):
-    D = agregarAutovalores(inicial, n)    
-    D = np.diag(D)
+    inicial.extend(np.random.randint(-n+1, n, size=n-len(inicial)))  
+    D = np.diag(inicial)
     
-    u = np.random.rand(n, 1)
-    u = u / norma(u, 2)
+    u = nml(np.random.rand(n, 1))
     H = np.eye(n) - 2 * (u @ u.T)
     S = H @ D @ H.T
 
@@ -224,6 +214,7 @@ def alt_potencia(A, niter=10000, epsilon=1e-6, x={}):
     x2 = nml(A @ x) - x
     x3 = nml(A @ x) + x
     if n2(x2) > EPSILON and n2(x3) > EPSILON and niter > 100:
+        print("entree...")
         x2 = nml(x2)
         a2 = rayleigh(A, x2)
         return a2, x2

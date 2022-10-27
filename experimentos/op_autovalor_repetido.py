@@ -40,7 +40,8 @@ TOL = 0
 
 def make_tests():
     
-    print('creando test...')    
+    print('creando test...')   
+    
     S, V, a = utils.armarMatriz([N, N], N) #nos aseguramos de que haya un autovalor repetido
     x = utils.armarRandom(N)
     np.savetxt(MATRIZ_IN, S)
@@ -97,6 +98,6 @@ if __name__ == "__main__":
         x=df.iter, 
         y=df.error_autovalor,
         hue=["distancia al autovalor esperado"]*(int(NITER/STEP) + 1), 
-        xaxis="CANTIDAD DE ITERACIONES", 
-        yaxis="ERROR", 
+        xaxis="cantidad de iteraciones", 
+        yaxis="error", 
         filename=GRAFICO_AVAL)
