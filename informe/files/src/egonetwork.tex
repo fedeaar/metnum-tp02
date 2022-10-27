@@ -15,7 +15,7 @@ En particular, dada una red de estas características, resulta de interés poder
 \end{figure}
 
 \vspace{1em}
-En este análisis\footnote{El script asociado se puede encontrar en \textit{./experimentos/ego\_facebook.py}, los archivos con los resultados  en \textit{./experimentos/resultados/ego-facebook/}.} estimaremos la red `ego' \textbf{E} de la figura (\ref{ego_facebook}.), por medio de la construcción de una matriz de similaridad que utilice el conjunto de atributos \textbf{C} asociados a \textbf{E}\footnote{Por cuestiones de privacidad, los datos están despojados de cualquier referencia a sus cualidades: los nodos y atributos se distinguen por medio de números; los atributos, además, por una parametrización binaria que designa si el nodo porta o no cierta cualidad anónima.}. También, buscaremos reducir su dimensionalidad por medio del análisis de componentes principales.
+En este análisis\footnote{El script asociado se puede encontrar en \textit{./experimentos/ego\_facebook.py}, los archivos con los resultados  en \textit{./experimentos/resultados/ego-facebook/}.} estimaremos la red `ego' \textbf{E} de la figura (\ref{ego_facebook}.), por medio de la construcción de una matriz de similaridad que utilice el conjunto de atributos \textbf{C} asociados a \textbf{E}\footnote{Por cuestiones de privacidad, los datos están despojados de cualquier referencia a sus cualidades: los nodos y atributos se distinguen por medio de números; los atributos, además, por una parametrización binaria que designa si el nodo porta o no cierta cualidad.}. También, buscaremos reducir su dimensionalidad por medio del análisis de componentes principales.
 
 
 
@@ -46,7 +46,7 @@ De manera general, podemos pensar en las \textit{matrices de similaridad}. Dado 
 %Nuestra tabla de atributos\footnote{La misma puede encontrarse en \textit{./catedra/ego-facebook.feat}.} es tal que la primera columna contiene los tags correspondientes a cada usuario, y el resto de las columnas forman \textbf{C}, donde la $fila_i(\textbf{C})$ son los atributos del usuario $tag_i$. Tomemos entonces nuestra matriz de similaridad $\textbf{S} = \textbf{CC}^{t}$, tal que $\textbf{S}_{ij}$ expresa la similaridad entre la $tag_{i}$ y $tag_{j}$ computando el producto interno de sus respectivos atributos. Con esta información podemos luego proponer diferentes umbrales $u$ entre el menor y mayor valor en \textbf{S}, y establecer que $\textbf{S}_{ij} > u$ indica que los $tag_{i}$ y $tag_{j}$ están conectados en nuestra aproximación. 
 
 \vspace{2em}
-En nuestro caso, trabajaremos con una tabla de atributos\footnote{La misma se puede encontrar en \textit{./catedra/ego-facebook.feat}. Dado que la red original y esta tabla no comparten todos sus nodos, se realizó un proceso de filtrado y limpieza. Las versiones corregidas se encuentran en \textit{./experimentos/resultados/ego-facebook/}.} cuya primer columna contiene las etiquetas ($tags$) de cada nodo en la red, y el resto de las columnas forman \textbf{C} ---donde la $\text{\textit{fila}}_i(\textbf{C})$ representa los atributos del usuario definido por la etiqueta $i$---, y definiremos la matriz de similaridad de la siguiente forma:
+En nuestro caso, trabajaremos con una tabla de atributos\footnote{La misma se puede encontrar en \textit{./catedra/ego-facebook.feat}. Dado que la red original y esta tabla no comparten todos sus nodos, se realizó un proceso de filtrado y limpieza. Las versiones corregidas se encuentran en \textit{./experimentos/resultados/ego-facebook/}.} cuya primer columna contiene las etiquetas ($tags$) de cada nodo en la red, y el resto de las columnas forman \textbf{C} ---donde la $\text{\textit{fila}}_i(\textbf{C})$ representa los atributos del usuario definido por la etiqueta $i$---. A partir de estos datos, definiremos la matriz de similaridad de la siguiente forma:
 
 \vspace{1em}
 \begin{equation}
@@ -117,9 +117,7 @@ Nos encontramos con diferentes grafos construidos en base a los atributos en \te
 Un primer acercamiento a este problema puede ser calcular la cantidad de \textit{posiciones coincidentes} entre las matrices de adyacencia y dividir por los elementos totales. La lógica por detrás del método es que nuestros grafos serán más similares entre sí por cada conexión y `no conexión' acertada. %Entonces, por cada 0 y 1 coincidente en nuestra aproximación y \textbf{E} nos acercaríamos más a un 100\% de similitud. 
 
 %\vspace{1em}
-Otros dos métodos de comparación posibles incluyen \textit{la correlación de las matrices de adyacencia estiradas} ---donde se computa la correlación entre los vectores estirados de las matrices---, y \textit{la correlación de las listas de autovalores} ---donde se computa la correlación entre los vectores ordenados de autovalores---. 
-
-Por su parte, la correlación es una covarianza normalizada con valores en (-1, 1), donde números mayores indican una mayor similitud. Se describe por la siguiente fórmula:
+Otros dos métodos de comparación posibles son la comparación de matrices por \textit{adyacencia estirada} ---donde se computa la correlación entre los vectores estirados de las matrices---, y la comparación por \textit{listas de autovalores} ---donde se computa la correlación entre los vectores ordenados de autovalores---. La correlación, por su parte, es una covarianza normalizada con valores en (-1, 1), donde números mayores indican una mayor similitud. Se describe por la siguiente fórmula:
 
 \vspace{1em}
 \begin{equation}
@@ -246,56 +244,91 @@ Sin embargo, notamos que los resultados son considerablemente distintos a la red
 % === PCA === %
 
 \vspace{2em}
-\subsection{PCA}
+\subsection{Análisis de componentes principales}
 
-Ahora bien, el conjunto describe 319 atributos distintos.
-En cada caso su significado puede variar notablemente.
-Su impacto sobre el sistema de conexiones puede diferir de tal manera que el subconjunto de atributos en consideración
-sea relevante para nuestra exploración del mismo, y tal que parte de los datos sea poco pertinente para dicho estudio.
-El Análisis de Componentes Principales (PCA) es un método que podemos aprovechar para reducir la dimensionalidad de los datos.
-Reduciendo la cantidad bajo consideración podemos obtener un conjunto de atributos que sea más relevante para la exploración del sistema de conexiones.
-PCA proyecta los datos en un espacio de menor dimensionalidad, donde los atributos son linealmente independientes, formando una base de vectores ordenados según su varianza de mayor a menor.
-Es decir, PCA organiza la información según su relevancia. Esto podria eventualmente ayudarnos a reducir la redundacía de los datos, y por ende, la cantidad de atributos que debemos considerar.
-Así se espera intercambiar un poco de precisión, deshaciendonos de información redundante, para ganar simplicidad y eficiencia computacional.
+% Ahora bien, el conjunto describe 319 atributos distintos.
+% En cada caso su significado puede variar notablemente.
+% Su impacto sobre el sistema de conexiones puede diferir de tal manera que el subconjunto de atributos en consideración
+% sea relevante para nuestra exploración del mismo, y tal que parte de los datos sea poco pertinente para dicho estudio.
+% El Análisis de Componentes Principales (PCA) es un método que podemos aprovechar para reducir la dimensionalidad de los datos.
+% Reduciendo la cantidad bajo consideración podemos obtener un conjunto de atributos que sea más relevante para la exploración del sistema de conexiones.
+% PCA proyecta los datos en un espacio de menor dimensionalidad, donde los atributos son linealmente independientes, formando una base de vectores ordenados según su varianza de mayor a menor.
+% Es decir, PCA organiza la información según su relevancia. Esto podria eventualmente ayudarnos a reducir la redundacía de los datos, y por ende, la cantidad de atributos que debemos considerar.
+% Así se espera intercambiar un poco de precisión, deshaciendonos de información redundante, para ganar simplicidad y eficiencia computacional.
 
-Para lograr esto, se busca hacer un cambio de base a la matriz de datos $\textbf{C}$. 
-Y para eso vamos a diagonalizar la matriz de covarianza $\textbf{M}_x$.
-Esta contiene en su diagonal los valores de varianza de cada variable, y la covarianza (definida en \ref{eq:corr}) en el resto de sus posiciones.
-La obtenemos de la siguiente manera:
+El conjunto \textbf{C} describe 319 atributos distintos, cada uno con un significado diferente\footnote{Si bien los atributos están obfuscados para mantener la privacidad de los usuarios, el dataset permite conocer de manera parcial su significado: existen atributos respecto a fechas de cumpleaños, educación, trabajo, género, nombre, apellido y lugar de residencia; por nombrar algunos. Como cada atributo es binario y múltiples refieren a las mismas cualidades, podemos suponer que no todas las combinaciones son posibles.}. %Por ejemplo, el subconjunto de atributos que designa el nombre es exclusivo dos a dos, por lo que tendrá a lo sumo un bit levantado por usuario.
+Su impacto sobre nuestras aproximaciones puede diferir notablemente, de tal manera que es esperable que sólo parte de la información sea relevante para nuestra exploración.
 
-\begin{equation}
-	\textbf{M}_x = \frac{\textbf{C}^t\textbf{C}}{n-1}
-\end{equation}
+El Análisis de Componentes Principales, \textit{PCA}, es un método que podemos aprovechar para reducir la dimensionalidad de los datos. Si consideramos al conjunto \textbf{C} como una matriz, entonces cada fila designa un usuario y cada columna un atributo. \textit{PCA} nos permite proyectar las columnas de esta matriz a un espacio de menor dimensión donde las columnas son linealmente independientes y están ordenadas según su varianza de mayor a menor.
 
-Donde $n$ es la cantidad de nodos en el grafo.
+Es decir, PCA organiza la información según su relevancia. Esto nos ayudará a reducir la redundacía de los datos, y por ende, la cantidad de atributos que debemos considerar. Así se espera intercambiar un poco de precisión, al remover información redundante, para ganar simplicidad y eficiencia computacional.
 
-Buscamos diagonalizar esta matriz tal que, para $\textbf{M}_x = \textbf{V}\textbf{D}\textbf{V}^t$, $\textbf{V}$ contiene los autovectores de $\textbf{M}_x$ en sus columnas.
-Permutamos las columnas de $\textbf{V}$ para que estén ordenadas de mayor a menor según los valores de la diagonal de $\textbf{D}$, los autovalores de $\textbf{M}_x$, y obtenemos $\textbf{V}^*$. 
-La matriz resultante con base cambiada es $\textbf{C}^* = \textbf{C}\textbf{V}^*$.
-
-Podemos limitar el subconjunto de componentes principales a considerar.
-Definimos una variable $p$ como el porcentage de componentes que deseamos preservar en nuestro conjunto.
-Es decir, el tamaño de la matriz $\textbf{V}^*$ va a depender de este valor.
-Así procedemos a trabajar con el valor $p$ y el umbral $u$ para estudiar nuevamente la aproximación de $\textbf{E}$.
-Usando $\textbf{C}^*$ construimos la matriz de similaridad e iteramos sobre el rango de umbrales.
+% Para lograr esto, se busca hacer un cambio de base a la matriz de datos $\textbf{C}$. 
+% Y para eso vamos a diagonalizar la matriz de covarianza $\textbf{M}_x$.
+% Esta contiene en su diagonal los valores de varianza de cada variable, y la covarianza (definida en \ref{eq:corr}) en el resto de sus 
+% posiciones.
+% La obtenemos de la siguiente manera:
+% Buscamos diagonalizar esta matriz tal que, para $\textbf{M}_x = \textbf{V}\textbf{D}\textbf{V}^t$, $\textbf{V}$ contiene los autovectores de % $\textbf{M}_x$ en sus columnas.
+% Permutamos las columnas de $\textbf{V}$ para que estén ordenadas de mayor a menor según los valores de la diagonal de $\textbf{D}$, los % autovalores de $\textbf{M}_x$, y obtenemos $\textbf{V}^*$. 
+% La matriz resultante con base cambiada es $\textbf{C}^* = \textbf{C}\textbf{V}^*$.
 
 \vspace{1em}
-La totalidad de los resultados obtenidos se adjuntan en el apendice (ver figuras \ref{similaridad_pca} y \ref{similaridad_pca_2}). 
-En la figura \ref{grafo_correlaciones_pca}, ilustramos nuevamente los distintos métodos de comparación para cada iteración de $p$.
+\noindent Para lograr esto, se buscará hacer un cambio de base a la matriz de datos \textbf{C}. 
+
+\vspace{1em}
+La matriz de covarianza \textbf{M}$_x$, contiene en su diagonal los valores de varianza de cada variable, y la covarianza ---definida en (\ref{eq:corr}.)--- en el resto de sus posiciones. % La obtenemos de la siguiente manera:
+
+\vspace{1em}
+\begin{equation}
+	\mathbf{M}_x = \frac{\mathbf{C}^t \mathbf{C}}{n-1}
+\end{equation}
+
+\vspace{1em}
+\noindent donde $n$ es la cantidad de nodos en el grafo.
+
+\vspace{1em}
+Si diagonalizamos esta matriz, tal que $\mathbf{M}_x = \mathbf{V} \mathbf{D} \mathbf{V}^t$ ---donde \textbf{V} contiene los autovectores de \textbf{M}$_x$ en sus columnas y \textbf{D} sus autovalores---, y permutamos las columnas de $\textbf{V}$ para que estén ordenadas de mayor a menor según sus autovalores asociados, obtendremos el cambio de base buscado:
+
+\vspace{1em}
+\begin{equation}
+    \mathbf{C}^* = \mathbf{C} \mathbf{V}^*
+\end{equation}
+
+\vspace{1em}
+\noindent donde $\mathbf{V}^* := \mathbf{V} \mathbf{P}$, con \textbf{P} una matriz de permutación.
+
+% Podemos limitar el subconjunto de componentes principales a considerar.
+% Definimos una variable $p$ como el porcentage de componentes que deseamos preservar en nuestro conjunto.
+
+% La totalidad de los resultados obtenidos se adjuntan en el apendice (ver figuras \ref{similaridad_pca} y \ref{similaridad_pca_2}). 
+% En la figura \ref{grafo_correlaciones_pca}, ilustramos nuevamente los distintos métodos de comparación para cada iteración de $p$.
+
+\vspace{1em}
+Podemos limitar el subconjunto de componentes principales a considerar. Para ello, definimos la variable $p$ como el porcentaje de componentes que deseamos preservar en nuestro conjunto. Es decir, el tamaño de la matriz $\textbf{V}^*$ va a depender de este valor.
+
+% Así procedemos a trabajar con el valor $p$ y el umbral $u$ para estudiar nuevamente la aproximación de $\textbf{E}$. Usando $\textbf{C}^*$ construimos la matriz de similaridad e iteramos sobre el rango de umbrales.
+
+\vspace{1em}
+Procederemos a trabajar con el valor $p$ y el umbral $u$ para estudiar nuevamente las aproximaciones de $\textbf{E}$.
+Usaremos $\textbf{C}^*$ para construir la matriz de similaridad e iteraremos sobre el rango de umbrales como en la sección anterior.
+
+\vspace{2em}
+\noindent \textsc{Resultados}. La totalidad de los resultados obtenidos se adjuntan en el apendice (ver figuras (\ref{similaridad_pca}.) y (\ref{similaridad_pca_2}.)). 
+En la figura (\ref{grafo_correlaciones_pca}.) ilustramos nuevamente los distintos métodos de comparación para cada iteración de $p$.
 Para los valores de $p$ más pequeños, el grafico difiere notablemente de los obtenidos en la sección anterior. 
-Pero vemos que, como es de esperarse, los resultando tienden a converger al mismo comportamiento observado previamente.
+Pero vemos que, como es de esperar, los resultando tienden a converger al mismo comportamiento observado previamente.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[scale=0.45]{/files/src/.media/ego/facebook_similaridad_pca.png}
-    \caption{Similitud entre las aproximaciones y el grafo \textbf{E} para \textit{posiciones coincidentes}, \textit{adyacencia estirada} y \textit{listas de autovalores}, en función del umbral $u$, para todo $p \in \{0.4, 0.5, 0.6, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99\}$.}
+    \caption{Similitud entre las aproximaciones y el grafo \textbf{E} para \textit{posiciones coincidentes}, \textit{adyacencia estirada} y \textit{listas de autovalores}, en función del umbral $u$, para todo $p\ \in\ \{0.4, 0.5, 0.6, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99\}$.}
     \label{grafo_correlaciones_pca}
 \end{figure}
 
 \vspace{1em}
 Lo más interesante es que, con menos atributos, el valor de correlación máximo difiere solo ligeramente.
 Y este llega a su tope para un umbral $u$ relativamente menor.
-La tabla \ref{tabla_correlaciones_pca} muestra exactamente para que valor de $u$ se alcanza la máxima correlación, para cada valor de $p$, para los métodos de \textit{adyacencia estirada} y \textit{listas de autovalores}.
+La tabla (\ref{tabla_correlaciones_pca}.) muestra exactamente para qué valor de $u$ se alcanza la máxima correlación, en función del valor de $p$, para los métodos de \textit{adyacencia estirada} y \textit{listas de autovalores}.
 
 \vspace{1em}
 \begin{figure}[!htbp]
@@ -317,11 +350,13 @@ La tabla \ref{tabla_correlaciones_pca} muestra exactamente para que valor de $u$
     \hline
     \end{tabular} \\
     \bigskip
-    \caption{Umbral con correlación máxima para valores de $p$ en los métodos de \textit{adyacencia estirada} y \textit{listas de autovalores}.} \label{tabla_correlaciones_pca}
+    \caption{Umbral con correlación máxima para los valores de $p$ en los métodos de \textit{adyacencia estirada} y \textit{listas de autovalores}.} \label{tabla_correlaciones_pca}
 \end{figure}
 
-Efectivamente, para menor valores de $p$ empeora nuestra capacidad de aproximar $\textbf{E}$, pero solo levemente.
-Notar que habiendo reducido la cantidad de atributos en un 60\%, perdemos no más que 0.7\% y 5\% en la adyacencia estirada y la lista de autovalores, respectivamente.
+% Efectivamente, para menor valores de $p$ empeora nuestra capacidad de aproximar $\textbf{E}$, pero solo levemente.
+% Notar que habiendo reducido la cantidad de atributos en un 60\%, perdemos no más que 0.7\% y 5\% en la adyacencia estirada y la lista de autovalores, respectivamente.
+Vemos que, para valores de $p$ menores, empeora nuestra capacidad de aproximar $\textbf{E}$, pero solo levemente.
+Notamos que habiendo reducido la cantidad de atributos en un 60\%, perdemos no más que el 0.7\% y 5\% de similitud en \textit{la adyacencia estirada} y las \textit{listas de autovalores}, respectivamente.
 Es decir, de necesitar el uso del PCA para reducir la dimensionalidad de los datos, los resultados obtenidos sufren meramente una leve pérdida de calidad.
-También, constatamos que el rango de umbrales en el que se alcanza la máxima correlación converge a los mismos valores que en la sección anterior.
+También, constatamos que el rango de umbrales en los que se alcanza la máxima correlación converge a los mismos valores que en la sección anterior.
 Es decir, para $u \in \{5, 6\}$.
