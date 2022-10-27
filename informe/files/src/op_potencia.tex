@@ -27,17 +27,17 @@ Vimos que una condición necesaria para la aplicación del método de la potenci
 \end{equation}
 
 \vspace{1em}
-\noindent donde $a_i := b_0^t\ x_i$, y $x_i$ es el autovector asociado al $i$-ésimo autovalor de $\mathbf{A}$, $\lambda_i$, tal que $|\lambda_1| > |\lambda_2| \geq ... \geq |\lambda_n|$.
+\noindent donde $a_i := b_0^t\ x_i$, y $x_i$ es el autovector asociado al $i$-ésimo autovalor de $\mathbf{A}$ ---$\lambda_i$---, tal que $|\lambda_1| > |\lambda_2| \geq ... \geq |\lambda_n|$.
 
 \vspace{2em}
-\noindent Si suponemos, en cambio, que $\lambda_1 = ... = \lambda_k$, vemos que la ecuación (\ref{eq_potencia}.) se puede reescribir de la siguiente manera:
+\noindent Si suponemos, en cambio, que $\lambda_1 = ... = \lambda_k$, tal que $|\lambda_1| > |\lambda_{k + 1}|$, vemos que la ecuación (\ref{eq_potencia}.) se puede reescribir de la siguiente manera:
 
 %\vspace{1em}
-\begin{equation} \label{eq_limite}
+\begin{equation*} \label{eq_limite}
     b_k = \frac{\sum_{i=1}^{n} a_i \ \lambda_{i}^{k} \ x_i }{||\sum_{i=1}^{n} a_i \ \lambda_{i}^{k} \ x_i||_2} \cdot \frac{\lambda_1^k}{\lambda_1^k} 
         = \frac{\sum_{i=1}^{n} a_i \ (\frac{\lambda_{i}}{\lambda_{1}})^{k} \ x_i}{\frac{1}{\lambda_{1}^{k}}\ ||\sum_{i=1}^{n} a_i \ \lambda_{i}^{k} \ x_i||_2}
         \leq \frac{\sum_{i=1}^{k} a_i\ (\frac{\lambda_{i}}{\lambda_{1}})^{k}\ x_i + \sum_{i=k}^{n} a_i \ (\frac{\lambda_{i}}{\lambda_{1}})^{k} \ x_i }{(\frac{|\lambda_{1}|}{\lambda_{1}})^k ||\sum_{i=1}^{n} a_i \ x_i||_2}
-\end{equation}
+\end{equation*}
 
 \vspace{1em}
 \noindent y tomando el límite, vemos que $\frac{\lambda_{i}}{\lambda_{1}} = 1\ $ si $\ i \leq k\ $ y $\ (\frac{\lambda_{i}}{\lambda_{1}})^{k} \longrightarrow 0 \ \ \forall i: k + 1\ ...\ n$. Tal que $b_k$ converge a:
@@ -59,7 +59,7 @@ Vimos que una condición necesaria para la aplicación del método de la potenci
 % \end{align*}
 
 \newpage
-\noindent Como $x_1$ ... $x_k$ son autovectores de $\lambda_1$, vemos que para $c_1$ ... $c_k$ arbitrarios ($\exists c_i \neq 0$):
+\noindent Como $x_1$ ... $x_k$ son autovectores de $\lambda_1$, vemos que para $c_1$ ... $c_k$ arbitrarios (con la condición que exista $c_i \neq 0$):
 
 %\vspace{1em}
 \begin{equation*}
@@ -67,7 +67,7 @@ Vimos que una condición necesaria para la aplicación del método de la potenci
 \end{equation*}
 
 \vspace{1em}
-En consecuencia, sin importar quienes sean los $c_i$, se cumple que $\sum_{i=1}^{k} c_i\ x_i$ es un autovector y $\lambda_k$ es su autovalor. Si los $x_i$ son linealmente independientes, esto nos permite inferir que $\lambda_k$ esta asociado no solo a un autovector, sino a un subespacio de dimension $k$.   
+En consecuencia, sin importar quienes sean los $c_i$, se cumple que $\sum_{i=1}^{k} c_i\ x_i$ es un autovector y $\lambda_1$ es su autovalor. Esto nos permite inferir que $\lambda_1 = ... =\lambda_k$ esta asociado no solo a un autovector, sino a un subespacio de dimension $ \leq k$, ya que esta sumatoria define una combinación lineal de los $x_i$.   
 
 \vspace{1em}
 Por lo tanto, en el caso donde hay autovalores dominantes iguales, el método de la potencia converge correctamente. Este resultado lo comprobamos experimentalmente como se ve en el gráfico (\ref{fig:autovalor_repetido}.), donde se observa que el vector inicial tiende a un autovector a medida que aumenta la cantidad de iteraciones del algoritmo.
@@ -80,12 +80,13 @@ Por lo tanto, en el caso donde hay autovalores dominantes iguales, el método de
 \end{figure}
 
 \vspace{1em}
-Cabe destacar que como $\sum_{i=1}^{k} c_i\ x_i$ es autovector para todo $c_i$ ($\exists c_i \neq 0$). Entonces cualquier combinación lineal de los $x_i$ va a ser un autovector, y por ende hay infinitos resultados posibles con norma igual a uno ---a diferencia del caso en el que todos los autovalores son diferentes en módulo, donde hay solo dos autovectores con norma uno---.
+Cabe destacar que como $\sum_{i=1}^{k} c_i\ x_i$ es autovector para todo $c_i$ ($\exists c_i \neq 0$). Entonces cualquier combinación lineal de los $x_i$ va a ser un autovector, y por ende hay infinitos resultados posibles con norma igual a uno ---a diferencia del caso en el que todos los autovalores son diferentes en módulo, donde hay solo dos autovectores con norma uno---\footnote{Esto explica por qué hay que tener cuidado al comparar el autovector obtenido por el algoritmo con el que provee algún otro método, como $linalg.eig()$ de numpy.}.
 
 \vspace{1em}
-Algo interesante a notar es que, por tomar $k$ par, pudimos asumir que $signo(\lambda_1)^k = (\frac{|\lambda_{1}|}{\lambda_{1}})^k = 1$. Si no fueramos a asumir esto, observamos que en las iteraciones pares el metodo converge a $\sum_{i=1}^{k} c_i\ x_i$, pero en las impares podría converger a $-\sum_{i=1}^{k} c_i\ x_i$. Ambos son autovectores válidos linealmente dependientes. Por lo que la restriccion de $k$ par no es necesaria para encontrar un autovector.
+Algo interesante a notar es que, por tomar $k$ par, pudimos asumir que $signo(\lambda_1)^k = (\frac{|\lambda_{1}|}{\lambda_{1}})^k = 1$. Si no fueramos a asumir esto, observamos que en las iteraciones pares el método converge a $\sum_{i=1}^{k} c_i\ x_i$, pero en las impares, si $\lambda_1 < 0$ converge a $-\sum_{i=1}^{k} c_i\ x_i$. Ambos son autovectores válidos linealmente dependientes. Por lo que la restriccion de $k$ par no es necesaria para encontrar un autovector.
 
-Sin embargo, teniendo en cuenta que el método depende de la distancia entre una iteración y su consecutiva, como en este caso el método oscila entre iteraciones pares e iteraciones impares, la distancia entre una iteración y su consecutiva no tendera a cero. En consecuencia, de no imponer esta restriccion, el método va a tener que que hacer el total de las iteraciones sin poder interrumpirse antes. 
+\vspace{1em}
+Sin embargo, teniendo en cuenta que el método depende de la distancia entre una iteración y su consecutiva ---al comporar con la tolerancia---, como en este caso el método oscila entre iteraciones pares e iteraciones impares, la distancia entre una iteración y su consecutiva no tendera a cero. En consecuencia, de no imponer esta restricción, el método va a tener que hacer el total de las iteraciones $q$ sin poder interrumpirse antes. 
 
 
 
@@ -99,7 +100,7 @@ Sin embargo, teniendo en cuenta que el método depende de la distancia entre una
 \vspace{2em}
 \subsubsection*{2. Método de la potencia para autovalores diferentes pero iguales en módulo} 
 
-Si suponemos, en cambio, que $|\lambda_1| = ... = |\lambda_k|$, vemos que $(\frac{\lambda_i}{\lambda_1})^k = signo(\lambda_i)^k\ \ \forall i: 1\ ...\ k$, y la ecuación (\ref{eq_potencia}.) se comporta de la siguiente manera:
+Si suponemos, en cambio, que $|\lambda_1| = ... = |\lambda_k| > |\lambda_{k + 1}|$, vemos que $(\frac{\lambda_i}{\lambda_1})^k = signo(\lambda_i)^k\ \ \forall i: 1\ ...\ k$, y la ecuación (\ref{eq_potencia}.) se comporta de la siguiente manera:
 
 \begin{equation*}
     \lim_{k \to \infty} b_k = \sum_{i=1}^{k} signo(\lambda_i)^k\ c_i\ x_i = \sum_{i=1}^{k} d_i\ x_i  
@@ -120,13 +121,13 @@ Si suponemos, en cambio, que $|\lambda_1| = ... = |\lambda_k|$, vemos que $(\fra
 % \end{align}
 
 \vspace{1em}
-\noindent Notamos que este vector oscilará si k es impar, ya que dependerá del signo de cada autovalor dominante. Lo que es más, de tomar la subsecuencia convergente para $k$ par, este no necesariamente será un autovector. Vemos que para $d_1\ ...\ d_k$ arbitrarios ($\exists d_i \neq 0)$:
+\noindent Notamos que este vector oscilará si k tiende al infinito pasando por valores pares e impares, ya que dependerá del signo de cada autovalor dominante. Lo que es más, de tomar la subsecuencia convergente para $k$ par, este no necesariamente será un autovector. Vemos que para $d_1\ ...\ d_k$ arbitrarios (con la condición que exista $d_i \neq 0$):
 
 \begin{equation*}
     \mathbf{A} \sum_{i=1}^{k} d_i\ x_i = \sum_{i=1}^{k} \mathbf{A} d_i\ x_i = \sum_{i=1}^{k} \lambda_i\ d_i\ x_i 
 \end{equation*}
 
-\vspace{1em} 
+\vspace{2em} 
 \noindent Si existe al menos un $\lambda_j$ negativo, $1 \leq j \leq k$, entonces:
 
 \begin{equation*}
@@ -167,17 +168,17 @@ Es decir, estaríamos en la condición del caso anterior, por lo que este valor 
 \vspace{1em}
 
 \vspace{1em}
-Observamos que se podría calcular la resta para obtener otro autovector (asociado $\sum_{i: \lambda_i < 0}^{k} c_i\ x_i$). Como la deflacíon asume que el método de la potencia encuentra de a un autovector por llamado, consideramos que no vale la pena modificar el algoritmo para este caso puntual.
+Observamos que se podría calcular la resta para obtener otro autovector: el asociado a $\sum_{i: \lambda_i < 0}^{k} c_i\ x_i$. Es decir, podríamos obtener dos autovectores en un sólo llamado. Como la deflacíon asume que el método de la potencia encuentra de a un autovector por vez, decidimos no complejizar el algoritmo para aprovechar este caso puntual.
 
 
 \vspace{2em}
 \subsubsection*{3. Una extensión del método de la potencia} Con este resultado en mente planteamos el siguiente algoritmo como alternativa para el método de la potencia \textit{monte carlo}.
 
 \vspace{1em}
-\lstinputlisting[mathescape=true, escapechar=@, language=pseudo, label=potencia_modificada, caption={Pseudocódigo mostrando la alternativa a la potencia que soluciona cuando hay autovalores repetidos}]{files/src/.code/potencia_modificada.pseudo}
+\lstinputlisting[mathescape=true, escapechar=@, language=pseudo, label=potencia_modificada, caption={Pseudocódigo para una versión alternativa al \textit{método de la potencia monte carlo} que soluciona el caso de autovalores en módulo repetidos.}]{files/src/.code/potencia_modificada.pseudo}
 
 \vspace{1em}
-Dada una matriz inicial cuyos autovalores pertenecen a los reales, este nuevo algoritmo permite relajar las restricciones del método original.
+Dada una matriz inicial cuyos autovalores pertenecen a los reales, este algoritmo permite calcular sus $k$ autovalores, y vectores asociados, no nulos. Esto permite relajar de manera considerable las restricciones del método original.
 
 % \vspace{1em}
 
