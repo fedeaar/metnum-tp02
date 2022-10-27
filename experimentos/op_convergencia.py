@@ -33,8 +33,8 @@ FMT_COLS   = "{0},{1},{2}\n"
 
 # VARIABLES
 N_INICIAL = 2
-N_FINAL = 300 # tiene que terminar en 2
-STEP = 10 # tiene que se par para que tenga sentido
+N_FINAL = 1002 # recomendable que (N_FINAL - N_INICIAL) % STEP = 0
+STEP = 100 # tiene que se par para que tenga sentido
 EPSILON = 1E-4
 TOL = 0
 REP = 100
