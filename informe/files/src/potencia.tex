@@ -59,7 +59,7 @@ En este trabajo utilizaremos la deflación de Hotelling por su sencillez, a cues
 \noindent donde $n$ es un natural, \textbf{A} tiene al menos $k$ autovalores reales dominantes en módulo, $0 < k \leq n$, $q$ es un número par\footnote{Esta restricción no es necesaria, pero permite mantener exacta la cantidad de iteraciones a realizar.} que representa el máximo de iteraciones a realizar y $0 \leq t$ representa la tolerancia mínima a partir de la que se considera la convergencia de una solución. 
 
 \vspace{1em}
-\lstinputlisting[language=pseudo, label=algo_deflacion, caption={Pseudocódigo para el método de la deflación.}]{files/src/.code/deflacion.pseudo}
+\lstinputlisting[mathescape=true, escapechar=@, language=pseudo, label=algo_deflacion, caption={Pseudocódigo para el método de la deflación.}]{files/src/.code/deflacion.pseudo}
 
 %\vspace{1em}
 El algoritmo (\ref{algo_deflacion}.) retornará un vector con los primeros $k$ autovalores en módulo máximos de \textbf{A}, ordenados descendientemente, y una matriz cuyas columnas corresponden, respectivamente, a los autovectores normalizados asociados a estos autovalores. 
@@ -72,10 +72,10 @@ Es interesante notar que la $k$-ésima matriz sobre la que se aplicará el méto
 \noindent Por su parte, el algoritmo (\ref{algo_potencia}.) retornará el autovalor de \textbf{A} máximo en módulo y su autovector asociado:
 
 \vspace{1em}
-\lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{monte carlo}.}, label=algo_potencia]{files/src/.code/potencia.pseudo}
+\lstinputlisting[mathescape=true, escapechar=@, language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{monte carlo}.}, label=algo_potencia]{files/src/.code/potencia.pseudo}
 
 \vspace{1em}
-Observamos que el algoritmo (\ref{algo_potencia}.) trabaja con la subsecuencia par de $\{b_k\}_{k \in \mathbb{N}_0}$. Como mencionamos antes, esto garantiza la convergencia absoluta del método, dada una selección inicial de $b_0$ ---$v$ en nuestro pseudocódigo--- no ortogonal al autovector asociado al autovalor en módulo dominante --- para ver un análisis en más detalle, ver la experimentación (\ref{ap_A}.) ---. Sin embargo, como esta selección depende de un proceso aleatorio, el algoritmo podrá resultar en una respuesta incorrecta. A este tipo de procesos se los denomina \textit{monte carlo} \cite{Brassard}. 
+Observamos que el algoritmo (\ref{algo_potencia}.) trabaja con la subsecuencia par de $\{b_k\}_{k \in \mathbb{N}_0}$. Como mencionamos antes, esto garantiza la convergencia absoluta del método, dada una selección inicial de $b_0$ ---$v$ en nuestro pseudocódigo--- no ortogonal al autovector asociado al autovalor en módulo dominante\footnote{Para ver un análisis en más detalle, ver la experimentación (\ref{ap_A}.).}. Sin embargo, como esta selección depende de un proceso aleatorio, el algoritmo podrá resultar en una respuesta incorrecta. A este tipo de procesos se los denomina \textit{monte carlo} \cite{Brassard}. 
 
 \vspace{1em}
 Una variante posible, de tipo \textit{las vegas}, se presenta en el algoritmo (\ref{algo_potencia_vegas}.). Hasta llegar a un resultado aceptable, determinado por $\epsilon$, o superar la cantidad de iteraciones permitida, definida por $\alpha$, el algoritmo volverá a intentar resolver el problema. De no alcanzar una respuesta aceptable retornará una señal de error. 
@@ -86,7 +86,7 @@ De este modo, la probabilidad de fallar a causa de una selección inicial ortogo
 Para reducir esta probabilidad desde el comienzo, se propone que se elija cada coordenada del vector de manera pseudo-aleatoria sobre un rango amplio\footnote{Desde un punto de vista geométrico, dos vectores son ortogonales sólo si son perpendiculares. De manera intuitiva, podemos ver que a medida que la dirección inicial posible de un vector tiende al infinito, la probabilidad que forme un ángulo de 90 grados con otro tiende a cero.}. Por ejemplo, la máxima representación de enteros con signo en 32 bits. 
 
 \vspace{1em}
-\lstinputlisting[language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{las vegas}.}, label=algo_potencia_vegas]{files/src/.code/potencia_vegas.pseudo}
+\lstinputlisting[mathescape=true, escapechar=@, language=pseudo, caption={Pseudocódigo para el método de la potencia \textit{las vegas}.}, label=algo_potencia_vegas]{files/src/.code/potencia_vegas.pseudo}
 
 \vspace{1em}
 Es importante mencionar que una mala selección de $\epsilon$ ---en función de $q$ y $t$--- resultará en un algoritmo que siempre falla. Esto dependerá de la velocidad de convergencia del método para la matriz particular sobre la que se lo aplica.  
