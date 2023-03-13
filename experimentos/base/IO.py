@@ -80,8 +80,7 @@ def run(filename, niter, tol,
         f="matriz", m="base", o="./", p=15, save_as=None, time=False, verbose=False,
         exe_path=EXE_PATH):
 
-    call_params = [
-        "wsl" if WSL else "",   
+    call_params = [ 
         exe_path, 
         filename, str(niter), str(tol),
         "-f", f,
@@ -89,8 +88,9 @@ def run(filename, niter, tol,
         "-o", o,
         "-p", str(p)
     ]
+    if WSL: call_params.insert(0, "wsl")
     if save_as: call_params.extend(["-as", save_as])
     if verbose: call_params.extend(["-v"])
     if time: call_params.extend(["-time"])
 
-    sub.check_call(call_params)
+    sub.run(call_params)
